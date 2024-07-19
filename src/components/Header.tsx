@@ -57,9 +57,9 @@ export function Header() {
             <li className="hover:opacity-40 duration-300">
               <button
                 className={`${
-                  isFocus === "" ? "font-bold" : "text-white"
+                  isFocus === "conversor" ? "font-bold" : "text-white"
                 }`}
-                onClick={() => setIsFocus("campaign")}
+                onClick={() => setIsFocus("conversor")}
               >
                 Conversor
               </button>

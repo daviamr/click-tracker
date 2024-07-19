@@ -18,6 +18,7 @@ const TextareaWithCounter: React.FC<TextareaWithCounterProps> = ({ maxLength }) 
         value={text}
         onChange={handleChange}
         rows={5}
+        maxLength={999}
         placeholder="Digite seu texto aqui..."
       />
       <div>

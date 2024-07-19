@@ -34,7 +34,7 @@ export function EditarConversor() {
             <Label htmlFor="url" className="text-right">
               Conversor
             </Label>
-            <TextareaWithCounter maxLength={200} />
+            <TextareaWithCounter maxLength={999} />
             <div>
             </div>
           </div>

@@ -45,7 +45,8 @@ export function NovoConversor() {
               </div>
         </div>
         <DialogFooter>
-          <Button type="submit" variant={"secondary"}>
+          <Button className="flex items-center gap-2" type="submit" variant={"secondary"}>
+          <Plus size={18} />
             Criar
           </Button>
         </DialogFooter>

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UserRoundPlus } from "lucide-react";
+import { UserRoundCheck, UserRoundPlus } from "lucide-react";
 
 export function NovoUsuario() {
   return (
@@ -45,7 +45,10 @@ export function NovoUsuario() {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" variant={'secondary'}>Criar</Button>
+          <Button className="flex items-center gap-2" type="submit" variant={'secondary'}>
+          <UserRoundCheck size={18}/>
+            Criar
+            </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

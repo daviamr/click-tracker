@@ -1,8 +1,9 @@
 import { SelectCampanha } from "@/components/SelectCampaign";
+import { SelectConversor } from "@/components/SelectConversor";
 import { SelectEncurtador } from "@/components/SelectShort";
 import { Button } from "@/components/ui/button";
 import { useContextState } from "@/hook/state";
-import { CircleArrowLeft, Upload } from "lucide-react";
+import { CircleArrowLeft, Send, Upload } from "lucide-react";
 
 export function EncutadorPage() {
   const { setIsFocus } = useContextState();
@@ -19,10 +20,18 @@ export function EncutadorPage() {
           Voltar
         </Button>
       </div>
-      <div className="">
-        <div className="flex items-end flex-wrap gap-4">
-          <SelectCampanha />
-          <SelectEncurtador />
+      <div className="pt-12 px-8 bg-transparent rounded-md border border-input w-max m-auto">
+        <h1 className="text-3xl font-semibold w-max m-auto pb-8">Lorem ipsum dolor</h1>
+        <div className="grid grid-cols-4 gap-4 max-w-[500px]">
+          <div className="col-span-2">
+            <SelectCampanha />
+          </div>
+          <div className="col-span-2">
+            <SelectEncurtador />
+          </div>
+          <div className="col-span-4">
+            <SelectConversor />
+          </div>
           <input
             type="file"
             className="cursor-pointer p-1 bg-transparent rounded-md border border-input col-span-3"
@@ -31,16 +40,34 @@ export function EncutadorPage() {
             <Upload size={18} className="mr-2" />
             Upload
           </Button>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="urlFinal" className="font-semibold">Preencha a URL final</label>
-          <input id="urlFinal" type="text" className="pl-4 bg-transparent rounded-md border border-input min-h-[36px]"/>
+          <div className="flex flex-col gap-1 col-span-2">
+            <label htmlFor="urlFinal" className="font-semibold">
+              Preencha a URL final
+            </label>
+            <input
+              id="urlFinal"
+              type="text"
+              className="pl-4 bg-transparent rounded-md border border-input min-h-[36px]"
+            />
           </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="urlFinal" className="font-semibold">Parâmetro que será substituído</label>
-          <input id="urlFinal" type="text" placeholder="" className="pl-4 bg-transparent rounded-md border border-input min-h-[36px]"/>
+          <div className="flex flex-col gap-1 col-span-2">
+            <label htmlFor="urlFinal" className="font-semibold">
+              Parâmetro que será substituído
+            </label>
+            <input
+              id="urlSubstituida"
+              type="text"
+              placeholder=""
+              className="pl-4 bg-transparent rounded-md border border-input min-h-[36px]"
+            />
           </div>
-          <Button variant='secondary'>
-            Baixar
+        </div>
+        <div className="pb-12 text-right mt-8 max-w-[500px]">
+          <Button className="col-span-1" variant="secondary">
+            <div className="flex items-center gap-2">
+              <Send size={18} />
+              Enviar
+            </div>
           </Button>
         </div>
       </div>

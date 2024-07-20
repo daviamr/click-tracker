@@ -11,7 +11,7 @@ import {
   export function SelectEncurtador() {
     return (
       <Select>
-        <SelectTrigger className="w-[200px]">
+        <SelectTrigger>
           <SelectValue placeholder="Selecione a Short URL" />
         </SelectTrigger>
         <SelectContent>

@@ -11,7 +11,7 @@ import {
 export function SelectCampanha() {
   return (
     <Select>
-      <SelectTrigger className="w-[200px]">
+      <SelectTrigger>
         <SelectValue placeholder="Selecione a campanha" />
       </SelectTrigger>
       <SelectContent>

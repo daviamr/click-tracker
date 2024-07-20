@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "lucide-react";
+import { Link, Link2 } from "lucide-react";
 
 export function NovaUrl() {
   return (
@@ -39,7 +39,10 @@ export function NovaUrl() {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" variant={'secondary'}>Criar</Button>
+          <Button className="flex items-center gap-2" type="submit" variant={'secondary'}>
+          <Link2 size={18} />
+            Criar
+            </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

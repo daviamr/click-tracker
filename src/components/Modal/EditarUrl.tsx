@@ -38,7 +38,10 @@ export function EditarUrl() {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" variant={'secondary'}>Editar</Button>
+          <Button className="flex items-center gap-2" type="submit" variant={'secondary'}>
+          <Pencil size={18}/>
+            Editar
+            </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

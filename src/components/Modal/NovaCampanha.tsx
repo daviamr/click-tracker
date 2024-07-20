@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FileCheck2 } from "lucide-react";
+import { FileCheck2, FilePlus2 } from "lucide-react";
 import { SelectCliente } from "../SelectClient";
 
 export function NovaCampanha() {
@@ -19,7 +19,7 @@ export function NovaCampanha() {
       <DialogTrigger asChild>
         <Button className="flex items-center gap-2"
         variant={"secondary"}>
-        <FileCheck2 size={18}/>
+        <FilePlus2 size={18}/>
         Cadastrar
         </Button>
       </DialogTrigger>
@@ -44,7 +44,10 @@ export function NovaCampanha() {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" variant={'secondary'}>Criar</Button>
+          <Button className="flex items-center gap-2" type="submit" variant={'secondary'}>
+          <FileCheck2 size={18}/>
+            Criar
+            </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

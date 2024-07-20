@@ -44,7 +44,8 @@ export function EditarConversor() {
               </div>
         </div>
         <DialogFooter>
-          <Button type="submit" variant={"secondary"}>
+          <Button className="flex items-center gap-2" type="submit" variant={"secondary"}>
+          <Pencil size={18} />
             Editar
           </Button>
         </DialogFooter>

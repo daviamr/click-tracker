@@ -3,7 +3,7 @@ import { SelectConversor } from "@/components/SelectConversor";
 import { SelectEncurtador } from "@/components/SelectShort";
 import { Button } from "@/components/ui/button";
 import { useContextState } from "@/hook/state";
-import { CircleArrowLeft, Send, Upload } from "lucide-react";
+import { CircleArrowLeft, Send } from "lucide-react";
 
 export function EncutadorPage() {
   const { setIsFocus } = useContextState();
@@ -34,12 +34,8 @@ export function EncutadorPage() {
           </div>
           <input
             type="file"
-            className="cursor-pointer p-1 bg-transparent rounded-md border border-input col-span-3"
+            className="cursor-pointer p-1 bg-transparent rounded-md border border-input col-span-4"
           />
-          <Button variant={"secondary"}>
-            <Upload size={18} className="mr-2" />
-            Upload
-          </Button>
           <div className="flex flex-col gap-1 col-span-2">
             <label htmlFor="urlFinal" className="font-semibold">
               Preencha a URL final
@@ -52,7 +48,7 @@ export function EncutadorPage() {
           </div>
           <div className="flex flex-col gap-1 col-span-2">
             <label htmlFor="urlFinal" className="font-semibold">
-              Parâmetro que será substituído
+              Parâmetro a substituir
             </label>
             <input
               id="urlSubstituida"

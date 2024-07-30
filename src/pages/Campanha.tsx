@@ -45,7 +45,7 @@ export function CampanhaPage() {
       </div>
       <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow className="pointer-events-none">
             <TableHead className="w-[120px]">Campanha</TableHead>
             <TableHead>Cliente</TableHead>
             <TableHead></TableHead>

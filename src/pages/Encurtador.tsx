@@ -3,7 +3,7 @@ import { SelectConversor } from "@/components/SelectConversor";
 import { SelectEncurtador } from "@/components/SelectShort";
 import { Button } from "@/components/ui/button";
 import { useContextState } from "@/hook/state";
-import { CircleArrowLeft, Send } from "lucide-react";
+import { CircleArrowLeft, Download, Send } from "lucide-react";
 
 export function EncutadorPage() {
   const { setIsFocus } = useContextState();
@@ -19,6 +19,12 @@ export function EncutadorPage() {
           <CircleArrowLeft size={18} />
           Voltar
         </Button>
+      </div>
+      <div className="flex justify-end">
+        <Button variant={'secondary'}
+        className="flex gap-2 items-center">
+          <Download size={18}/>
+          Baixa arquivo exemplo</Button>
       </div>
       <div className="pt-12 px-8 bg-transparent rounded-md border border-input w-max m-auto">
         <h1 className="text-3xl font-semibold w-max m-auto pb-8">Lorem ipsum dolor</h1>

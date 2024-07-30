@@ -44,7 +44,7 @@ export function ShortUrlsPage() {
       </div>
       <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow className="pointer-events-none">
             <TableHead>URL</TableHead>
             <TableHead></TableHead>
           </TableRow>

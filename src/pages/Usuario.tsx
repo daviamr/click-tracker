@@ -15,9 +15,6 @@ import { useAuth } from "@/hook/Auth";
 import { DataProps, userDataProps } from "@/interface/auth";
 
 export function UsuarioPage() {
-  let DataAtual = new Date();
-  let DataFormatada = DataAtual.toLocaleString();
-
   const { data } = useAuth() as DataProps;
 
   const [userData, setUserData] = useState<userDataProps[]>([]);
@@ -54,7 +51,7 @@ return (
       </div>
       <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow className="pointer-events-none">
             <TableHead>ID</TableHead>
             <TableHead>Nome</TableHead>
             <TableHead>E-mail</TableHead>

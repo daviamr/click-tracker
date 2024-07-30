@@ -69,7 +69,7 @@ export function ClientesPage() {
       </div>
       <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow className="pointer-events-none">
             <TableHead className="w-[120px]">Logo</TableHead>
             <TableHead>Cliente</TableHead>
             <TableHead></TableHead>

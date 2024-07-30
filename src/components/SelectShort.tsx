@@ -16,7 +16,7 @@ import {
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>Selecione o encurtador</SelectLabel>
+            <SelectLabel>Selecione a URL</SelectLabel>
             <SelectItem value="shortener">Shortener</SelectItem>
             <SelectItem value="lorem">lorem</SelectItem>
             <SelectItem value="lorem">lorem</SelectItem>

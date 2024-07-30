@@ -44,7 +44,8 @@ export function ConversorPage() {
       </div>
       <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow className="pointer-events-none">
+            <TableHead className="min-w-[100px]">Título</TableHead>
             <TableHead>Conversor</TableHead>
             <TableHead></TableHead>
           </TableRow>
@@ -52,6 +53,7 @@ export function ConversorPage() {
         <TableBody>
           {conversor.map((i) => (
             <TableRow key={i.id}>
+              <TableCell>Lorem</TableCell>
               <TableCell>{i.url}</TableCell>
               <TableCell className="flex items-center justify-end gap-2">
                 <EditarConversor/>

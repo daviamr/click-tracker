@@ -18,9 +18,12 @@ import { AxiosError } from "axios";
 import { CircleArrowLeft, UserRoundX } from "lucide-react";
 import { useEffect, useState } from "react";
 
+type dataCustomerProps = {data: DataProps}
+
 export function ClientesPage() {
   const {setIsFocus} = useContextState();
-  const {data} = useAuth() as DataProps
+  const { data } = useAuth() as dataCustomerProps
+  const { deleteCustomer } = useAuth();
   const [customerData, setCustomerData] = useState<customerData[]>([]);
 
   useEffect(() => {
@@ -46,11 +49,8 @@ export function ClientesPage() {
   handleGetUsers()
 },[])
 
-  // function removeUser(id: number) {
-  //   setCustomerData((state) => state.filter((i) => i.id !== id));
-  // }
+console.log(customerData)
 
-  console.log(customerData)
   return (
     <>
       <div className="flex items-center justify-between mb-8">
@@ -90,7 +90,9 @@ export function ClientesPage() {
                 <EditarUsuario/>
                 <Button
                   className="p-2 duration-300 hover:text-red-700"
-                  variant={"outline"}>
+                  variant={"outline"}
+                  onClick={() => deleteCustomer({id: i.id})}
+                  >
                   <UserRoundX size={18} />
                 </Button>
               </TableCell>

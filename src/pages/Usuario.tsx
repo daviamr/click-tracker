@@ -14,8 +14,10 @@ import { api } from "@/services/Api";
 import { useAuth } from "@/hook/Auth";
 import { DataProps, userDataProps } from "@/interface/auth";
 
+type dataUserProps = {data: DataProps}
+
 export function UsuarioPage() {
-  const { data } = useAuth() as DataProps;
+  const { data } = useAuth() as dataUserProps;
 
   const [userData, setUserData] = useState<userDataProps[]>([]);
 
@@ -41,8 +43,6 @@ export function UsuarioPage() {
   }
   handleGetUsers()
 },[])
-
-console.log(userData)
 
 return (
     <>

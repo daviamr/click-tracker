@@ -1,33 +1,32 @@
-import React, { useState } from 'react';
+import React, { forwardRef } from 'react';
 import { Textarea } from './ui/textarea';
 
 interface TextareaWithCounterProps {
   maxLength: number;
+  onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  value: string;
 }
 
-const TextareaWithCounter: React.FC<TextareaWithCounterProps> = ({ maxLength }) => {
-  const [text, setText] = useState<string>('');
-
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setText(event.target.value);
-  };
-
-  return (
-    <div>
-      <Textarea
-        value={text}
-        onChange={handleChange}
-        rows={5}
-        maxLength={maxLength}
-        placeholder="Digite seu texto aqui..."
-      />
+const TextareaWithCounter = forwardRef<HTMLTextAreaElement, TextareaWithCounterProps>(
+  ({ maxLength, onChange, value }, ref) => {
+    return (
       <div>
-        <span className='text-base'>
-        <strong>{text.length}</strong> caracteres
-        </span>
+        <Textarea
+          value={value}
+          onChange={onChange}
+          rows={5}
+          maxLength={maxLength}
+          placeholder="Digite seu texto aqui..."
+          ref={ref}
+        />
+        <div>
+          <span className='text-base'>
+            <strong>{value.length}</strong> caracteres
+          </span>
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);
 
 export default TextareaWithCounter;

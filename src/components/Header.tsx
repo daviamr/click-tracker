@@ -6,6 +6,15 @@ import { useContextState } from "@/hook/state";
 export function Header() {
   const { isFocus, setIsFocus } = useContextState();
 
+  function logOut () {
+    try {
+      localStorage.removeItem('@shorturl:user')
+      window.location.reload()
+    } catch {
+      console.log('token não encontrado');
+    }
+  }
+
   return (
     <div className="flex bg-gray-900">
       <header className="flex justify-between items-center w-full max-w-7xl mx-auto px-8 py-4">
@@ -90,7 +99,9 @@ export function Header() {
         <div className="text-right">
           <div className="flex items-center gap-1">
             <ModeToggle />
-            <Button variant={"secondary"}>
+            <Button
+            variant={"secondary"}
+            onClick={() => logOut()}>
               <LogOut size={18} />
             </Button>
           </div>

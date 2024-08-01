@@ -9,22 +9,48 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NovoConversor } from "@/components/Modal/NovoConversor";
 import { EditarConversor } from "@/components/Modal/EditarConversor";
+import { useAuth } from "@/hook/Auth";
+import { conversorData, DataProps } from "@/interface/auth";
+import { api } from "@/services/Api";
+import { AxiosError } from "axios";
+import { AlertMessage } from "@/components/alert_message";
+
+type dataConversorProps = {data: DataProps}
 
 export function ConversorPage() {
   const { setIsFocus } = useContextState();
-  const [conversor, setConversor] = useState([
-    {
-      id: 0,
-      url: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Labore fugiat iure possimus aliquam quae ea officia doloribus, ipsa sunt blanditiis fugit. Doloribus, sit. Optio voluptas suscipit fugiat ad corporis incidunt?'
-    },
-  ]); // Estado para a lista de campanhas
+  const [conversor, setConversor] = useState<conversorData[]>([]);
+  const { data } = useAuth() as dataConversorProps
 
-  const removeUrl = (id: number) => {
-    setConversor((state) => state.filter((i) => i.id !== id));
+  useEffect(() => {
+    async function handleGetUsers()
+    {
+    try {
+      const response = await api.get('/alphabets',
+        {headers: {
+        "Authorization": `Bearer ${data.jwtToken}`,
+      }})
+      setConversor(response.data)
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível deletar uma conta agora, tente novamente mais tarde!",
+          "error"
+        );
+      }
+    }
   }
+  handleGetUsers()
+},[])
+
+  // const removeUrl = (id: number) => {
+  //   setConversor((state) => state.filter((i) => i.id !== id));
+  // }
 
   return (
     <>
@@ -53,14 +79,14 @@ export function ConversorPage() {
         <TableBody>
           {conversor.map((i) => (
             <TableRow key={i.id}>
-              <TableCell>Lorem</TableCell>
-              <TableCell>{i.url}</TableCell>
+              <TableCell>{i.name}</TableCell>
+              <TableCell>{i.characters}</TableCell>
               <TableCell className="flex items-center justify-end gap-2">
                 <EditarConversor/>
                 <Button
                   className="p-2 duration-300 hover:text-red-700"
                   variant={"outline"}
-                  onClick={() => removeUrl(i.id)}
+                  // onClick={() => removeUrl(i.id)}
                 >
                   <CircleX size={18} />
                 </Button>

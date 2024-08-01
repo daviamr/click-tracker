@@ -9,24 +9,48 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NovaCampanha } from "@/components/Modal/NovaCampanha";
 import { EditarCampanha } from "@/components/Modal/EditarCampanha";
+import { AxiosError } from "axios";
+import { AlertMessage } from "@/components/alert_message";
+import { api } from "@/services/Api";
+import { useAuth } from "@/hook/Auth";
+import { campaignData, DataProps } from "@/interface/auth";
+
+type dataCampaignProps = {data: DataProps}
 
 export function CampanhaPage() {
   const { setIsFocus } = useContextState();
-  const [campanhas, setCampanhas] = useState([
+  const [campanhas, setCampanhas] = useState<campaignData[]>([]);
+  const { data } = useAuth() as dataCampaignProps
+
+  useEffect(() => {
+    async function handleGetUsers()
     {
-      id: 0,
-      campanha: "Campanha1",
-      cliente: "Nike",
-    },
-  ]); // Estado para a lista de campanhas
-
-  const removeCampaign = (id: number) => {
-    setCampanhas((state) => state.filter((i) => i.id !== id));
+    try {
+      const response = await api.get('/campaigns',
+        {headers: {
+        "Authorization": `Bearer ${data.jwtToken}`,
+      }})
+      setCampanhas(response.data)
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível deletar uma conta agora, tente novamente mais tarde!",
+          "error"
+        );
+      }
+    }
   }
+  handleGetUsers()
+},[])
 
+  // const removeCampaign = (id: number) => {
+  //   setCampanhas((state) => state.filter((i) => i.id !== id));
+  // }
   return (
     <>
       <div className="flex items-center justify-between mb-8">
@@ -52,16 +76,16 @@ export function CampanhaPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {campanhas.map((i) => (
-            <TableRow key={i.id}>
-              <TableCell>{i.campanha}</TableCell>
-              <TableCell>{i.cliente}</TableCell>
+          {campanhas.map((i, index) => (
+            <TableRow key={index}>
+              <TableCell>{i.name}</TableCell>
+              <TableCell>{i.Client.name}</TableCell>
               <TableCell className="flex items-center justify-end gap-2">
                 <EditarCampanha />
                 <Button
                   className="p-2 duration-300 hover:text-red-700"
                   variant={"outline"}
-                  onClick={() => removeCampaign(i.id)}
+                  // onClick={() => removeCampaign(i.id)}
                 >
                   <FileX2 size={18} />
                 </Button>

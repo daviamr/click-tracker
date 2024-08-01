@@ -72,6 +72,7 @@ export function NovoCliente() {
               </Label>
               <Input
                 id="customer"
+                type="text"
                 placeholder="Nome do cliente..."
                 {...register("name")}
                 className={`${

@@ -7,8 +7,40 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
+import { useAuth } from "@/hook/Auth";
+import { customerData, DataProps } from "@/interface/auth";
+import { AxiosError } from "axios";
+import { useEffect, useState } from "react";
+import { AlertMessage } from "./alert_message";
+import { api } from "@/services/Api";
   
   export function SelectCliente() {
+    const {data} = useAuth() as DataProps
+    const [customerData, setCustomerData] = useState<customerData[]>([]);
+  
+    useEffect(() => {
+      async function handleGetUsers()
+      {
+      try {
+        const response = await api.get('/clients',
+          {headers: {
+          "Authorization": `Bearer ${data.jwtToken}`,
+        }})
+        setCustomerData(response.data)
+      } catch (error: unknown) {
+        if (error instanceof AxiosError && error.response) {
+          AlertMessage(error.response.data.message, "error");
+        } else {
+          AlertMessage(
+            "Não foi possível deletar uma conta agora, tente novamente mais tarde!",
+            "error"
+          );
+        }
+      }
+    }
+    handleGetUsers()
+  },[])
+  
     return (
       <Select>
         <SelectTrigger className="w-[200px]">
@@ -17,11 +49,11 @@ import {
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Clientes</SelectLabel>
-            <SelectItem value="cliente1">Cliente1</SelectItem>
-            <SelectItem value="cliente2">Cliente2</SelectItem>
-            <SelectItem value="cliente3">Cliente3</SelectItem>
-            <SelectItem value="cliente4">Cliente4</SelectItem>
-            <SelectItem value="cliente5">Cliente5</SelectItem>
+            {customerData.map((i,index) => (
+            <SelectItem value={i.name} key={index}>
+              {i.name}
+            </SelectItem>
+            ))}
           </SelectGroup>
         </SelectContent>
       </Select>

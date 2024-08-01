@@ -9,22 +9,48 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NovaUrl } from "@/components/Modal/NovaUrl";
 import { EditarUrl } from "@/components/Modal/EditarUrl";
+import { useAuth } from "@/hook/Auth";
+import { AlertMessage } from "@/components/alert_message";
+import { AxiosError } from "axios";
+import { api } from "@/services/Api";
+import { DataProps, urlData } from "@/interface/auth";
+
+type dataUrlProps = {data: DataProps}
 
 export function ShortUrlsPage() {
   const { setIsFocus } = useContextState();
-  const [urls, setUrls] = useState([
-    {
-      id: 0,
-      url: 'https://exemple.com/'
-    },
-  ]); // Estado para a lista de campanhas
+  const [url, setUrl] = useState<urlData[]>([]);
+  const {data} = useAuth() as dataUrlProps
 
-  const removeUrl = (id: number) => {
-    setUrls((state) => state.filter((i) => i.id !== id));
+  useEffect(() => {
+    async function handleGetUsers()
+    {
+    try {
+      const response = await api.get('/base-url',
+        {headers: {
+        "Authorization": `Bearer ${data.jwtToken}`,
+      }})
+      setUrl(response.data)
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível deletar uma conta agora, tente novamente mais tarde!",
+          "error"
+        );
+      }
+    }
   }
+  handleGetUsers()
+},[])
+
+  // const removeUrl = (id: number) => {
+  //   setUrls((state) => state.filter((i) => i.id !== id));
+  // }
 
   return (
     <>
@@ -50,7 +76,7 @@ export function ShortUrlsPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {urls.map((i) => (
+          {url.map((i) => (
             <TableRow key={i.id}>
               <TableCell>{i.url}</TableCell>
               <TableCell className="flex items-center justify-end gap-2">
@@ -58,7 +84,7 @@ export function ShortUrlsPage() {
                 <Button
                   className="p-2 duration-300 hover:text-red-700"
                   variant={"outline"}
-                  onClick={() => removeUrl(i.id)}
+                  // onClick={() => removeUrl(i.id)}
                 >
                   <CircleX size={18} />
                 </Button>

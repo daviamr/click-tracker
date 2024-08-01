@@ -10,7 +10,7 @@ export type CreateNewUser = {
   };
 
   export type DataProps = {
-    data: {jwtToken: string}
+    jwtToken: string
   }
 
   export type userDataProps = {
@@ -26,7 +26,43 @@ export type CreateNewUser = {
   }
 
   export type customerData = {
+    id: string;
     image: File;
     name: string;
     logo?: string;
+  }
+
+  export type deleteCustomer = {
+    id: string
+  }
+
+  export type createNewCampaign = {
+    name: string;
+    clientId: string;
+  }
+
+  export type campaignData = {
+    name: string;
+    clientId: string;
+    Client: {name: string};
+  }
+
+  export type createNewURL = {
+    url: string;
+  }
+
+  export type urlData = {
+    id: number;
+    url: string;
+  }
+
+  export type createNewConversor = {
+    name: string;
+    characters: string;
+  }
+  
+  export type conversorData = {
+    id: number;
+    name: string;
+    characters: string;
   }

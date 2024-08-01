@@ -27,7 +27,6 @@ export function EditarConversor() {
   const {
     formState: { errors },
     register,
-    handleSubmit,
     watch,
     setValue,
   } = useForm<conversorData>({

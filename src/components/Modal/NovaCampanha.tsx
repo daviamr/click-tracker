@@ -20,7 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FileCheck2, FilePlus2 } from "lucide-react";
-import { custom, z } from "zod";
+import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/hook/Auth";

@@ -13,9 +13,11 @@ import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { AlertMessage } from "./alert_message";
 import { api } from "@/services/Api";
+
+type dataSelectClienteProps = {data: DataProps}
   
   export function SelectCliente() {
-    const {data} = useAuth() as DataProps
+    const {data} = useAuth() as dataSelectClienteProps
     const [customerData, setCustomerData] = useState<customerData[]>([]);
   
     useEffect(() => {

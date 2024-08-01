@@ -12,8 +12,33 @@ import { Label } from "@/components/ui/label";
 import { Pencil } from "lucide-react";
 import TextareaWithCounter from "../ContadorCaracteres";
 import { Input } from "../ui/input";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+const verifyCreateConversor = z.object({
+  name: z.string().min(4, '*Mínimo de 4 caracteres.'),
+  characters: z.string().min(8, '*Mínimo de 8 caracteres.'),
+});
+
+type conversorData = z.infer<typeof verifyCreateConversor>;
 
 export function EditarConversor() {
+  const {
+    formState: { errors },
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+  } = useForm<conversorData>({
+    resolver: zodResolver(verifyCreateConversor),
+    defaultValues: {
+      name: "",
+      characters: ""
+    },
+  });
+
+  const charactersValue = watch("characters");
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -34,13 +59,34 @@ export function EditarConversor() {
             <Label htmlFor="url" className="text-right">
               Conversor
             </Label>
-            <TextareaWithCounter maxLength={999} />
+            <TextareaWithCounter
+                maxLength={999}
+                value={charactersValue}
+                onChange={(e) => {
+                  setValue('characters', e.target.value);
+                }}
+              />
+              {errors.characters && (
+                <span className="text-xs text-rose-400 font-normal">
+                  {errors.characters.message}
+                </span>
+              )}
             <div>
             </div>
           </div>
               <div className="col-span-4">
                 <Label>Novo Título</Label>
-                <Input type="text" placeholder="..."/>
+                <Input
+                type="text"
+                placeholder="..."
+                {...register("name")}
+                className={`${errors.name && "border-rose-400"}`}
+              />
+              {errors.name && (
+                <span className="text-xs text-rose-400 font-normal">
+                  {errors.name.message}
+                </span>
+              )}
               </div>
         </div>
         <DialogFooter>

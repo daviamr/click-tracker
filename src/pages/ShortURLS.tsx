@@ -39,14 +39,14 @@ export function ShortUrlsPage() {
         AlertMessage(error.response.data.message, "error");
       } else {
         AlertMessage(
-          "Não foi possível deletar uma conta agora, tente novamente mais tarde!",
+          "Não foi possível carregar as URLs, tente novamente mais tarde.",
           "error"
         );
       }
     }
   }
   handleGetUsers()
-},[])
+},[url])
 
   // const removeUrl = (id: number) => {
   //   setUrls((state) => state.filter((i) => i.id !== id));

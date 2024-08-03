@@ -39,18 +39,15 @@ export function CampanhaPage() {
         AlertMessage(error.response.data.message, "error");
       } else {
         AlertMessage(
-          "Não foi possível deletar uma conta agora, tente novamente mais tarde!",
+          "Não foi possível carregar as campanhas, tente novamente mais tarde.",
           "error"
         );
       }
     }
   }
   handleGetUsers()
-},[])
+},[campanhas])
 
-  // const removeCampaign = (id: number) => {
-  //   setCampanhas((state) => state.filter((i) => i.id !== id));
-  // }
   return (
     <>
       <div className="flex items-center justify-between mb-8">
@@ -81,7 +78,7 @@ export function CampanhaPage() {
               <TableCell>{i.name}</TableCell>
               <TableCell>{i.Client.name}</TableCell>
               <TableCell className="flex items-center justify-end gap-2">
-                <EditarCampanha />
+                <EditarCampanha id={i.id} nameClient={i.Client.name} />
                 <Button
                   className="p-2 duration-300 hover:text-red-700"
                   variant={"outline"}

@@ -35,14 +35,14 @@ export function UsuarioPage() {
         AlertMessage(error.response.data.message, "error");
       } else {
         AlertMessage(
-          "Não foi possível deletar uma conta agora, tente novamente mais tarde!",
+          "Não foi possível carregar os usuários, tente novamente mais tarde.",
           "error"
         );
       }
     }
   }
   handleGetUsers()
-},[])
+},[userData])
 
 return (
     <>

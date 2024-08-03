@@ -25,6 +25,12 @@ export type CreateNewUser = {
     name: string;
   }
 
+  export type editCustomer = {
+    id: string;
+    image: File;
+    name: string;
+  }
+
   export type customerData = {
     id: string;
     image: File;
@@ -41,7 +47,14 @@ export type CreateNewUser = {
     clientId: string;
   }
 
+  export type editCampaign = {
+    id: number;
+    name: string;
+    clientId: string;
+  }
+
   export type campaignData = {
+    id: number,
     name: string;
     clientId: string;
     Client: {name: string};

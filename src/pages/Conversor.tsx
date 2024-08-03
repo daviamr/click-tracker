@@ -39,14 +39,14 @@ export function ConversorPage() {
         AlertMessage(error.response.data.message, "error");
       } else {
         AlertMessage(
-          "Não foi possível deletar uma conta agora, tente novamente mais tarde!",
+          "Não foi possível carregar os conversores, tente novamente mais tarde.",
           "error"
         );
       }
     }
   }
   handleGetUsers()
-},[])
+},[conversor])
 
   // const removeUrl = (id: number) => {
   //   setConversor((state) => state.filter((i) => i.id !== id));

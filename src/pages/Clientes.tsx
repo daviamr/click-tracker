@@ -1,5 +1,5 @@
 import { AlertMessage } from "@/components/alert_message";
-import { EditarUsuario } from "@/components/Modal/EditarUsuario";
+import { EditarCliente } from "@/components/Modal/EditarCliente";
 import { NovoCliente } from "@/components/Modal/NovoCliente";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,16 +40,14 @@ export function ClientesPage() {
         AlertMessage(error.response.data.message, "error");
       } else {
         AlertMessage(
-          "Não foi possível deletar uma conta agora, tente novamente mais tarde!",
+          "Não foi possível carregar os clientes, tente novamente mais tarde.",
           "error"
         );
       }
     }
   }
   handleGetUsers()
-},[])
-
-console.log(customerData)
+},[customerData])
 
   return (
     <>
@@ -87,7 +85,7 @@ console.log(customerData)
               </TableCell>
               <TableCell
               className="flex items-center justify-end gap-2">
-                <EditarUsuario/>
+                <EditarCliente id={i.id} name={i.name}/>
                 <Button
                   className="p-2 duration-300 hover:text-red-700"
                   variant={"outline"}

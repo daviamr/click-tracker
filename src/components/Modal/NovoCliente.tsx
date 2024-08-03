@@ -21,7 +21,7 @@ const verifyCreateCustomer = z.object({
   image: z
     .any()
     .refine((files) => files instanceof FileList && files.length > 0, { message: "*Campo obrigatório" }),
-  name: z.string().min(4, "A senha deve ter no mínimo 4 caracteres"),
+  name: z.string().min(4, "O nome deve ter no mínimo 4 caracteres"),
 });
 
 type customerData = z.infer<typeof verifyCreateCustomer>;
@@ -43,8 +43,8 @@ export function NovoCliente() {
   });
 
   function createCustomer(data: customerData) {
-    console.log(data);
     const { image, name } = data;
+    console.log(data);
     handleCreateCustomers({ image: image[0], name });
   }
 

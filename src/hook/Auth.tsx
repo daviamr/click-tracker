@@ -18,6 +18,8 @@ import {
   CreateNewUser,
   DataProps,
   deleteCustomer,
+  editCampaign,
+  editCustomer,
   Login,
 } from "@/interface/auth";
 import { AlertMessage } from "@/components/alert_message";
@@ -26,8 +28,10 @@ interface AuthContextType {
   handleCreateUsers: (data: CreateNewUser) => Promise<void>;
   signIn: (data: Login) => Promise<void>;
   handleCreateCustomers: (data: createNewCustomer) => Promise<void>;
+  handleEditCustomer: (data: editCustomer) => Promise<void>;
   deleteCustomer: (data: deleteCustomer) => Promise<void>;
   handleCreateCampaign: (data: createNewCampaign) => Promise<void>;
+  handleEditCampaign: (data: editCampaign) => Promise<void>;
   handleCreateURL: (data: createNewURL) => Promise<void>;
   handleCreateConversor: (data: createNewConversor) => Promise<void>;
   data: DataProps | null;
@@ -84,6 +88,7 @@ function AuthProvider({ children }: ChildrenProps) {
     handleUserSession();
   }, []);
 
+  //USER
   async function handleCreateUsers({ email, password, name }: CreateNewUser) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
@@ -161,6 +166,41 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
+  async function handleEditCustomer({ id, image, name }: editCustomer) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      // Cria um objeto FormData e adiciona a imagem e o nome
+      const formData = new FormData();
+      formData.append("image", image);
+      formData.append("name", name);
+
+      const response = await api.put(`/clients/${id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token.jwtToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(response.data);
+
+      AlertMessage("Cliente editado com sucesso.", "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível editar o cliente, tente novamente.",
+          "error"
+        );
+      }
+    }
+  }
+
   async function deleteCustomer({ id }: deleteCustomer) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
@@ -231,6 +271,45 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
+  async function handleEditCampaign({id, name, clientId }: editCampaign) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      console.log(id, name, clientId)
+
+      const response = await api.put(
+        `/campaigns/${id}`,
+        {
+          name,
+          clientId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token.jwtToken}`,
+          },
+        }
+      );
+      console.log(response.data);
+
+      AlertMessage("Campanha editada com sucesso.", "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível editar a campanha agora, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  }
+
+  //URL
   async function handleCreateURL({ url }: createNewURL) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
@@ -268,6 +347,8 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
+
+  //CONVERSOR
   async function handleCreateConversor({
     name,
     characters,
@@ -316,8 +397,10 @@ function AuthProvider({ children }: ChildrenProps) {
           handleCreateUsers,
           signIn,
           handleCreateCustomers,
+          handleEditCustomer,
           deleteCustomer,
           handleCreateCampaign,
+          handleEditCampaign,
           handleCreateURL,
           handleCreateConversor,
           data,

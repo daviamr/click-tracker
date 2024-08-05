@@ -373,6 +373,7 @@ function AuthProvider({ children }: ChildrenProps) {
           },
         }
       );
+      console.log(response.data);
 
       AlertMessage("URL editada com sucesso.", "success");
     } catch (error: unknown) {

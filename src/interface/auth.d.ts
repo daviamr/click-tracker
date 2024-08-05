@@ -90,3 +90,12 @@ export type CreateNewUser = {
     name: string;
     characters: string;
   }
+
+  export type dataAction = {
+    customer: string;
+    campaign: string;
+  }
+
+  export type selectShortUrl = {
+    url: string;
+  }

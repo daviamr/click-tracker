@@ -55,6 +55,17 @@ export function Header() {
             <li className="hover:opacity-40 duration-300">
               <button
                 className={`${
+                  isFocus === "action" ? "font-bold" : "text-white"
+                }`}
+                onClick={() => setIsFocus("action")}
+              >
+                Ação
+              </button>
+            </li>
+
+            <li className="hover:opacity-40 duration-300">
+              <button
+                className={`${
                   isFocus === "shorturl" ? "font-bold" : "text-white"
                 }`}
                 onClick={() => setIsFocus("shorturl")}

@@ -1,4 +1,5 @@
 import { useContextState } from "./hook/state";
+import { AcaoPage } from "./pages/Acao";
 import { CampanhaPage } from "./pages/Campanha";
 import { ClientesPage } from "./pages/Clientes";
 import { ConversorPage } from "./pages/Conversor";
@@ -15,6 +16,7 @@ export function App() {
         {isFocus === "user" && <UsuarioPage />}
         {isFocus === "customers" && <ClientesPage />}
         {isFocus === "campaign" && <CampanhaPage />}
+        {isFocus === "action" && <AcaoPage />}
         {isFocus === "shorturl" && <ShortUrlsPage />}
         {isFocus === "conversor" && <ConversorPage />}
         {isFocus === "shorter" && <EncutadorPage />}

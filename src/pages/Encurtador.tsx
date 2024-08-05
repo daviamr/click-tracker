@@ -1,4 +1,6 @@
+import { SelectAcao } from "@/components/SelectAcao";
 import { SelectCampanha } from "@/components/SelectCampaign";
+import { SelectCliente } from "@/components/SelectClient";
 import { SelectConversor } from "@/components/SelectConversor";
 import { SelectEncurtador } from "@/components/SelectShort";
 import { Button } from "@/components/ui/button";
@@ -29,8 +31,14 @@ export function EncutadorPage() {
       <div className="pt-12 px-8 bg-transparent rounded-md border border-input w-max m-auto">
         <h1 className="text-3xl font-semibold w-max m-auto pb-8">Lorem ipsum dolor</h1>
         <div className="grid grid-cols-4 gap-4 max-w-[500px]">
+        <div className="col-span-2">
+            <SelectCliente />
+          </div>
           <div className="col-span-2">
             <SelectCampanha />
+          </div>
+          <div className="col-span-2">
+            <SelectAcao />
           </div>
           <div className="col-span-2">
             <SelectEncurtador />

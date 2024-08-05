@@ -76,6 +76,7 @@ export function NovoConversor() {
               <TextareaWithCounter
                 maxLength={999}
                 value={charactersValue}
+                placeholder="..."
                 onChange={(e) => {
                   setValue('characters', e.target.value);
                 }}

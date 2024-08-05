@@ -15,29 +15,50 @@ import { Input } from "../ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { editConversor } from "@/interface/auth";
+import { useAuth } from "@/hook/Auth";
+import { useEffect } from "react";
 
-const verifyCreateConversor = z.object({
-  name: z.string().min(4, '*Mínimo de 4 caracteres.'),
-  characters: z.string().min(8, '*Mínimo de 8 caracteres.'),
+const verifyEditConversor = z.object({
+  id: z.number(),
+  name: z.string().min(4, "*Mínimo de 4 caracteres."),
+  characters: z.string().min(8, "*Mínimo de 8 caracteres."),
 });
 
-type conversorData = z.infer<typeof verifyCreateConversor>;
+type conversorData = z.infer<typeof verifyEditConversor>;
+type HandleCreateUsersProps = {
+  handleEditConversor: ({ id, name, characters }: editConversor) => void;
+};
 
-export function EditarConversor() {
+export function EditarConversor({id, name, characters,} : {id: number; name: string; characters: string;}) {
+  const { handleEditConversor } = useAuth() as HandleCreateUsersProps;
   const {
     formState: { errors },
+    handleSubmit,
     register,
     watch,
     setValue,
+    reset,
   } = useForm<conversorData>({
-    resolver: zodResolver(verifyCreateConversor),
+    resolver: zodResolver(verifyEditConversor),
     defaultValues: {
+      id,
       name: "",
-      characters: ""
+      characters: "",
     },
   });
-
   const charactersValue = watch("characters");
+
+  function editConversor(data: conversorData) {
+    console.log(data);
+    const { id, name, characters } = data;
+    handleEditConversor({ id, name, characters });
+  }
+
+  useEffect(() => {
+    reset({ id, name: "", characters: ""});
+  }, [id, reset]);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -53,16 +74,21 @@ export function EditarConversor() {
             veritatis ipsa nisi hic at!
           </DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-4 gap-4 py-4">
-          <div className="col-span-4">
-            <Label htmlFor="url" className="text-right">
-              Conversor
-            </Label>
-            <TextareaWithCounter
+        <form action="" onSubmit={handleSubmit(editConversor)}>
+        <input type="hidden"
+          value={id}
+          {...register("id")}/>
+          <div className="grid grid-cols-4 gap-4 py-4">
+            <div className="col-span-4">
+              <Label htmlFor="url" className="text-right">
+                Conversor
+              </Label>
+              <TextareaWithCounter
                 maxLength={999}
                 value={charactersValue}
+                placeholder={characters}
                 onChange={(e) => {
-                  setValue('characters', e.target.value);
+                  setValue("characters", e.target.value);
                 }}
               />
               {errors.characters && (
@@ -70,14 +96,13 @@ export function EditarConversor() {
                   {errors.characters.message}
                 </span>
               )}
-            <div>
+              <div></div>
             </div>
-          </div>
-              <div className="col-span-4">
-                <Label>Novo Título</Label>
-                <Input
+            <div className="col-span-4">
+              <Label>Novo Título</Label>
+              <Input
                 type="text"
-                placeholder="..."
+                placeholder={name}
                 {...register("name")}
                 className={`${errors.name && "border-rose-400"}`}
               />
@@ -86,14 +111,19 @@ export function EditarConversor() {
                   {errors.name.message}
                 </span>
               )}
-              </div>
-        </div>
-        <DialogFooter>
-          <Button className="flex items-center gap-2" type="submit" variant={"secondary"}>
-          <Pencil size={18} />
-            Editar
-          </Button>
-        </DialogFooter>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              className="flex items-center gap-2"
+              type="submit"
+              variant={"secondary"}
+            >
+              <Pencil size={18} />
+              Editar
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

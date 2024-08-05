@@ -19,7 +19,9 @@ import {
   DataProps,
   deleteCustomer,
   editCampaign,
+  editConversor,
   editCustomer,
+  editURL,
   Login,
 } from "@/interface/auth";
 import { AlertMessage } from "@/components/alert_message";
@@ -33,7 +35,9 @@ interface AuthContextType {
   handleCreateCampaign: (data: createNewCampaign) => Promise<void>;
   handleEditCampaign: (data: editCampaign) => Promise<void>;
   handleCreateURL: (data: createNewURL) => Promise<void>;
+  handleEditURL: (data: editURL) => Promise<void>;
   handleCreateConversor: (data: createNewConversor) => Promise<void>;
+  handleEditConversor: (data: editConversor) => Promise<void>;
   data: DataProps | null;
 }
 
@@ -347,6 +351,42 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
+  async function handleEditURL({ id, url }: editURL) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      // console.log(token)
+
+      const response = await api.put(
+        `/base-url/${id}`,
+        {
+          url,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token.jwtToken}`,
+          },
+        }
+      );
+
+      AlertMessage("URL editada com sucesso.", "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível editar a URL agora, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  }
+
 
   //CONVERSOR
   async function handleCreateConversor({
@@ -390,6 +430,48 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
+  async function handleEditConversor({
+    id,
+    name,
+    characters,
+  }: editConversor) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      // console.log(token)
+
+      const response = await api.put(
+        `/alphabets/${id}`,
+        {
+          name,
+          characters,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token.jwtToken}`,
+          },
+        }
+      );
+      console.log(response.data);
+
+      AlertMessage("Conversor editado com sucesso.", "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível editar o Conversor agora, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  }
+
   return (
     <>
       <AuthContext.Provider
@@ -402,7 +484,9 @@ function AuthProvider({ children }: ChildrenProps) {
           handleCreateCampaign,
           handleEditCampaign,
           handleCreateURL,
+          handleEditURL,
           handleCreateConversor,
+          handleEditConversor,
           data,
         }}
       >

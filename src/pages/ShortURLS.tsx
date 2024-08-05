@@ -80,7 +80,7 @@ export function ShortUrlsPage() {
             <TableRow key={i.id}>
               <TableCell>{i.url}</TableCell>
               <TableCell className="flex items-center justify-end gap-2">
-                <EditarUrl />
+                <EditarUrl id={i.id} url={i.url}/>
                 <Button
                   className="p-2 duration-300 hover:text-red-700"
                   variant={"outline"}

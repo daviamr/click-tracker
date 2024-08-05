@@ -64,6 +64,11 @@ export type CreateNewUser = {
     url: string;
   }
 
+  export type editURL = {
+    id: number;
+    url: string;
+  }
+
   export type urlData = {
     id: number;
     url: string;
@@ -75,6 +80,12 @@ export type CreateNewUser = {
   }
   
   export type conversorData = {
+    id: number;
+    name: string;
+    characters: string;
+  }
+
+  export type editConversor = {
     id: number;
     name: string;
     characters: string;

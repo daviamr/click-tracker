@@ -82,7 +82,7 @@ export function ConversorPage() {
               <TableCell>{i.name}</TableCell>
               <TableCell>{i.characters}</TableCell>
               <TableCell className="flex items-center justify-end gap-2">
-                <EditarConversor/>
+                <EditarConversor id={i.id} name={i.name} characters={i.characters}/>
                 <Button
                   className="p-2 duration-300 hover:text-red-700"
                   variant={"outline"}

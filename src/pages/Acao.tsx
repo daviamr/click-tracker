@@ -1,5 +1,5 @@
 import { AlertMessage } from "@/components/alert_message";
-import { NovoConversor } from "@/components/Modal/NovoConversor";
+import { NovaAcao } from "@/components/Modal/NovaAcao";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -62,7 +62,7 @@ console.log(dataAction)
         </Button>
       </div>
       <div className="flex gap-4 justify-end">
-        <NovoConversor />
+        <NovaAcao />
       </div>
       <Table>
         <TableHeader>
@@ -77,7 +77,7 @@ console.log(dataAction)
             <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell className="flex items-center justify-end gap-2">
-              <div>a</div>
+              <div></div>
               <Button
                 className="p-2 duration-300 hover:text-red-700"
                 variant={"outline"}

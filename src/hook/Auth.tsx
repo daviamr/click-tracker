@@ -17,12 +17,16 @@ import {
   createNewURL,
   CreateNewUser,
   DataProps,
+  deleteCampaign,
   deleteCustomer,
+  deleteURL,
   editCampaign,
   editConversor,
+  deleteConversor,
   editCustomer,
   editURL,
   Login,
+  createNewAction,
 } from "@/interface/auth";
 import { AlertMessage } from "@/components/alert_message";
 
@@ -34,10 +38,14 @@ interface AuthContextType {
   deleteCustomer: (data: deleteCustomer) => Promise<void>;
   handleCreateCampaign: (data: createNewCampaign) => Promise<void>;
   handleEditCampaign: (data: editCampaign) => Promise<void>;
+  deleteCampaign: (data: deleteCampaign) => Promise<void>;
+  handleCreateAction: (data: createNewAction) => Promise<void>;
   handleCreateURL: (data: createNewURL) => Promise<void>;
   handleEditURL: (data: editURL) => Promise<void>;
+  deleteURL: (data: deleteURL) => Promise<void>;
   handleCreateConversor: (data: createNewConversor) => Promise<void>;
   handleEditConversor: (data: editConversor) => Promise<void>;
+  deleteConversor: (data: deleteConversor) => Promise<void>;
   data: DataProps | null;
 }
 
@@ -313,6 +321,76 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
+  async function deleteCampaign({ id }: deleteCampaign) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      const response = await api.delete(`/campaigns/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token.jwtToken}`,
+        },
+      });
+
+      console.log(response.data);
+
+      AlertMessage("Campanha deletada com sucesso.", "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+        console.log(error.response.data.message)
+      } else {
+        AlertMessage(
+          "Não foi possível deletar a campanha, tente novamente.",
+          "error"
+        );
+      }
+    }
+  }
+
+  //ACTIONS
+  async function handleCreateAction({ name, campaignId }: createNewAction) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      // console.log(token)
+
+      const response = await api.post(
+        "/actions",
+        {
+          name,
+          campaignId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token.jwtToken}`,
+          },
+        }
+      );
+      console.log(response.data);
+
+      AlertMessage("Ação criada com sucesso.", "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível criar uma ação agora, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  }
+
   //URL
   async function handleCreateURL({ url }: createNewURL) {
     try {
@@ -382,6 +460,37 @@ function AuthProvider({ children }: ChildrenProps) {
       } else {
         AlertMessage(
           "Não foi possível editar a URL agora, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  }
+
+  async function deleteURL({ id }: deleteURL) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      const response = await api.delete(`/base-url/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token.jwtToken}`,
+        },
+      });
+
+      console.log(response.data);
+
+      AlertMessage("URL deletada com sucesso.", "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+        console.log(error.response.data.message)
+      } else {
+        AlertMessage(
+          "Não foi possível deletar a URL, tente novamente.",
           "error"
         );
       }
@@ -472,6 +581,36 @@ function AuthProvider({ children }: ChildrenProps) {
       }
     }
   }
+  async function deleteConversor({ id }: deleteConversor) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      const response = await api.delete(`/alphabets/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token.jwtToken}`,
+        },
+      });
+
+      console.log(response.data);
+
+      AlertMessage("Conversor deletado com sucesso.", "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+        console.log(error.response.data.message)
+      } else {
+        AlertMessage(
+          "Não foi possível deletar o conversor, tente novamente.",
+          "error"
+        );
+      }
+    }
+  }
 
   return (
     <>
@@ -484,10 +623,14 @@ function AuthProvider({ children }: ChildrenProps) {
           deleteCustomer,
           handleCreateCampaign,
           handleEditCampaign,
+          deleteCampaign,
+          handleCreateAction,
           handleCreateURL,
           handleEditURL,
+          deleteURL,
           handleCreateConversor,
           handleEditConversor,
+          deleteConversor,
           data,
         }}
       >

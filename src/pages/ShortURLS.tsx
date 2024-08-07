@@ -24,6 +24,7 @@ export function ShortUrlsPage() {
   const { setIsFocus } = useContextState();
   const [url, setUrl] = useState<urlData[]>([]);
   const {data} = useAuth() as dataUrlProps
+  const {deleteURL} = useAuth();
 
   useEffect(() => {
     async function handleGetUsers()
@@ -84,7 +85,7 @@ export function ShortUrlsPage() {
                 <Button
                   className="p-2 duration-300 hover:text-red-700"
                   variant={"outline"}
-                  // onClick={() => removeUrl(i.id)}
+                  onClick={() => deleteURL({id: i.id})}
                 >
                   <CircleX size={18} />
                 </Button>

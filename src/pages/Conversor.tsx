@@ -24,6 +24,7 @@ export function ConversorPage() {
   const { setIsFocus } = useContextState();
   const [conversor, setConversor] = useState<conversorData[]>([]);
   const { data } = useAuth() as dataConversorProps
+  const {deleteConversor} = useAuth()
 
   useEffect(() => {
     async function handleGetUsers()
@@ -86,7 +87,7 @@ export function ConversorPage() {
                 <Button
                   className="p-2 duration-300 hover:text-red-700"
                   variant={"outline"}
-                  // onClick={() => removeUrl(i.id)}
+                  onClick={() => deleteConversor({id: i.id})}
                 >
                   <CircleX size={18} />
                 </Button>

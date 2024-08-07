@@ -30,15 +30,6 @@ import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import { AlertMessage } from "../alert_message";
 
-// async function loadSelectOptions() {
-//   const {data} = useAuth() as DataProps
-//   const response = await api.get('/clients',
-//     {headers: {
-//     "Authorization": `Bearer ${data.jwtToken}`,
-//   }})
-//   return response.data
-// }
-
 const verifyCreateCampaign = z.object({
   name: z.string().min(4, "*Mínimo de 4 caracteres"),
   clientId: z.string().min(1, ''),

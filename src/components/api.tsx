@@ -1,7 +1,7 @@
 // api.js
 export const fetchDados = async (url: string) => {
   const token =
-    "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjM3OTk5ZTBhLWVmNDEtNDE4MC1iYTQwLTU5YzNhYzhjOTkzZCIsImV4cCI6MTcyMjUzMDM3Nn0.MaKq537fPpc4H30X4-MyUfYUYJIzHdfG3DaQc7FfpBs";
+    "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6ImM5OWRlODA1LTEzYTUtNDdlZC1hNDQwLTM5MmJmMDA3ZjY5ZiIsImV4cCI6MTcyMzU1ODM1N30.VqdEaZtV7SjI2UUCJ9IY4EYxXp0b5UBlcMAB0M3ZwG8";
 
   try {
     const response = await fetch(url, {
@@ -26,7 +26,7 @@ export const fetchDados = async (url: string) => {
 /*post*/
 export const postDados = async (url: string, data: any) => {
     const token =
-      "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjM3OTk5ZTBhLWVmNDEtNDE4MC1iYTQwLTU5YzNhYzhjOTkzZCIsImV4cCI6MTcyMjUzMDM3Nn0.MaKq537fPpc4H30X4-MyUfYUYJIzHdfG3DaQc7FfpBs";
+      "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6ImM5OWRlODA1LTEzYTUtNDdlZC1hNDQwLTM5MmJmMDA3ZjY5ZiIsImV4cCI6MTcyMzU1ODM1N30.VqdEaZtV7SjI2UUCJ9IY4EYxXp0b5UBlcMAB0M3ZwG8";
   
     try {
       console.log("Posting data to:", url);

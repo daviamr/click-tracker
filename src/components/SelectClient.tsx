@@ -15,8 +15,11 @@ import { AlertMessage } from "./alert_message";
 import { api } from "@/services/Api";
 
 type dataSelectClienteProps = {data: DataProps}
+type SelectClienteProps = {
+  onChange: (value: string) => void;
+};
   
-  export function SelectCliente() {
+  export function SelectCliente({onChange}: SelectClienteProps) {
     const {data} = useAuth() as dataSelectClienteProps
     const [customerData, setCustomerData] = useState<customerData[]>([]);
   
@@ -44,8 +47,8 @@ type dataSelectClienteProps = {data: DataProps}
   },[])
   
     return (
-      <Select>
-        <SelectTrigger className="w-[200px]">
+      <Select onValueChange={onChange}>
+        <SelectTrigger>
           <SelectValue placeholder="Selecione o cliente" />
         </SelectTrigger>
         <SelectContent>

@@ -42,7 +42,7 @@ type HandleCreateUsersProps = {
   data: DataProps;
 };
 
-export function EditarCampanha({id, nameClient} : {id: number, nameClient: string}) {
+export function EditarCampanha({name, id, nameClient} : {name: string; id: number, nameClient: string;}) {
   // GET NA API RETORNANDO OS CLIENTES
   const { data, handleEditCampaign } = useAuth() as HandleCreateUsersProps;
   const [customerData, setCustomerData] = useState<customerData[]>([]);
@@ -127,7 +127,7 @@ export function EditarCampanha({id, nameClient} : {id: number, nameClient: strin
               </Label>
               <Input
                 id="nome"
-                placeholder="Nome da campanha..."
+                placeholder={name}
                 {...register("name")}
                 className={`${errors.name && "border-rose-400 bg-rose-100"}`}
               />

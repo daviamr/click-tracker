@@ -17,7 +17,6 @@ import { api } from "@/services/Api";
 import { AxiosError } from "axios";
 import { CircleArrowLeft, UserRoundX } from "lucide-react";
 import { useEffect, useState } from "react";
-import { custom } from "zod";
 
 type dataCustomerProps = {data: DataProps}
 

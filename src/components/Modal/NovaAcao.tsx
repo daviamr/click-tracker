@@ -112,10 +112,10 @@ const {
 });
 
 function createAction(data: actionData) {
-  // const { name, campaignId } = data;
+  const { name, campaignId } = data;
   console.log(data);
   
-  // handleCreateAction({ name, campaignId});
+  handleCreateAction({ name, campaignId});
 }
 
   return (

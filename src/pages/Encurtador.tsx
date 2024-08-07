@@ -1,6 +1,6 @@
 import { SelectAcao } from "@/components/SelectAcao";
 import { SelectCampanha } from "@/components/SelectCampaign";
-import { SelectCliente } from "@/components/SelectClient";
+// import { SelectCliente } from "@/components/SelectClient";
 import { SelectConversor } from "@/components/SelectConversor";
 import { SelectEncurtador } from "@/components/SelectShort";
 import { Button } from "@/components/ui/button";

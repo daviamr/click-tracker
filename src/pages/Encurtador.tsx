@@ -6,15 +6,10 @@ import { SelectEncurtador } from "@/components/SelectShort";
 import { Button } from "@/components/ui/button";
 import { useContextState } from "@/hook/state";
 import { CircleArrowLeft, Download, Send } from "lucide-react";
-import { useState } from "react";
 
 export function EncutadorPage() {
   const { setIsFocus } = useContextState();
 
-  const [selectedClient, setSelectedClient] = useState<string>('');
-  const handleSelectChange = (value: string) => {
-    setSelectedClient(value);
-  };
   return (
     <>
       <div className="flex items-center justify-between mb-8">
@@ -38,7 +33,7 @@ export function EncutadorPage() {
         <h1 className="text-3xl font-semibold w-max m-auto pb-8">Lorem ipsum dolor</h1>
         <div className="grid grid-cols-4 gap-4 max-w-[500px]">
         <div className="col-span-2">
-            <SelectCliente onChange={handleSelectChange}/>
+            {/* <SelectCliente/> */}
           </div>
           <div className="col-span-2">
             <SelectCampanha />

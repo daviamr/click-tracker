@@ -28,7 +28,7 @@ export function AcaoPage() {
     async function handleGetUsers()
     {
     try {
-      const response = await api.get('/campaigns',
+      const response = await api.get('/actions',
         {headers: {
         "Authorization": `Bearer ${data.jwtToken}`,
       }})

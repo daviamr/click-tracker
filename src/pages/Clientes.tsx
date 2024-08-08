@@ -49,8 +49,6 @@ export function ClientesPage() {
   handleGetUsers()
 },[customerData])
 
-console.log(customerData)
-
   return (
     <>
       <div className="flex items-center justify-between mb-8">

@@ -20,7 +20,8 @@ import { useEffect, useState } from "react";
 type dataActionProps = {data: DataProps}
 
 export function AcaoPage() {
-    const {data} = useAuth() as dataActionProps
+  const {data} = useAuth() as dataActionProps
+  const {deleteAction} = useAuth();
   const [dataAction, setAction] = useState<dataAction[]>([])
   const { setIsFocus } = useContextState();
 
@@ -45,8 +46,7 @@ export function AcaoPage() {
     }
   }
   handleGetUsers()
-},[])
-console.log(dataAction)
+},[dataAction])
 
   return (
     <>
@@ -73,19 +73,23 @@ console.log(dataAction)
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow>
+            {dataAction.map(i => (
+          <TableRow key={i.id}>
             <TableCell></TableCell>
-            <TableCell></TableCell>
+            <TableCell>{i.campaignId}</TableCell>
+            <TableCell>{i.name}</TableCell>
             <TableCell className="flex items-center justify-end gap-2">
               <div></div>
               <Button
                 className="p-2 duration-300 hover:text-red-700"
                 variant={"outline"}
+                onClick={() => deleteAction({id: i.id})}
               >
                 <CircleX size={18} />
               </Button>
             </TableCell>
           </TableRow>
+            ))}
         </TableBody>
       </Table>
     </>

@@ -14,6 +14,7 @@ import { useAuth } from "@/hook/Auth";
 import { createNewURL } from "@/interface/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, Link2 } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -27,16 +28,18 @@ type HandleCreateUsersProps = {
 };
 
 export function NovaUrl() {
-  
+
+  const [isOpen, setIsOpen] = useState(false);
   const { handleCreateURL } = useAuth() as HandleCreateUsersProps;
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<urlData>({
     resolver: zodResolver(verifyCreateURL),
     defaultValues: {
-      url: ""
+      url: '',
     },
   });
 
@@ -44,10 +47,12 @@ export function NovaUrl() {
     console.log(data);
     const { url } = data;
     handleCreateURL({ url });
+    setIsOpen(false);
+    reset();
   }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="flex items-center gap-2"
         variant={"secondary"}>
@@ -85,7 +90,12 @@ export function NovaUrl() {
           </div>
         </div>
         <DialogFooter>
-          <Button className="flex items-center gap-2" type="submit" variant={'secondary'}>
+          <Button
+          className="flex items-center gap-2"
+          type="submit"
+          variant={'secondary'}
+          onClick={() => setIsOpen(true)}
+          >
           <Link2 size={18} />
             Criar
             </Button>

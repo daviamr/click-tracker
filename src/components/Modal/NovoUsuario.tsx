@@ -16,11 +16,12 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/hook/Auth";
 import { CreateNewUser } from "@/interface/auth";
+import { useState } from "react";
 
 const createUserSchema = z.object({
   name: z.string().min(1, "*Campo obrigatório"),
   email: z.string().min(1, "*Campo obrigatório").email("E-mail invalido."),
-  password: z.string().min(4, "A senha deve ter no mínimo 4 caracteres"),
+  password: z.string().min(8, "A senha deve ter no mínimo 8 caracteres"),
 });
 
 type createUserForm = z.infer<typeof createUserSchema>;
@@ -33,17 +34,19 @@ type HandleCreateUsersProps = {
 };
 
 export function NovoUsuario() {
+  const [isOpen, setIsOpen] = useState(false);
   const {handleCreateUsers} = useAuth() as HandleCreateUsersProps;
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<createUserForm>({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
-      email: "",
-      name: "",
-      password: "",
+      email: '',
+      name: '',
+      password: '',
     },
   });
 
@@ -51,10 +54,12 @@ export function NovoUsuario() {
     console.log(data)
     const {name, email, password} = data
     handleCreateUsers({name, email, password})
+    setIsOpen(false);
+    reset();
   }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="flex items-center gap-2"
         variant={"secondary"}>
@@ -123,7 +128,11 @@ export function NovoUsuario() {
           </div>
         </div>
         <DialogFooter>
-          <Button className="flex items-center gap-2" type="submit" variant={'secondary'}>
+          <Button
+          className="flex items-center gap-2"
+          type="submit"
+          variant={'secondary'}
+          onClick={() => setIsOpen(true)}>
           <UserRoundCheck size={18}/>
             Criar
             </Button>

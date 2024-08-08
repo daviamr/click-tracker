@@ -27,6 +27,7 @@ import {
   editURL,
   Login,
   createNewAction,
+  deleteAction,
 } from "@/interface/auth";
 import { AlertMessage } from "@/components/alert_message";
 
@@ -40,6 +41,7 @@ interface AuthContextType {
   handleEditCampaign: (data: editCampaign) => Promise<void>;
   deleteCampaign: (data: deleteCampaign) => Promise<void>;
   handleCreateAction: (data: createNewAction) => Promise<void>;
+  deleteAction: (data: deleteAction) => Promise<void>;
   handleCreateURL: (data: createNewURL) => Promise<void>;
   handleEditURL: (data: editURL) => Promise<void>;
   deleteURL: (data: deleteURL) => Promise<void>;
@@ -391,6 +393,37 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
+  async function deleteAction({ id }: deleteAction) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      const response = await api.delete(`/actions/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token.jwtToken}`,
+        },
+      });
+
+      console.log(response.data);
+
+      AlertMessage("Ação deletada com sucesso.", "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+        console.log(error.response.data.message)
+      } else {
+        AlertMessage(
+          "Não foi possível deletar a Ação, tente novamente.",
+          "error"
+        );
+      }
+    }
+  }
+
   //URL
   async function handleCreateURL({ url }: createNewURL) {
     try {
@@ -625,6 +658,7 @@ function AuthProvider({ children }: ChildrenProps) {
           handleEditCampaign,
           deleteCampaign,
           handleCreateAction,
+          deleteAction,
           handleCreateURL,
           handleEditURL,
           deleteURL,

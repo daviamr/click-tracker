@@ -16,7 +16,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FileCheck2, FilePlus2 } from "lucide-react";
@@ -32,30 +32,29 @@ import { AlertMessage } from "../alert_message";
 
 const verifyCreateCampaign = z.object({
   name: z.string().min(4, "*Mínimo de 4 caracteres"),
-  clientId: z.string().min(1, ''),
+  clientId: z.string().min(1, ""),
 });
 
 type campaignData = z.infer<typeof verifyCreateCampaign>;
 type HandleCreateUsersProps = {
   handleCreateCampaign: ({ name, clientId }: createNewCampaign) => void;
-  data: DataProps
+  data: DataProps;
 };
 
 export function NovaCampanha() {
+  const [isOpen, setIsOpen] = useState(false);
+  const { data, handleCreateCampaign } = useAuth() as HandleCreateUsersProps;
+  const [customerData, setCustomerData] = useState<customerData[]>([]);
 
-  // GET NA API RETORNANDO OS CLIENTES
-  const {data, handleCreateCampaign} = useAuth() as HandleCreateUsersProps
-    const [customerData, setCustomerData] = useState<customerData[]>([]);
-  
-    useEffect(() => {
-      async function handleGetUsers()
-      {
+  useEffect(() => {
+    async function handleGetUsers() {
       try {
-        const response = await api.get('/clients',
-          {headers: {
-          "Authorization": `Bearer ${data.jwtToken}`,
-        }})
-        setCustomerData(response.data)
+        const response = await api.get("/clients", {
+          headers: {
+            Authorization: `Bearer ${data.jwtToken}`,
+          },
+        });
+        setCustomerData(response.data);
       } catch (error: unknown) {
         if (error instanceof AxiosError && error.response) {
           AlertMessage(error.response.data.message, "error");
@@ -67,36 +66,39 @@ export function NovaCampanha() {
         }
       }
     }
-    handleGetUsers()
-  },[])
-  //FINAL GET
+    handleGetUsers();
+  }, []);
 
   const {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm<campaignData>({
     resolver: zodResolver(verifyCreateCampaign),
     defaultValues: {
-      name: "",
+      name: '',
+      clientId: '',
     },
   });
 
   function createCampaign(data: campaignData) {
     const { name, clientId } = data;
-    const idClient = customerData.find(i => i.name === clientId)?.id;
-    
+    const idClient = customerData.find((i) => i.name === clientId)?.id;
+
     console.log(data);
     if (idClient) {
       handleCreateCampaign({ name, clientId: idClient });
+      setIsOpen(false);
+      reset();
     } else {
-      console.error('Id do cliente não encontrado.')
+      console.error("Id do cliente não encontrado.");
     }
   }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="flex items-center gap-2" variant={"secondary"}>
           <FilePlus2 size={18} />
@@ -111,8 +113,7 @@ export function NovaCampanha() {
             veritatis ipsa nisi hic at!
           </DialogDescription>
         </DialogHeader>
-        <form action=""
-        onSubmit={handleSubmit(createCampaign)}>
+        <form action="" onSubmit={handleSubmit(createCampaign)}>
           <div className="grid grid-cols-4 gap-4 py-4">
             <div className="col-span-4">
               <Label htmlFor="nome" className="text-right">
@@ -136,26 +137,26 @@ export function NovaCampanha() {
               {/* SELECT CUSTOMER */}
 
               <Controller
-              name="clientId"
-              control={control}
-              render={({field}) => (
-              <Select onValueChange={field.onChange}>
-                <SelectTrigger className="w-[200px]">
-                  <SelectValue placeholder="Selecione o cliente" />
-                </SelectTrigger>
-                <SelectContent
-                className={`${errors.clientId}`}>
-                  <SelectGroup>
-                    <SelectLabel>Clientes</SelectLabel>
-                    {customerData.map((i, index) => (
-                      <SelectItem value={i.name} key={index}>
-                        {i.name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              )}/>
+                name="clientId"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange}>
+                    <SelectTrigger className="w-[200px]">
+                      <SelectValue placeholder="Selecione o cliente" />
+                    </SelectTrigger>
+                    <SelectContent className={`${errors.clientId}`}>
+                      <SelectGroup>
+                        <SelectLabel>Clientes</SelectLabel>
+                        {customerData.map((i, index) => (
+                          <SelectItem value={i.name} key={index}>
+                            {i.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
               {errors.clientId && (
                 <span className="text-xs text-rose-400 font-normal">
                   *Campo obrigatório
@@ -169,6 +170,7 @@ export function NovaCampanha() {
               className="flex items-center gap-2"
               type="submit"
               variant={"secondary"}
+              onClick={() => setIsOpen(true)}
             >
               <FileCheck2 size={18} />
               Criar

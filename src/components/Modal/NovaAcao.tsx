@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { FileCheck2, FilePlus2 } from "lucide-react";
-import { SelectCliente } from "../SelectClient";
 import { Input } from "../ui/input";
 import { useEffect, useState } from "react";
 import { AlertMessage } from "../alert_message";
@@ -49,6 +48,7 @@ type HandleCreateUsersProps = {
 };
 
 export function NovaAcao() {
+  const [isOpen, setIsOpen] = useState(false);
   const { data, handleCreateAction } = useAuth() as HandleCreateUsersProps;
   const [selectedClient, setSelectedClient] = useState<string>("");
   const [customerData, setCustomerData] = useState<customerData[]>([]);
@@ -142,12 +142,13 @@ export function NovaAcao() {
     } else {
       handleCreateAction({ name, campaignId });
       console.log({ name, campaignId });
+      setIsOpen(false);
       reset();
     }
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="flex items-center gap-2" variant={"secondary"}>
           <FilePlus2 size={18} />
@@ -254,6 +255,7 @@ export function NovaAcao() {
               className="flex items-center gap-2 mt-6"
               type="submit"
               variant={"secondary"}
+              onClick={() => setIsOpen(true)}
             >
               <FileCheck2 size={18} />
               Criar

@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/hook/Auth";
 import { createNewCustomer } from "@/interface/auth";
+import { useState } from "react";
 
 const verifyCreateCustomer = z.object({
   image: z
@@ -30,15 +31,18 @@ type HandleCreateUsersProps = {
 };
 
 export function NovoCliente() {
+  const [isOpen, setIsOpen] = useState(false);
   const { handleCreateCustomers } = useAuth() as HandleCreateUsersProps;
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<customerData>({
     resolver: zodResolver(verifyCreateCustomer),
     defaultValues: {
-      name: ""
+      image: '',
+      name: '',
     },
   });
 
@@ -46,10 +50,12 @@ export function NovoCliente() {
     const { image, name } = data;
     console.log(data);
     handleCreateCustomers({ image: image[0], name });
+    setIsOpen(false);
+    reset();
   }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="flex items-center gap-2" variant={"secondary"}>
           <UserRoundPlus size={18} />
@@ -107,6 +113,7 @@ export function NovoCliente() {
               className="flex items-center gap-2"
               type="submit"
               variant={"secondary"}
+              onClick={() => setIsOpen(true)}
             >
               <UserRoundCheck size={18} />
               Criar

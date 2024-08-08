@@ -69,6 +69,16 @@ export type CreateNewUser = {
     campaignId: number;
   }
 
+  export type dataAction = {
+    id: number;
+    name: string;
+    campaignId: number;
+  }
+
+  export type deleteAction = {
+    id: number;
+  }
+
   export type createNewURL = {
     url: string;
   }
@@ -106,11 +116,6 @@ export type CreateNewUser = {
 
   export type deleteConversor = {
     id: number;
-  }
-
-  export type dataAction = {
-    customer: string;
-    campaign: string;
   }
 
   export type selectShortUrl = {

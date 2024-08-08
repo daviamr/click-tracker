@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/hook/Auth";
 import { createNewConversor } from "@/interface/auth";
+import { useState } from "react";
 
 const verifyCreateConversor = z.object({
   name: z.string().min(4, '*Mínimo de 4 caracteres.'),
@@ -29,6 +30,7 @@ type HandleCreateUsersProps = {
 };
 
 export function NovoConversor() {
+  const [isOpen, setIsOpen] = useState(false);
   const { handleCreateConversor } = useAuth() as HandleCreateUsersProps;
   const {
     register,
@@ -36,11 +38,12 @@ export function NovoConversor() {
     formState: { errors },
     watch,
     setValue,
+    reset,
   } = useForm<conversorData>({
     resolver: zodResolver(verifyCreateConversor),
     defaultValues: {
-      name: "",
-      characters: ""
+      name: '',
+      characters: '',
     },
   });
 
@@ -48,11 +51,13 @@ export function NovoConversor() {
     const { name, characters } = data;
     console.log(data);
     handleCreateConversor({ name, characters });
+    setIsOpen(false);
+    reset();
   }
 
   const charactersValue = watch("characters");
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="flex items-center gap-2" variant={"secondary"}>
           <Plus size={18} />
@@ -107,6 +112,7 @@ export function NovoConversor() {
               className="flex items-center gap-2"
               type="submit"
               variant={"secondary"}
+              onClick={() => setIsOpen(true)}
             >
               <Plus size={18} />
               Criar

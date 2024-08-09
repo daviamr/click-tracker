@@ -22,7 +22,7 @@ const verifyCreateCustomer = z.object({
   image: z
     .any()
     .refine((files) => files instanceof FileList && files.length > 0, { message: "*Campo obrigatório" }),
-  name: z.string().min(4, "O nome deve ter no mínimo 4 caracteres"),
+  name: z.string().min(2, "O nome deve ter no mínimo 2 caracteres"),
 });
 
 type customerData = z.infer<typeof verifyCreateCustomer>;

@@ -72,7 +72,12 @@ export type CreateNewUser = {
   export type dataAction = {
     id: number;
     name: string;
-    campaignId: number;
+    Campaign: {
+      Client: {
+        name: string;
+      }
+      name: string;
+    }
   }
 
   export type deleteAction = {
@@ -120,4 +125,14 @@ export type CreateNewUser = {
 
   export type selectShortUrl = {
     url: string;
+  }
+
+  export type encurtadorData = {
+    actionId: number;
+    baseUrlId: number;
+    alphabetId: number;
+    length: number;
+    sheet: File;
+    longUrl: string;
+    replace: string;
   }

@@ -75,8 +75,8 @@ export function AcaoPage() {
         <TableBody>
             {dataAction.map(i => (
           <TableRow key={i.id}>
-            <TableCell></TableCell>
-            <TableCell>{i.campaignId}</TableCell>
+            <TableCell>{i.Campaign.Client.name}</TableCell>
+            <TableCell>{i.Campaign.name}</TableCell>
             <TableCell>{i.name}</TableCell>
             <TableCell className="flex items-center justify-end gap-2">
               <div></div>

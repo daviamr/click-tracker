@@ -1,7 +1,6 @@
 import { AlertMessage } from "@/components/alert_message";
 import { SelectAcao } from "@/components/SelectAcao";
 import { SelectCampanha } from "@/components/SelectCampaign";
-import { SelectCliente } from "@/components/SelectClient";
 // import { SelectCliente } from "@/components/SelectClient";
 import { SelectConversor } from "@/components/SelectConversor";
 import { SelectEncurtador } from "@/components/SelectShort";
@@ -13,21 +12,21 @@ import { api } from "@/services/Api";
 import { AxiosError } from "axios";
 import { CircleArrowLeft, Download, Send } from "lucide-react";
 import { useEffect, useState } from "react";
-import { z } from "zod";
+// import { z } from "zod";
 
-const verifyCreateAction = z.object({
-  actionId: z.number(),
-  baseUrlId: z.number(),
-  alphabetId: z.number(),
-  length: z.number(),
-  sheet: z
-    .any()
-    .refine((files) => files instanceof FileList && files.length > 0, { message: "*Campo obrigatório" }),
-  longUrl: z.string().min(4, '*Digite uma url válida'),
-  replace: z.string()
-});
+// const verifyCreateAction = z.object({
+//   actionId: z.number(),
+//   baseUrlId: z.number(),
+//   alphabetId: z.number(),
+//   length: z.number(),
+//   sheet: z
+//     .any()
+//     .refine((files) => files instanceof FileList && files.length > 0, { message: "*Campo obrigatório" }),
+//   longUrl: z.string().min(4, '*Digite uma url válida'),
+//   replace: z.string()
+// });
 
-type encurtadorDados = z.infer<typeof verifyCreateAction>;
+// type encurtadorDados = z.infer<typeof verifyCreateAction>;
 
 type shortenerData = {
   data: DataProps;
@@ -38,8 +37,6 @@ export function EncutadorPage() {
   const [actions, setActions] = useState([]);
   const [clients, setClients] = useState([]);
   const { setIsFocus } = useContextState();
-
-  const id = 'a'
 
   useEffect(() => {
     async function handleGetUsers() {
@@ -62,8 +59,7 @@ export function EncutadorPage() {
       }
     }
     handleGetUsers();
-  }, []);
-  console.log(actions)
+  }, [actions]);
 
   useEffect(() => {
     async function handleGetUsers() {
@@ -86,8 +82,7 @@ export function EncutadorPage() {
       }
     }
     handleGetUsers();
-  }, []);
-  console.log(clients)
+  }, [clients]);
 
   return (
     <>
@@ -112,7 +107,7 @@ export function EncutadorPage() {
         <h1 className="text-3xl font-semibold w-max m-auto pb-8">Lorem ipsum dolor</h1>
         <div className="grid grid-cols-4 gap-4 max-w-[500px]">
         <div className="col-span-2">
-            <SelectCliente/>
+            {/* <SelectCliente onChange={() => handleSelectChange(value)}/> */}
           </div>
           <div className="col-span-2">
             <SelectCampanha />

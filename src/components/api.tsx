@@ -38,6 +38,7 @@ export const postDados = async (url: string, data: any) => {
         },
         body: JSON.stringify(data),
       });
+      console.log(token)
   
       if (!response.ok) {
         const errorText = await response.text();

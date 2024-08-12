@@ -1,4 +1,5 @@
 import { AlertMessage } from "@/components/alert_message";
+import { EditarAcao } from "@/components/Modal/EditarAcao";
 import { NovaAcao } from "@/components/Modal/NovaAcao";
 import { Button } from "@/components/ui/button";
 import {
@@ -79,7 +80,7 @@ export function AcaoPage() {
             <TableCell>{i.Campaign.name}</TableCell>
             <TableCell>{i.name}</TableCell>
             <TableCell className="flex items-center justify-end gap-2">
-              <div></div>
+              <EditarAcao/>
               <Button
                 className="p-2 duration-300 hover:text-red-700"
                 variant={"outline"}

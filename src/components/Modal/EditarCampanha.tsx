@@ -147,8 +147,9 @@ export function EditarCampanha({name, id, nameClient} : {name: string; id: numbe
               render={({field}) => (
               <Select onValueChange={field.onChange}>
                 <SelectTrigger className="w-[200px]">
-                  <SelectValue placeholder={nameClient} />
+                  <SelectValue placeholder={'Selecione o cliente'}/>
                 </SelectTrigger>
+                  <span className='text-xs text-nowrap opacity-40'>*Cliente atual: <strong>{nameClient}</strong></span>
                 <SelectContent
                 className={`${errors.clientId}`}>
                   <SelectGroup>

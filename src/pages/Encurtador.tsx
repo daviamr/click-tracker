@@ -45,6 +45,7 @@ export function EncutadorPage() {
 
   const handleSelectChange = (value: string) => {
     setSelectedClient(value);
+    console.log(selectedClient)
   };
 
   const handleSubmit = async (event: React.FormEvent) => {

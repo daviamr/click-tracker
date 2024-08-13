@@ -355,7 +355,7 @@ function AuthProvider({ children }: ChildrenProps) {
   }
 
   //ACTIONS
-  async function handleCreateAction({ name, campaignId }: createNewAction) {
+  async function handleCreateAction({ name, campaignId, startAt, endAt }: createNewAction) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -371,6 +371,8 @@ function AuthProvider({ children }: ChildrenProps) {
         {
           name,
           campaignId,
+          startAt,
+          endAt,
         },
         {
           headers: {

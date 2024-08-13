@@ -76,7 +76,9 @@ export function LoginPage() {
               )}
               </div>
             </div>
-            <Button variant={"outline"} className="mt-10 mb-10">
+            <Button
+            variant={"outline"}
+            className="mt-10 mb-10 w-full">
               Entrar
             </Button>
           </div>

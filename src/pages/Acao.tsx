@@ -2,6 +2,7 @@ import { AlertMessage } from "@/components/alert_message";
 import { EditarAcao } from "@/components/Modal/EditarAcao";
 import { NovaAcao } from "@/components/Modal/NovaAcao";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import {
   Table,
   TableBody,
@@ -68,18 +69,27 @@ export function AcaoPage() {
       <Table>
         <TableHeader>
           <TableRow className="pointer-events-none">
+            <TableHead>Status</TableHead>
             <TableHead className="min-w-[100px]">Cliente</TableHead>
             <TableHead>Campanha</TableHead>
             <TableHead>Ação</TableHead>
+            <TableHead>Início</TableHead>
+            <TableHead>Fim</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
             {dataAction.map(i => (
           <TableRow key={i.id}>
+            <TableCell>
+              <div className="w-4 h-4 bg-green-600 rounded-full"></div>
+            </TableCell>
             <TableCell>{i.Campaign.Client.name}</TableCell>
             <TableCell>{i.Campaign.name}</TableCell>
             <TableCell>{i.name}</TableCell>
+            <TableCell>{i.startAt}</TableCell>
+            <TableCell>{i.endAt}</TableCell>
             <TableCell className="flex items-center justify-end gap-2">
+              <Switch/>
               <EditarAcao/>
               <Button
                 className="p-2 duration-300 hover:text-red-700"

@@ -62,11 +62,15 @@ export type CreateNewUser = {
     name: string;
     clientId: string;
     Client: {name: string};
+    startAt: string;
+    endAt: string;
   }
 
   export type createNewAction = {
     name: string;
     campaignId: number;
+    startAt: string;
+    endAt: string;
   }
 
   export type dataAction = {
@@ -78,6 +82,8 @@ export type CreateNewUser = {
       }
       name: string;
     }
+    startAt: string;
+    endAt: string;
   }
 
   export type deleteAction = {

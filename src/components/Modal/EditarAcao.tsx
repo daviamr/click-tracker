@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { FileCheck2, FilePenLine } from "lucide-react";
+import { FileCheck2, FilePenLine, FilePlus2 } from "lucide-react";
 import { Input } from "../ui/input";
 import { useEffect, useState } from "react";
 import { AlertMessage } from "../alert_message";
@@ -38,21 +38,25 @@ import { zodResolver } from "@hookform/resolvers/zod";
 const verifyCreateAction = z.object({
   name: z.string().min(4, "*Mínimo de 4 caracteres"),
   campaignId: z.number(),
-  selectCliente: z.string().min(1,'')
+  customPath: z.string(),
+  selectCliente: z.string().min(1,''),
+  startAt: z.string().min(1, "*Campo obrigatório"),
+  endAt: z.string().min(1, "*Campo obrigatório")
 });
 
 type actionData = z.infer<typeof verifyCreateAction>;
 type HandleCreateUsersProps = {
-  handleCreateAction: ({ name, campaignId }: createNewAction) => void;
+  handleCreateAction: ({ name, campaignId, customPath, startAt, endAt }: createNewAction) => void;
   data: DataProps;
 };
 
 export function EditarAcao() {
   const [isOpen, setIsOpen] = useState(false);
-  const { data } = useAuth() as HandleCreateUsersProps;
+  const { data, handleCreateAction } = useAuth() as HandleCreateUsersProps;
   const [selectedClient, setSelectedClient] = useState<string>("");
   const [customerData, setCustomerData] = useState<customerData[]>([]);
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
+  const [isChecked, setIsChecked] = useState(false);
 
   const cliente =
     customerData
@@ -63,6 +67,10 @@ export function EditarAcao() {
   const handleSelectChange = (value: string) => {
     setSelectedClient(value);
   };
+
+  const handleChecked = () => {
+    setIsChecked(!isChecked)
+  }
 
   useEffect(() => {
     async function handleGetUsers() {
@@ -122,7 +130,10 @@ export function EditarAcao() {
     defaultValues: {
       name: '',
       campaignId: 0,
+      customPath: '',
       selectCliente: '',
+      startAt: '',
+      endAt: '',
     },
   });
 
@@ -135,12 +146,17 @@ export function EditarAcao() {
   };
 
   const createAction = (data: actionData) => {
-    const { name, campaignId } = data;
+    const { name, campaignId, customPath, startAt, endAt } = data;
+    const dataInicioFormatado = new Date(startAt);
+    const dataFimFormatado = new Date(endAt);
+    const inicioIso = dataInicioFormatado.toISOString();
+    const fimIso = dataFimFormatado.toISOString();
 
     if (campaignId === 0) {
       alert('Campanha não encontrada.')
     } else {
-      console.log(`${name}`);
+      handleCreateAction({ name, campaignId, customPath, startAt: inicioIso, endAt: fimIso });
+      console.log({ name, campaignId, customPath, startAt: inicioIso, endAt: fimIso });
       setIsOpen(false);
       reset();
     }
@@ -150,7 +166,7 @@ export function EditarAcao() {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="p-2" variant={"outline"}>
-        <FilePenLine size={18}/>
+        <FilePenLine size={18} />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -232,6 +248,7 @@ export function EditarAcao() {
                 Ação
               </Label>
               <Input
+                id="nome"
                 type="text"
                 placeholder="Digite a ação..."
                 {...register("name")}
@@ -243,6 +260,48 @@ export function EditarAcao() {
                 </span>
               )}
             </div>
+          <div className="flex gap-4 col-span-4">
+            <Input
+            type="checkbox"
+            className="max-w-[16px]"
+            checked={isChecked}
+            onChange={handleChecked}
+            />
+
+            <Input
+            placeholder="Personalizar URL"
+            disabled={!isChecked}
+            {...register("customPath")}
+            className="col-span-4"/>
+          </div>
+          <div className="col-span-2">
+            <Label id="dataInicio">Data/Hora Início</Label>
+            <Input
+            id="dataInicio"
+            type="datetime-local"
+            {...register("startAt")}
+                className={`${errors.startAt && "border-rose-400 bg-rose-100"}`}
+            />
+            {errors.startAt && (
+                <span className="text-xs text-rose-400 font-normal">
+                  *Campo obrigatório
+                </span>
+              )}
+          </div>
+          <div className="col-span-2">
+            <Label id="dataFim">Data/Hora Fim</Label>
+            <Input
+            id="dataFim"
+            type="datetime-local"
+            {...register("endAt")}
+                className={`${errors.endAt && "border-rose-400 bg-rose-100"}`}
+            />
+            {errors.endAt && (
+                <span className="text-xs text-rose-400 font-normal">
+                  *Campo obrigatório
+                </span>
+              )}
+          </div>
             <input
               type="hidden"
               {...register("campaignId", { valueAsNumber: true })}

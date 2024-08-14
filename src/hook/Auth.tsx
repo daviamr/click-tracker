@@ -28,6 +28,7 @@ import {
   Login,
   createNewAction,
   deleteAction,
+  statusAction,
 } from "@/interface/auth";
 import { AlertMessage } from "@/components/alert_message";
 
@@ -41,6 +42,7 @@ interface AuthContextType {
   handleEditCampaign: (data: editCampaign) => Promise<void>;
   deleteCampaign: (data: deleteCampaign) => Promise<void>;
   handleCreateAction: (data: createNewAction) => Promise<void>;
+  handleStatusAction: (data: statusAction) => Promise<void>;
   deleteAction: (data: deleteAction) => Promise<void>;
   handleCreateURL: (data: createNewURL) => Promise<void>;
   handleEditURL: (data: editURL) => Promise<void>;
@@ -355,7 +357,7 @@ function AuthProvider({ children }: ChildrenProps) {
   }
 
   //ACTIONS
-  async function handleCreateAction({ name, campaignId, startAt, endAt }: createNewAction) {
+  async function handleCreateAction({ name, campaignId, customPath, startAt, endAt }: createNewAction) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -371,6 +373,7 @@ function AuthProvider({ children }: ChildrenProps) {
         {
           name,
           campaignId,
+          customPath,
           startAt,
           endAt,
         },
@@ -389,6 +392,40 @@ function AuthProvider({ children }: ChildrenProps) {
       } else {
         AlertMessage(
           "Não foi possível criar uma ação agora, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  }
+
+  async function handleStatusAction({id}: statusAction) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      console.log(id, token)
+
+      const response = await api.put(
+        `/actions/${id}/toggle`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.jwtToken}`,
+          },
+        }
+      );
+      console.log(response.data);
+
+      AlertMessage(response.data, "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível editar a campanha agora, tente novamente mais tarde.",
           "error"
         );
       }
@@ -660,6 +697,7 @@ function AuthProvider({ children }: ChildrenProps) {
           handleEditCampaign,
           deleteCampaign,
           handleCreateAction,
+          handleStatusAction,
           deleteAction,
           handleCreateURL,
           handleEditURL,

@@ -69,6 +69,7 @@ export type CreateNewUser = {
   export type createNewAction = {
     name: string;
     campaignId: number;
+    customPath: string;
     startAt: string;
     endAt: string;
   }
@@ -84,6 +85,11 @@ export type CreateNewUser = {
     }
     startAt: string;
     endAt: string;
+    status: string;
+  }
+
+  export type statusAction = {
+    id: number;
   }
 
   export type deleteAction = {

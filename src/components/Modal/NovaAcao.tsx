@@ -38,6 +38,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 const verifyCreateAction = z.object({
   name: z.string().min(4, "*Mínimo de 4 caracteres"),
   campaignId: z.number(),
+  customPath: z.string(),
   selectCliente: z.string().min(1,''),
   startAt: z.string().min(1, "*Campo obrigatório"),
   endAt: z.string().min(1, "*Campo obrigatório")
@@ -45,7 +46,7 @@ const verifyCreateAction = z.object({
 
 type actionData = z.infer<typeof verifyCreateAction>;
 type HandleCreateUsersProps = {
-  handleCreateAction: ({ name, campaignId, startAt, endAt }: createNewAction) => void;
+  handleCreateAction: ({ name, campaignId, customPath, startAt, endAt }: createNewAction) => void;
   data: DataProps;
 };
 
@@ -129,6 +130,7 @@ export function NovaAcao() {
     defaultValues: {
       name: '',
       campaignId: 0,
+      customPath: '',
       selectCliente: '',
       startAt: '',
       endAt: '',
@@ -144,7 +146,7 @@ export function NovaAcao() {
   };
 
   const createAction = (data: actionData) => {
-    const { name, campaignId, startAt, endAt } = data;
+    const { name, campaignId, customPath, startAt, endAt } = data;
     const dataInicioFormatado = new Date(startAt);
     const dataFimFormatado = new Date(endAt);
     const inicioIso = dataInicioFormatado.toISOString();
@@ -153,8 +155,8 @@ export function NovaAcao() {
     if (campaignId === 0) {
       alert('Campanha não encontrada.')
     } else {
-      handleCreateAction({ name, campaignId, startAt: inicioIso, endAt: fimIso });
-      console.log({ name, campaignId, startAt: inicioIso, endAt: fimIso });
+      handleCreateAction({ name, campaignId, customPath, startAt: inicioIso, endAt: fimIso });
+      console.log({ name, campaignId, customPath, startAt: inicioIso, endAt: fimIso });
       setIsOpen(false);
       reset();
     }
@@ -270,6 +272,7 @@ export function NovaAcao() {
             <Input
             placeholder="Personalizar URL"
             disabled={!isChecked}
+            {...register("customPath")}
             className="col-span-4"/>
           </div>
           <div className="col-span-2">

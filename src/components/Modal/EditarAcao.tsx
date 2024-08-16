@@ -30,42 +30,77 @@ import {
   createNewAction,
   customerData,
   DataProps,
+  editAction,
 } from "@/interface/auth";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const verifyCreateAction = z.object({
+const verifyEditAction = z.object({
+  id: z.number(),
   name: z.string().min(4, "*Mínimo de 4 caracteres"),
   campaignId: z.number(),
   customPath: z.string(),
   selectCliente: z.string(),
   startAt: z.string().min(1, "*Campo obrigatório"),
-  endAt: z.string().min(1, "*Campo obrigatório")
+  endAt: z.string().min(1, "*Campo obrigatório"),
 });
 
-type actionData = z.infer<typeof verifyCreateAction>;
+type actionData = z.infer<typeof verifyEditAction>;
 type HandleCreateUsersProps = {
-  handleCreateAction: ({ name, campaignId, customPath, startAt, endAt }: createNewAction) => void;
+  handleEditAction: ({
+    id,
+    name,
+    campaignId,
+    customPath,
+    startAt,
+    endAt,
+  }: editAction) => void;
   data: DataProps;
 };
 
-export function EditarAcao({cliente, campanha, acao}: {cliente: string, campanha: string, acao: string}) {
+export function EditarAcao({
+  id,
+  cliente,
+  campanha,
+  acao,
+  dataInicio,
+  dataFim,
+}: {
+  id: number;
+  cliente: string;
+  campanha: string;
+  acao: string;
+  dataInicio: string;
+  dataFim: string;
+}) {
   const [isOpen, setIsOpen] = useState(false);
-  const { data } = useAuth() as HandleCreateUsersProps;
+  const { data, handleEditAction } = useAuth() as HandleCreateUsersProps;
   const [customerData, setCustomerData] = useState<customerData[]>([]);
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
   const [isChecked, setIsChecked] = useState(false);
 
+  const dataFormatada = (data: string) => {
+    return new Date(data).toLocaleString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
+  };
+
   const clienteId =
-  customerData
-    .filter((customer) => cliente === customer.name)
-    .map((customer) => customer.id)
-    .join(", ") || "Cliente não encontrado";
+    customerData
+      .filter((customer) => cliente === customer.name)
+      .map((customer) => customer.id)
+      .join(", ") || "Cliente não encontrado";
 
   const handleChecked = () => {
-    setIsChecked(!isChecked)
-  }
+    setIsChecked(!isChecked);
+  };
 
   useEffect(() => {
     async function handleGetUsers() {
@@ -120,37 +155,47 @@ export function EditarAcao({cliente, campanha, acao}: {cliente: string, campanha
     reset,
     formState: { errors },
   } = useForm<actionData>({
-    resolver: zodResolver(verifyCreateAction),
+    resolver: zodResolver(verifyEditAction),
     defaultValues: {
-      name: '',
+      id,
+      name: "",
       campaignId: 0,
-      customPath: '',
+      customPath: "",
       selectCliente: cliente,
-      startAt: '',
-      endAt: '',
+      startAt: "",
+      endAt: "",
     },
   });
 
   const handleSelectCampaign = (value: string) => {
-    const selectedCampaign = campanhas.find((campanha) => campanha.name === value);
+    const selectedCampaign = campanhas.find(
+      (campanha) => campanha.name === value
+    );
     if (selectedCampaign) {
       setValue("campaignId", selectedCampaign.id);
       console.log(`id da campanha: ${selectedCampaign.id}`);
     }
   };
 
-  const createAction = (data: actionData) => {
-    const { name, campaignId, customPath, startAt, endAt } = data;
+  const editAction = (data: editAction) => {
+    const { id, name, campaignId, customPath, startAt, endAt } = data;
     const dataInicioFormatado = new Date(startAt);
     const dataFimFormatado = new Date(endAt);
     const inicioIso = dataInicioFormatado.toISOString();
     const fimIso = dataFimFormatado.toISOString();
 
     if (campaignId === 0) {
-      alert('Campanha não encontrada.')
+      alert("Campanha não encontrada.");
     } else {
-      // handleCreateAction({ name, campaignId, customPath, startAt: inicioIso, endAt: fimIso });
-      console.log({ name, campaignId, customPath, startAt: inicioIso, endAt: fimIso });
+      handleEditAction({ id, name, campaignId, customPath, startAt: inicioIso, endAt: fimIso });
+      console.log({
+        id,
+        name,
+        campaignId,
+        customPath,
+        startAt: inicioIso,
+        endAt: fimIso,
+      });
       setIsOpen(false);
       reset();
     }
@@ -160,7 +205,7 @@ export function EditarAcao({cliente, campanha, acao}: {cliente: string, campanha
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="p-2" variant={"outline"}>
-        <FilePenLine size={18} />
+          <FilePenLine size={18} />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -171,30 +216,30 @@ export function EditarAcao({cliente, campanha, acao}: {cliente: string, campanha
             veritatis ipsa nisi hic at!
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit(createAction)}>
+        <form onSubmit={handleSubmit(editAction)}>
+          <input type="hidden" value={id} {...register("id")} />
           <div className="grid grid-cols-4 gap-4 py-4">
-            
             <div className="col-span-4">
               <Label htmlFor="cliente">Cliente</Label>
-              <Input id="cliente" value={cliente} type="text" disabled
-              {...register('selectCliente')}/>
+              <Input
+                id="cliente"
+                value={cliente}
+                type="text"
+                disabled
+                {...register("selectCliente")}
+              />
             </div>
             <div className="col-span-4">
               <Label htmlFor="campanha">Campanha</Label>
               <Select onValueChange={handleSelectCampaign}>
                 <SelectTrigger>
-                  <SelectValue
-                    placeholder={campanha}
-                  />
+                  <SelectValue placeholder={campanha} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Campanhas</SelectLabel>
                     {campanhas.map((i, index) => (
-                      <SelectItem
-                        value={i.name}
-                        key={index}
-                      >
+                      <SelectItem value={i.name} key={index}>
                         {i.name}
                       </SelectItem>
                     ))}
@@ -219,48 +264,55 @@ export function EditarAcao({cliente, campanha, acao}: {cliente: string, campanha
                 </span>
               )}
             </div>
-          <div className="flex gap-4 col-span-4">
-            <Input
-            type="checkbox"
-            className="max-w-[16px]"
-            checked={isChecked}
-            onChange={handleChecked}
-            />
+            <div className="flex gap-4 col-span-4">
+              <Input
+                type="checkbox"
+                className="max-w-[16px]"
+                checked={isChecked}
+                onChange={handleChecked}
+              />
 
-            <Input
-            placeholder="Personalizar URL"
-            disabled={!isChecked}
-            {...register("customPath")}
-            className="col-span-4"/>
-          </div>
-          <div className="col-span-2">
-            <Label id="dataInicio">Data/Hora Início</Label>
-            <Input
-            id="dataInicio"
-            type="datetime-local"
-            {...register("startAt")}
+              <Input
+                placeholder="Personalizar URL"
+                disabled={!isChecked}
+                {...register("customPath")}
+                className="col-span-4"
+              />
+            </div>
+            <div className="col-span-2">
+              <Label id="dataInicio">Data/Hora Início</Label>
+              <Input
+                id="dataInicio"
+                type="datetime-local"
+                {...register("startAt")}
                 className={`${errors.startAt && "border-rose-400 bg-rose-100"}`}
-            />
-            {errors.startAt && (
-                <span className="text-xs text-rose-400 font-normal">
+              />
+              {errors.startAt && (
+                <span className="text-xs text-rose-400 font-normal block">
                   *Campo obrigatório
                 </span>
               )}
-          </div>
-          <div className="col-span-2">
-            <Label id="dataFim">Data/Hora Fim</Label>
-            <Input
-            id="dataFim"
-            type="datetime-local"
-            {...register("endAt")}
+              <span className="text-xs text-nowrap opacity-40">
+                *Atual: <strong>{dataFormatada(dataInicio)}</strong>
+              </span>
+            </div>
+            <div className="col-span-2">
+              <Label id="dataFim">Data/Hora Fim</Label>
+              <Input
+                id="dataFim"
+                type="datetime-local"
+                {...register("endAt")}
                 className={`${errors.endAt && "border-rose-400 bg-rose-100"}`}
-            />
-            {errors.endAt && (
-                <span className="text-xs text-rose-400 font-normal">
+              />
+              {errors.endAt && (
+                <span className="text-xs text-rose-400 font-normal block">
                   *Campo obrigatório
                 </span>
               )}
-          </div>
+              <span className="text-xs text-nowrap opacity-40">
+                *Atual: <strong>{dataFormatada(dataFim)}</strong>
+              </span>
+            </div>
             <input
               type="hidden"
               {...register("campaignId", { valueAsNumber: true })}

@@ -74,6 +74,15 @@ export type CreateNewUser = {
     endAt: string;
   }
 
+  export type editAction = {
+    id: number;
+    name: string;
+    campaignId: number;
+    startAt: string;
+    endAt: string;
+    customPath: string;
+  }
+
   export type dataAction = {
     id: number;
     name: string;

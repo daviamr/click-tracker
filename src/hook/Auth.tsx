@@ -29,6 +29,7 @@ import {
   createNewAction,
   deleteAction,
   statusAction,
+  editAction,
 } from "@/interface/auth";
 import { AlertMessage } from "@/components/alert_message";
 
@@ -42,6 +43,7 @@ interface AuthContextType {
   handleEditCampaign: (data: editCampaign) => Promise<void>;
   deleteCampaign: (data: deleteCampaign) => Promise<void>;
   handleCreateAction: (data: createNewAction) => Promise<void>;
+  handleEditAction: (data: editAction) => Promise<void>;
   handleStatusAction: (data: statusAction) => Promise<void>;
   deleteAction: (data: deleteAction) => Promise<void>;
   handleCreateURL: (data: createNewURL) => Promise<void>;
@@ -398,7 +400,7 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
-  async function handleStatusAction({id}: statusAction) {
+  async function handleEditAction({id, name, campaignId, startAt, endAt, customPath }: editAction) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -407,7 +409,44 @@ function AuthProvider({ children }: ChildrenProps) {
       }
       const token = JSON.parse(dataUser);
 
-      console.log(id, token)
+      const response = await api.put(
+        `/actions/${id}`,
+        {
+          name,
+          campaignId,
+          startAt,
+          endAt,
+          customPath,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token.jwtToken}`,
+          },
+        }
+      );
+      console.log(response.data);
+
+      AlertMessage("Campanha editada com sucesso.", "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível editar a campanha agora, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  }
+
+  async function handleStatusAction({id}: statusAction) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
 
       const response = await api.put(
         `/actions/${id}/toggle`,
@@ -698,6 +737,7 @@ function AuthProvider({ children }: ChildrenProps) {
           handleEditCampaign,
           deleteCampaign,
           handleCreateAction,
+          handleEditAction,
           handleStatusAction,
           deleteAction,
           handleCreateURL,

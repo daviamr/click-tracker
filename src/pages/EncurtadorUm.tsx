@@ -7,9 +7,11 @@ import { SelectCliente } from "@/components/SelectClient";
 import { SelectConversor } from "@/components/SelectConversor";
 import { SelectEncurtador } from "@/components/SelectShort";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hook/Auth";
 import { DataProps } from "@/interface/auth";
 import { api } from "@/services/Api";
+import { Label } from "@radix-ui/react-label";
 import { AxiosError } from "axios";
 import { Send } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -40,10 +42,11 @@ export function EncutadorUm() {
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
   const [selectedClient, setSelectedClient] = useState<string>("");
+  const [qrCodeActive, setQrCodeActive] = useState<boolean>(false);
 
   const handleSelectChange = (value: string) => {
     setSelectedClient(value);
-    console.log(selectedClient)
+    console.log(selectedClient);
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -179,10 +182,19 @@ export function EncutadorUm() {
                 className="pl-4 bg-transparent rounded-md border border-input min-h-[36px]"
               />
             </div>
+            <div className="flex items-center gap-4">
+              <Input
+              id="qrCode"
+              type="checkbox"
+              className="max-w-[16px]"
+              checked={qrCodeActive}
+              onChange={(e) => setQrCodeActive(e.target.checked)}/>
+              <Label htmlFor="qrCode" className="text-nowrap cursor-pointer">Gerar QRCode</Label>
+            </div>
           </div>
           <div className="pb-12 text-right mt-8 max-w-[500px]">
             <Button
-              className="col-span-1"
+              className="w-full"
               variant="secondary"
               disabled={loading}
             >

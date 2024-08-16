@@ -3,7 +3,7 @@ import { AcaoPage } from "./pages/Acao";
 import { CampanhaPage } from "./pages/Campanha";
 import { ClientesPage } from "./pages/Clientes";
 import { ConversorPage } from "./pages/Conversor";
-import { EncutadorPage } from "./pages/Encurtador";
+import { EncurtadorPage } from "./pages/Encurtador";
 import { PainelPage } from "./pages/Painel";
 import { ShortUrlsPage } from "./pages/ShortURLS";
 import { UsuarioPage } from "./pages/Usuario";
@@ -19,7 +19,7 @@ export function App() {
         {isFocus === "action" && <AcaoPage />}
         {isFocus === "shorturl" && <ShortUrlsPage />}
         {isFocus === "conversor" && <ConversorPage />}
-        {isFocus === "shorter" && <EncutadorPage />}
+        {isFocus === "shorter" && <EncurtadorPage />}
         {isFocus === "dashboard" && <PainelPage />}
       </div>
     </>

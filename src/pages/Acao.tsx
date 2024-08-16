@@ -138,7 +138,7 @@ export function AcaoPage() {
               onCheckedChange={(checked) =>
               handleSwitchChange(i.id, checked)
               }/>
-              <EditarAcao/>
+              <EditarAcao cliente={i.Campaign.Client.name} campanha={i.Campaign.name} acao={i.name}/>
               <Button
                 className="p-2 duration-300 hover:text-red-700"
                 variant={"outline"}

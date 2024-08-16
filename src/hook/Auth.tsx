@@ -411,6 +411,7 @@ function AuthProvider({ children }: ChildrenProps) {
 
       const response = await api.put(
         `/actions/${id}/toggle`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${token.jwtToken}`,
@@ -419,7 +420,7 @@ function AuthProvider({ children }: ChildrenProps) {
       );
       console.log(response.data);
 
-      AlertMessage(response.data, "success");
+      AlertMessage('Status da campanha alterado com sucesso.', "success");
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");

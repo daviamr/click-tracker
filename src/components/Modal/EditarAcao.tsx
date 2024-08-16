@@ -32,14 +32,14 @@ import {
   DataProps,
 } from "@/interface/auth";
 import { z } from "zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const verifyCreateAction = z.object({
   name: z.string().min(4, "*Mínimo de 4 caracteres"),
   campaignId: z.number(),
   customPath: z.string(),
-  selectCliente: z.string().min(1,''),
+  selectCliente: z.string(),
   startAt: z.string().min(1, "*Campo obrigatório"),
   endAt: z.string().min(1, "*Campo obrigatório")
 });
@@ -50,23 +50,18 @@ type HandleCreateUsersProps = {
   data: DataProps;
 };
 
-export function EditarAcao() {
+export function EditarAcao({cliente, campanha, acao}: {cliente: string, campanha: string, acao: string}) {
   const [isOpen, setIsOpen] = useState(false);
   const { data, handleCreateAction } = useAuth() as HandleCreateUsersProps;
-  const [selectedClient, setSelectedClient] = useState<string>("");
   const [customerData, setCustomerData] = useState<customerData[]>([]);
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
   const [isChecked, setIsChecked] = useState(false);
 
-  const cliente =
-    customerData
-      .filter((customer) => selectedClient === customer.name)
-      .map((customer) => customer.id)
-      .join(", ") || "Cliente não encontrado";
-
-  const handleSelectChange = (value: string) => {
-    setSelectedClient(value);
-  };
+  const clienteId =
+  customerData
+    .filter((customer) => cliente === customer.name)
+    .map((customer) => customer.id)
+    .join(", ") || "Cliente não encontrado";
 
   const handleChecked = () => {
     setIsChecked(!isChecked)
@@ -98,7 +93,7 @@ export function EditarAcao() {
   useEffect(() => {
     async function handleGetUsers() {
       try {
-        const response = await api.get(`/campaigns?clientId=${cliente}`, {
+        const response = await api.get(`/campaigns?clientId=${clienteId}`, {
           headers: {
             Authorization: `Bearer ${data.jwtToken}`,
           },
@@ -116,13 +111,12 @@ export function EditarAcao() {
       }
     }
     handleGetUsers();
-  }, [cliente]);
+  }, [campanhas]);
 
   const {
     register,
     handleSubmit,
     setValue,
-    control,
     reset,
     formState: { errors },
   } = useForm<actionData>({
@@ -131,7 +125,7 @@ export function EditarAcao() {
       name: '',
       campaignId: 0,
       customPath: '',
-      selectCliente: '',
+      selectCliente: cliente,
       startAt: '',
       endAt: '',
     },
@@ -155,7 +149,7 @@ export function EditarAcao() {
     if (campaignId === 0) {
       alert('Campanha não encontrada.')
     } else {
-      handleCreateAction({ name, campaignId, customPath, startAt: inicioIso, endAt: fimIso });
+      // handleCreateAction({ name, campaignId, customPath, startAt: inicioIso, endAt: fimIso });
       console.log({ name, campaignId, customPath, startAt: inicioIso, endAt: fimIso });
       setIsOpen(false);
       reset();
@@ -182,50 +176,15 @@ export function EditarAcao() {
             
             <div className="col-span-4">
               <Label htmlFor="cliente">Cliente</Label>
-              {/* SELECT CUSTOMER */}
-
-              <Controller
-              name="selectCliente"
-              control={control}
-              render={({field}) => (
-              <Select onValueChange={(value) => {
-                field.onChange(value); // Atualiza o valor no formulário
-                handleSelectChange(value); // Atualiza o estado do cliente selecionado
-              }}
-            >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o cliente" />
-                </SelectTrigger>
-                <SelectContent
-                className={`${errors.selectCliente}`}>
-                  <SelectGroup>
-                    <SelectLabel>Clientes</SelectLabel>
-                    {customerData.map((i, index) => (
-                      <SelectItem value={i.name} key={index}>
-                        {i.name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              )}/>
-              {errors.selectCliente && (
-                <span className="text-xs text-rose-400 font-normal">
-                  *Campo obrigatório
-                </span>
-              )}
-              {/* FINAL SELECT CUSTOMER */}
+              <Input id="cliente" value={cliente} type="text" disabled
+              {...register('selectCliente')}/>
             </div>
             <div className="col-span-4">
               <Label htmlFor="campanha">Campanha</Label>
-              <Select disabled={!selectedClient} onValueChange={handleSelectCampaign}>
+              <Select onValueChange={handleSelectCampaign}>
                 <SelectTrigger>
                   <SelectValue
-                    placeholder={
-                      !selectedClient
-                        ? "Cliente não selecionado"
-                        : "Selecione a campanha"
-                    }
+                    placeholder={campanha}
                   />
                 </SelectTrigger>
                 <SelectContent>
@@ -250,7 +209,7 @@ export function EditarAcao() {
               <Input
                 id="nome"
                 type="text"
-                placeholder="Digite a ação..."
+                placeholder={acao}
                 {...register("name")}
                 className={`${errors.name && "border-rose-400 bg-rose-100"}`}
               />

@@ -52,7 +52,7 @@ type HandleCreateUsersProps = {
 
 export function EditarAcao({cliente, campanha, acao}: {cliente: string, campanha: string, acao: string}) {
   const [isOpen, setIsOpen] = useState(false);
-  const { data, handleCreateAction } = useAuth() as HandleCreateUsersProps;
+  const { data } = useAuth() as HandleCreateUsersProps;
   const [customerData, setCustomerData] = useState<customerData[]>([]);
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
   const [isChecked, setIsChecked] = useState(false);

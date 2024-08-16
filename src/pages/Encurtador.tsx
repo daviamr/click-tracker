@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useContextState } from "@/hook/state";
 import { Label } from "@radix-ui/react-label";
-import { CircleArrowLeft, Download } from "lucide-react";
+import { CircleArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { EncutadorUm } from "./EncurtadorUm";
 import { EncurtadorDois } from "./EncurtadorDois";

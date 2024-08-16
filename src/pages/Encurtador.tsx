@@ -34,12 +34,12 @@ export function EncurtadorPage() {
         <div className="flex 
         justify-center mb-6">
         <Label
-        className={`bg-slate-800 p-2 px-16 rounded-l-lg cursor-pointer ${selectedOption === 'option1' ? 'font-semibold bg-slate-600' : ''}`}
+        className={`p-2 px-16 rounded-l-lg cursor-pointer ${selectedOption === 'option1' ? 'font-semibold bg-slate-600' : 'bg-slate-800'}`}
         onClick={() => setSelectedOption('option1')}>
             OPÇÃO 1
         </Label>
         <Label
-        className={`bg-slate-800 p-2 px-16 rounded-r-lg cursor-pointer ${selectedOption === 'option2' ? 'font-semibold bg-slate-600' : ''}`}
+        className={`p-2 px-16 rounded-r-lg cursor-pointer ${selectedOption === 'option2' ? 'font-semibold bg-slate-600' : 'bg-slate-800'}`}
         onClick={() => setSelectedOption('option2')}>
             OPÇÃO 2
         </Label>

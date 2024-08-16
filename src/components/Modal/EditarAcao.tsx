@@ -27,7 +27,6 @@ import { api } from "@/services/Api";
 import { useAuth } from "@/hook/Auth";
 import {
   campaignData,
-  createNewAction,
   customerData,
   DataProps,
   editAction,

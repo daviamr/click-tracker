@@ -1,5 +1,5 @@
 import { AlertMessage } from "@/components/alert_message";
-import { BarraProgresso } from "@/components/BarraProgresso";
+// import { BarraProgresso } from "@/components/BarraProgresso";
 import {
   Select,
   SelectContent,
@@ -358,6 +358,7 @@ export function EncutadorUm() {
     register,
     handleSubmit,
     reset,
+
     setValue,
     control,
     formState: { errors },
@@ -386,7 +387,7 @@ export function EncutadorUm() {
     } = data;
     
     handleCreateLink({ actionId, baseUrlId, alphabetId, longUrl, replace, sheet, length: selectedValue, qrCode: qrCodeActive });
-    // reset();
+    reset();
   }
 
   return (

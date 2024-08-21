@@ -148,12 +148,13 @@ export type CreateNewUser = {
     url: string;
   }
 
-  export type encurtadorData = {
+  export type createNewLink = {
     actionId: number;
     baseUrlId: number;
     alphabetId: number;
-    length: number;
-    sheet: File;
     longUrl: string;
     replace: string;
+    sheet: File;
+    length: number;
+    qrCode: boolean;
   }

@@ -30,6 +30,7 @@ import {
   deleteAction,
   statusAction,
   editAction,
+  createNewLink,
 } from "@/interface/auth";
 import { AlertMessage } from "@/components/alert_message";
 
@@ -52,10 +53,13 @@ interface AuthContextType {
   handleCreateConversor: (data: createNewConversor) => Promise<void>;
   handleEditConversor: (data: editConversor) => Promise<void>;
   deleteConversor: (data: deleteConversor) => Promise<void>;
+  handleCreateLink: (data: createNewLink) => Promise<void>;
   data: DataProps | null;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);
 
 interface ChildrenProps {
   children?: ReactNode;
@@ -240,7 +244,7 @@ function AuthProvider({ children }: ChildrenProps) {
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
-        console.log(error.response.data.message)
+        console.log(error.response.data.message);
       } else {
         AlertMessage(
           "Não foi possível deletar o cliente, tente novamente.",
@@ -289,7 +293,7 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
-  async function handleEditCampaign({id, name, clientId }: editCampaign) {
+  async function handleEditCampaign({ id, name, clientId }: editCampaign) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -298,7 +302,7 @@ function AuthProvider({ children }: ChildrenProps) {
       }
       const token = JSON.parse(dataUser);
 
-      console.log(id, name, clientId)
+      console.log(id, name, clientId);
 
       const response = await api.put(
         `/campaigns/${id}`,
@@ -348,7 +352,7 @@ function AuthProvider({ children }: ChildrenProps) {
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
-        console.log(error.response.data.message)
+        console.log(error.response.data.message);
       } else {
         AlertMessage(
           "Não foi possível deletar a campanha, tente novamente.",
@@ -359,7 +363,13 @@ function AuthProvider({ children }: ChildrenProps) {
   }
 
   //ACTIONS
-  async function handleCreateAction({ name, campaignId, customPath, startAt, endAt }: createNewAction) {
+  async function handleCreateAction({
+    name,
+    campaignId,
+    customPath,
+    startAt,
+    endAt,
+  }: createNewAction) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -400,7 +410,14 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
-  async function handleEditAction({id, name, campaignId, startAt, endAt, customPath }: editAction) {
+  async function handleEditAction({
+    id,
+    name,
+    campaignId,
+    startAt,
+    endAt,
+    customPath,
+  }: editAction) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -439,7 +456,7 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
-  async function handleStatusAction({id}: statusAction) {
+  async function handleStatusAction({ id }: statusAction) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -459,7 +476,7 @@ function AuthProvider({ children }: ChildrenProps) {
       );
       console.log(response.data);
 
-      AlertMessage('Status da campanha alterado com sucesso.', "success");
+      AlertMessage("Status da campanha alterado com sucesso.", "success");
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
@@ -493,7 +510,7 @@ function AuthProvider({ children }: ChildrenProps) {
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
-        console.log(error.response.data.message)
+        console.log(error.response.data.message);
       } else {
         AlertMessage(
           "Não foi possível deletar a Ação, tente novamente.",
@@ -599,7 +616,7 @@ function AuthProvider({ children }: ChildrenProps) {
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
-        console.log(error.response.data.message)
+        console.log(error.response.data.message);
       } else {
         AlertMessage(
           "Não foi possível deletar a URL, tente novamente.",
@@ -608,7 +625,6 @@ function AuthProvider({ children }: ChildrenProps) {
       }
     }
   }
-
 
   //CONVERSOR
   async function handleCreateConversor({
@@ -652,11 +668,7 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
-  async function handleEditConversor({
-    id,
-    name,
-    characters,
-  }: editConversor) {
+  async function handleEditConversor({ id, name, characters }: editConversor) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -714,10 +726,73 @@ function AuthProvider({ children }: ChildrenProps) {
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
-        console.log(error.response.data.message)
+        console.log(error.response.data.message);
       } else {
         AlertMessage(
           "Não foi possível deletar o conversor, tente novamente.",
+          "error"
+        );
+      }
+    }
+  }
+
+  //LINK
+  async function handleCreateLink({
+    actionId,
+    baseUrlId,
+    alphabetId,
+    longUrl,
+    replace,
+    sheet,
+    length,
+    qrCode,
+  }: createNewLink) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      console.log([
+        `actionId: ` + actionId,
+        `baseUrlId: ` + baseUrlId,
+        `alphabetId: ` + alphabetId,
+        `longUrl: ` + longUrl,
+        `replace: ` + replace,
+        sheet,
+        `length: ` + length,
+        `qrCode: ` + qrCode,
+      ]);
+
+      const formData = new FormData();
+      formData.append("actionId", String(actionId));
+      formData.append("baseUrlId", String(baseUrlId));
+      formData.append("alphabetId", String(alphabetId));
+      formData.append("longUrl", longUrl);
+      formData.append("replace", replace);
+      formData.append("sheet", sheet);
+      formData.append("length", String(length));
+      formData.append("qrCode", String(qrCode));
+
+      // Envio da requisição com FormData
+      const response = await api.post("/links/multiple", formData, {
+        headers: {
+          Authorization: `Bearer ${token.jwtToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log(response.data);
+
+      AlertMessage("Conversor criado com sucesso.", "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível criar um Conversor agora, tente novamente mais tarde.",
           "error"
         );
       }
@@ -746,6 +821,7 @@ function AuthProvider({ children }: ChildrenProps) {
           handleCreateConversor,
           handleEditConversor,
           deleteConversor,
+          handleCreateLink,
           data,
         }}
       >
@@ -759,7 +835,7 @@ function useAuth() {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error('useAuth deve ser usado dentro de um AuthProvider')
+    throw new Error("useAuth deve ser usado dentro de um AuthProvider");
   }
 
   return context;

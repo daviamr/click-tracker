@@ -51,7 +51,6 @@ type dataSelectShortProps = {data: DataProps}
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Selecione a URL</SelectLabel>
-            <SelectItem value="shortener">Shortener</SelectItem>
             {url.map((i, index) => (
             <SelectItem value={i.url} key={index}>{i.url}</SelectItem>
             ))}

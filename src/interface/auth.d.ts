@@ -154,7 +154,7 @@ export type CreateNewUser = {
     alphabetId: number;
     longUrl: string;
     replace: string;
-    sheet: File;
+    sheet?: File;
     length: number;
     qrCode: boolean;
   }

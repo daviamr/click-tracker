@@ -54,6 +54,7 @@ interface AuthContextType {
   handleEditConversor: (data: editConversor) => Promise<void>;
   deleteConversor: (data: deleteConversor) => Promise<void>;
   handleCreateLink: (data: createNewLink) => Promise<void>;
+  handleCreateSingleLink: (data: createNewLink) => Promise<void>;
   data: DataProps | null;
 }
 
@@ -772,9 +773,13 @@ function AuthProvider({ children }: ChildrenProps) {
       formData.append("alphabetId", String(alphabetId));
       formData.append("longUrl", longUrl);
       formData.append("replace", replace);
-      formData.append("sheet", sheet);
+      // formData.append("sheet", sheet);
       formData.append("length", String(length));
       formData.append("qrCode", String(qrCode));
+
+      if (sheet) {
+        formData.append("sheet", sheet);
+      }
 
       // Envio da requisição com FormData
       const response = await api.post("/links/multiple", formData, {
@@ -793,6 +798,57 @@ function AuthProvider({ children }: ChildrenProps) {
       } else {
         AlertMessage(
           "Não foi possível criar um Conversor agora, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  }
+
+  async function handleCreateSingleLink({
+    actionId,
+    baseUrlId,
+    alphabetId,
+    longUrl,
+    replace,
+    length,
+    qrCode,
+  }: createNewLink) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      // console.log(token)
+
+      const response = await api.post(
+        "/links/single",
+        {
+          actionId,
+          baseUrlId,
+          alphabetId,
+          longUrl,
+          replace,
+          length,
+          qrCode,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token.jwtToken}`,
+          },
+        }
+      );
+      console.log(response.data);
+
+      AlertMessage("Link criado com sucesso.", "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível criar uma campanha agora, tente novamente mais tarde.",
           "error"
         );
       }
@@ -822,6 +878,7 @@ function AuthProvider({ children }: ChildrenProps) {
           handleEditConversor,
           deleteConversor,
           handleCreateLink,
+          handleCreateSingleLink,
           data,
         }}
       >

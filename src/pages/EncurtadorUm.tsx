@@ -36,7 +36,7 @@ const verifyCreateLink = z.object({
   actionId: z.number().min(1, ''),
   baseUrlId: z.number().min(1, ''),
   alphabetId: z.number().min(1, ''),
-  longUrl: z.string().min(4, '*Digite uma url válida'),
+  redirectUrl: z.string().min(4, '*Digite uma url válida'),
   replace: z.string().min(2, '*Mínimo de 2 caracteres.'),
   sheet: z
     .any()
@@ -54,7 +54,7 @@ type HandleCreateLinkProps = {
     actionId,
     baseUrlId,
     alphabetId,
-    longUrl,
+    redirectUrl,
     replace,
     sheet,
     length,
@@ -368,7 +368,7 @@ export function EncutadorUm() {
       actionId: 0,
       baseUrlId: 0,
       alphabetId: 0,
-      longUrl: "",
+      redirectUrl: "",
       replace: "",
       sheet: null,
       length: 6,
@@ -381,12 +381,12 @@ export function EncutadorUm() {
       actionId,
       baseUrlId,
       alphabetId,
-      longUrl,
+      redirectUrl,
       replace,
       sheet,
     } = data;
     
-    handleCreateLink({ actionId, baseUrlId, alphabetId, longUrl, replace, sheet, length: selectedValue, qrCode: qrCodeActive });
+    handleCreateLink({ actionId, baseUrlId, alphabetId, redirectUrl, replace, sheet, length: selectedValue, qrCode: qrCodeActive });
     reset();
   }
 
@@ -594,14 +594,14 @@ export function EncutadorUm() {
                 id="urlFinal"
                 type="text"
                 placeholder="https://"
-                {...register("longUrl")}
+                {...register("redirectUrl")}
                 className={`pl-4 bg-transparent rounded-md border border-input min-h-[36px] ${
-                  errors.longUrl && "border-rose-400"
+                  errors.redirectUrl && "border-rose-400"
                 }`}
             />
-            {errors.longUrl && (
+            {errors.redirectUrl && (
                 <span className="text-xs text-rose-400 font-normal">
-                  {errors.longUrl.message}
+                  {errors.redirectUrl.message}
                 </span>
               )}
             </div>

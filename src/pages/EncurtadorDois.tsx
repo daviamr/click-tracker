@@ -59,7 +59,7 @@ type HandleCreateLinkProps = {
     redirectUrl,
     length,
     qrCode,
-  }: createNewSingleLink) => void;
+  }: createNewSingleLink) => Promise<ApiResponse>;
   data: DataProps;
 };
 

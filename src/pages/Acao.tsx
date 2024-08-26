@@ -126,8 +126,8 @@ export function AcaoPage() {
                 {i.status}
               </p>}
             </TableCell>
-            <TableCell>{i.Campaign.Client.name}</TableCell>
-            <TableCell>{i.Campaign.name}</TableCell>
+            <TableCell>{i.campaign.client.name}</TableCell>
+            <TableCell>{i.campaign.name}</TableCell>
             <TableCell>{i.name}</TableCell>
             <TableCell>{dataFormatada(i.startAt)}</TableCell>
             <TableCell>{dataFormatada(i.endAt)}</TableCell>
@@ -138,7 +138,7 @@ export function AcaoPage() {
               onCheckedChange={(checked) =>
               handleSwitchChange(i.id, checked)
               }/>
-              <EditarAcao id={i.id} cliente={i.Campaign.Client.name} campanha={i.Campaign.name} acao={i.name} dataInicio={i.startAt} dataFim={i.endAt}/>
+              <EditarAcao id={i.id} cliente={i.campaign.client.name} campanha={i.campaign.name} acao={i.name} dataInicio={i.startAt} dataFim={i.endAt}/>
               <Button
                 className="p-2 duration-300 hover:text-red-700"
                 variant={"outline"}

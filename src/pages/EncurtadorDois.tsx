@@ -13,31 +13,38 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hook/Auth";
 import {
+  ApiResponse,
   campaignData,
   conversorData,
-  createNewLink,
+  createNewSingleLink,
   customerData,
   dataAction,
   DataProps,
   urlData,
 } from "@/interface/auth";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { api } from "@/services/Api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "@radix-ui/react-label";
 import { AxiosError } from "axios";
-import { Send } from "lucide-react";
+import { Link2, Send } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 const verifyCreateLink = z.object({
-  customer: z.string().min(1, ''),
-  campaignId: z.number().min(1, ''),
-  actionId: z.number().min(1, ''),
-  baseUrlId: z.number().min(1, ''),
-  alphabetId: z.number().min(1, ''),
-  longUrl: z.string().min(4, '*Digite uma url válida'),
-  replace: z.string().min(2, '*Mínimo de 2 caracteres.'),
+  customer: z.string().min(1, ""),
+  campaignId: z.number().min(1, ""),
+  actionId: z.number().min(1, ""),
+  baseUrlId: z.number().min(1, ""),
+  alphabetId: z.number().min(1, ""),
+  redirectUrl: z.string().min(4, "*Digite uma url válida"),
   length: z.number(),
   qrCode: z.boolean(),
 });
@@ -49,12 +56,10 @@ type HandleCreateLinkProps = {
     actionId,
     baseUrlId,
     alphabetId,
-    longUrl,
-    replace,
-    sheet,
+    redirectUrl,
     length,
     qrCode,
-  }: createNewLink) => void;
+  }: createNewSingleLink) => void;
   data: DataProps;
 };
 
@@ -69,7 +74,6 @@ export function EncurtadorDois() {
   const [acoes, setAcoes] = useState<dataAction[]>([]);
   const [baseUrl, setBaseUrl] = useState<urlData[]>([]);
   const [conversor, setConversor] = useState<conversorData[]>([]);
-  const [qrCodeActive, setQrCodeActive] = useState<boolean>(false);
   const [selectedValue, setSelectedValue] = useState<number>(6);
   const linkLength = [
     "a",
@@ -93,10 +97,14 @@ export function EncurtadorDois() {
     "s",
     "t",
   ];
+  const [returnData, setReturnData] = useState<ApiResponse | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  console.log(isModalOpen)
 
   //FUNÇÃO SALVANDO NO ESTADO O VALOR DE COMPRIMENTO
   const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = Number(event.target.value);
+    setValue("length", newValue);
     setSelectedValue(newValue);
   };
 
@@ -119,9 +127,7 @@ export function EncurtadorDois() {
   };
 
   const handleSelectAction = (value: string) => {
-    const selectedAction = acoes.find(
-      (acao) => acao.name === value
-    );
+    const selectedAction = acoes.find((acao) => acao.name === value);
     if (selectedAction) {
       setValue("actionId", selectedAction.id);
       console.log(`id da ação: ${selectedAction.id}`);
@@ -129,9 +135,7 @@ export function EncurtadorDois() {
   };
 
   const handleSelectBaseUrl = (value: string) => {
-    const selectedBaseUrl = baseUrl.find(
-      (url) => url.url === value
-    );
+    const selectedBaseUrl = baseUrl.find((url) => url.url === value);
     if (selectedBaseUrl) {
       setValue("baseUrlId", selectedBaseUrl.id);
       console.log(`id da baseUrl: ${selectedBaseUrl.id}`);
@@ -352,9 +356,8 @@ export function EncurtadorDois() {
   const {
     register,
     handleSubmit,
-    reset,
-
     setValue,
+    reset,
     control,
     formState: { errors },
   } = useForm<encurtadorDados>({
@@ -363,25 +366,66 @@ export function EncurtadorDois() {
       actionId: 0,
       baseUrlId: 0,
       alphabetId: 0,
-      longUrl: "",
-      replace: "",
+      redirectUrl: "",
       length: 6,
       qrCode: false,
     },
   });
 
-  function createLink(data: encurtadorDados) {
-    const {
-      actionId,
-      baseUrlId,
-      alphabetId,
-      longUrl,
-      replace,
-    } = data;
-    
-    handleCreateSingleLink({ actionId, baseUrlId, alphabetId, longUrl, replace, length: selectedValue, qrCode: qrCodeActive });
-    reset();
+  async function createLink(data: createNewSingleLink) {
+    const { actionId, baseUrlId, alphabetId, redirectUrl, length, qrCode } =
+      data;
+
+    try {
+      const response: ApiResponse = await handleCreateSingleLink({
+        actionId,
+        baseUrlId,
+        alphabetId,
+        redirectUrl,
+        length,
+        qrCode,
+      });
+
+      setReturnData(response);
+      setIsModalOpen(true);
+      reset();
+    } catch (error) {
+      console.error("Erro ao criar link:", error);
+    }
   }
+
+  const handleCloseModal = () => {
+    setReturnData(null);
+    setIsModalOpen(false);
+  };
+
+  const handleDownloadQRCode = async () => {
+    if (returnData) {
+      const imageUrl = `bigdates/${returnData.qrCode}`;
+
+      try {
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `qrcode-${returnData.shortUrl}.png`; // Nome do arquivo a ser salvo
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url); // Limpa o URL após o download
+      } catch (error) {
+        console.error("Erro ao baixar a imagem:", error);
+      }
+    }
+  };
+
+  const handleCopyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Link copiado para a área de transferência!");
+    });
+  };
 
   return (
     <>
@@ -472,8 +516,9 @@ export function EncurtadorDois() {
                 control={control}
                 render={() => (
                   <Select
-                  disabled={!selectedClient}
-                  onValueChange={handleSelectAction}>
+                    disabled={!selectedClient}
+                    onValueChange={handleSelectAction}
+                  >
                     <SelectTrigger>
                       <SelectValue
                         placeholder={
@@ -509,8 +554,7 @@ export function EncurtadorDois() {
                 name="baseUrlId"
                 control={control}
                 render={() => (
-                  <Select
-                  onValueChange={handleSelectBaseUrl}>
+                  <Select onValueChange={handleSelectBaseUrl}>
                     <SelectTrigger>
                       <SelectValue placeholder="Selecione o encurtador" />
                     </SelectTrigger>
@@ -540,8 +584,7 @@ export function EncurtadorDois() {
                 name="alphabetId"
                 control={control}
                 render={() => (
-                  <Select
-                  onValueChange={handleSelectConversor}>
+                  <Select onValueChange={handleSelectConversor}>
                     <SelectTrigger>
                       <SelectValue placeholder="Selecione o conversor" />
                     </SelectTrigger>
@@ -565,26 +608,26 @@ export function EncurtadorDois() {
               )}
               {/* FINAL SELECT CONVERSOR */}
             </div>
-            <div className="flex flex-col gap-1 col-span-2">
+            <div className="flex flex-col gap-1 col-span-4">
               <label htmlFor="urlFinal" className="font-semibold">
                 Preencha a URL final
               </label>
               <input
                 id="urlFinal"
                 type="text"
-                placeholder="https://"
-                {...register("longUrl")}
+                placeholder="https://url-final.com.br/..."
+                {...register("redirectUrl")}
                 className={`pl-4 bg-transparent rounded-md border border-input min-h-[36px] ${
-                  errors.longUrl && "border-rose-400"
+                  errors.redirectUrl && "border-rose-400"
                 }`}
-            />
-            {errors.longUrl && (
+              />
+              {errors.redirectUrl && (
                 <span className="text-xs text-rose-400 font-normal">
-                  {errors.longUrl.message}
+                  {errors.redirectUrl.message}
                 </span>
               )}
             </div>
-            <div className="flex flex-col gap-1 col-span-2">
+            {/* <div className="flex flex-col gap-1 col-span-2">
               <label htmlFor="urlFinal" className="font-semibold">
                 Parâmetro a substituir
               </label>
@@ -602,7 +645,7 @@ export function EncurtadorDois() {
                   {errors.replace.message}
                 </span>
               )}
-            </div>
+            </div> */}
             <div className="flex flex-col gap-1">
               <Label htmlFor="comprimento" className="font-semibold">
                 Comprimento
@@ -624,32 +667,81 @@ export function EncurtadorDois() {
                 disabled
               />
             </div>
-            <div className="flex items-center gap-4 col-span-4">
-              <Input
-                id="qrCode"
-                type="checkbox"
-                className="max-w-[16px]"
-                checked={qrCodeActive}
-                onChange={(e) => setQrCodeActive(e.target.checked)}
-              />
-              <Label htmlFor="qrCode" className="text-nowrap cursor-pointer">
-                Gerar QRCode
-              </Label>
-            </div>
+            <Controller
+              name="qrCode"
+              control={control}
+              render={({ field }) => (
+                <div className="flex items-center gap-4 col-span-4">
+                  <Input
+                    id="qrCode"
+                    type="checkbox"
+                    className="max-w-[16px]"
+                    checked={field.value}
+                    onChange={(e) => field.onChange(e.target.checked)}
+                  />
+                  <Label
+                    htmlFor="qrCode"
+                    className="text-nowrap cursor-pointer"
+                  >
+                    Gerar QRCode
+                  </Label>
+                </div>
+              )}
+            />
           </div>
           <div className="pb-12 text-right mt-8 max-w-[500px]">
-            <Button className="w-full" variant="secondary" /*disabled={loading}*/>
+            <Button className="w-full" variant="secondary">
               <div className="flex items-center gap-2">
                 <Send size={18} />
                 Enviar
               </div>
             </Button>
           </div>
-
-          {/* ProgressBar */}
-          {/* {loading && <BarraProgresso value={progress} />} */}
         </form>
       </div>
+
+      {returnData && (
+        <Dialog open={!!returnData} onOpenChange={handleCloseModal}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader className="mb-4">
+              <DialogTitle className="text-center">Dados da URL</DialogTitle>
+              <DialogDescription className="text-center">
+                Após o fechamento do modal, esses dados serão perdidos.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-col items-center gap-4">
+              <div className="flex">
+                <Button
+                  variant={"outline"}
+                  className="p-2 min-w-[320px]"
+                  onClick={() => handleCopyToClipboard(returnData.shortUrl)}
+                >
+                  <span>baseUrlEscolhida/{returnData.shortUrl}</span>
+                  <Link2 size={18} className="ml-4" />
+                </Button>
+              </div>
+              <div>
+                <img
+                  src={
+                    returnData
+                      ? `https://cdn-encurtador.bigdates.com.br/${returnData.qrCode}`
+                      : "ntemqrcode"
+                  }
+                  alt="qrCode"
+                  className="max-w-[320px]"
+                />
+                <Button
+                  variant={"outline"}
+                  className="w-full"
+                  onClick={handleDownloadQRCode}
+                >
+                  Baixar QRCode
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   );
 }

@@ -86,8 +86,8 @@ export type CreateNewUser = {
   export type dataAction = {
     id: number;
     name: string;
-    Campaign: {
-      Client: {
+    campaign: {
+      client: {
         name: string;
       }
       name: string;
@@ -152,9 +152,24 @@ export type CreateNewUser = {
     actionId: number;
     baseUrlId: number;
     alphabetId: number;
-    longUrl: string;
-    replace: string;
+    redirectUrl: string;
+    replace?: string;
     sheet?: File;
     length: number;
     qrCode: boolean;
+  }
+
+  export type createNewSingleLink = {
+    actionId: number;
+    baseUrlId: number;
+    alphabetId: number;
+    redirectUrl: string;
+    length: number;
+    qrCode: boolean;
+  }
+
+  export interface ApiResponse {
+    qrCode: string;
+    redirectUrl: string;
+    shortUrl: string;
   }

@@ -13,7 +13,7 @@ import {
 import { useAuth } from "@/hook/Auth";
 import { useContextState } from "@/hook/state";
 import { customerData, DataProps } from "@/interface/auth";
-import { api } from "@/services/Api";
+import { api, aws } from "@/services/Api";
 import { AxiosError } from "axios";
 import { CircleArrowLeft, UserRoundX } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -77,7 +77,7 @@ export function ClientesPage() {
           {customerData.map((i, index) => (
             <TableRow key={index}>
               <TableCell>
-                <img src={`${api.defaults.baseURL}/${i.logo}`}
+                <img src={`${aws}${i.logo}`}
                 alt={'Logo'+i.logo}/>
               </TableCell>
               <TableCell>

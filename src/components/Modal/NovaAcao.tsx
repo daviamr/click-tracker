@@ -57,15 +57,14 @@ export function NovaAcao() {
   const [customerData, setCustomerData] = useState<customerData[]>([]);
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
   const [isChecked, setIsChecked] = useState(false);
-
-  const cliente =
-    customerData
-      .filter((customer) => selectedClient === customer.name)
-      .map((customer) => customer.id)
-      .join(", ") || "Cliente não encontrado";
+  const [clientId, setClientId] = useState<string>('');
 
   const handleSelectChange = (value: string) => {
-    setSelectedClient(value);
+    const selectedCustomer = customerData.find(customer => customer.name === value);
+    if (selectedCustomer) {
+      setClientId(selectedCustomer.id);
+      setSelectedClient(value);
+    }
   };
 
   const handleChecked = () => {
@@ -96,9 +95,9 @@ export function NovaAcao() {
   }, [customerData]);
 
   useEffect(() => {
-    async function handleGetUsers() {
+    async function handleGetClient() {
       try {
-        const response = await api.get(`/campaigns?clientId=${cliente}`, {
+        const response = await api.get(`/campaigns?clientId=${clientId}`, {
           headers: {
             Authorization: `Bearer ${data.jwtToken}`,
           },
@@ -115,8 +114,10 @@ export function NovaAcao() {
         }
       }
     }
-    handleGetUsers();
-  }, [cliente]);
+    if (clientId) {
+      handleGetClient();
+    }
+  }, [clientId]);
 
   const {
     register,
@@ -232,10 +233,10 @@ export function NovaAcao() {
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Campanhas</SelectLabel>
-                    {campanhas.map((i, index) => (
+                    {campanhas.map(i => (
                       <SelectItem
                         value={i.name}
-                        key={index}
+                        key={i.id}
                       >
                         {i.name}
                       </SelectItem>

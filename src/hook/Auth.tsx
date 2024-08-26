@@ -31,6 +31,8 @@ import {
   statusAction,
   editAction,
   createNewLink,
+  createNewSingleLink,
+  ApiResponse,
 } from "@/interface/auth";
 import { AlertMessage } from "@/components/alert_message";
 
@@ -54,7 +56,7 @@ interface AuthContextType {
   handleEditConversor: (data: editConversor) => Promise<void>;
   deleteConversor: (data: deleteConversor) => Promise<void>;
   handleCreateLink: (data: createNewLink) => Promise<void>;
-  handleCreateSingleLink: (data: createNewLink) => Promise<void>;
+  handleCreateSingleLink: (data: createNewSingleLink) => Promise<ApiResponse>;
   data: DataProps | null;
 }
 
@@ -742,7 +744,7 @@ function AuthProvider({ children }: ChildrenProps) {
     actionId,
     baseUrlId,
     alphabetId,
-    longUrl,
+    redirectUrl,
     replace,
     sheet,
     length,
@@ -760,7 +762,7 @@ function AuthProvider({ children }: ChildrenProps) {
         `actionId: ` + actionId,
         `baseUrlId: ` + baseUrlId,
         `alphabetId: ` + alphabetId,
-        `longUrl: ` + longUrl,
+        `longUrl: ` + redirectUrl,
         `replace: ` + replace,
         sheet,
         `length: ` + length,
@@ -771,14 +773,15 @@ function AuthProvider({ children }: ChildrenProps) {
       formData.append("actionId", String(actionId));
       formData.append("baseUrlId", String(baseUrlId));
       formData.append("alphabetId", String(alphabetId));
-      formData.append("longUrl", longUrl);
-      formData.append("replace", replace);
-      // formData.append("sheet", sheet);
+      formData.append("redirectUrl", redirectUrl);
       formData.append("length", String(length));
       formData.append("qrCode", String(qrCode));
 
       if (sheet) {
         formData.append("sheet", sheet);
+      }
+      if (replace) {
+        formData.append("sheet", replace);
       }
 
       // Envio da requisição com FormData
@@ -808,11 +811,10 @@ function AuthProvider({ children }: ChildrenProps) {
     actionId,
     baseUrlId,
     alphabetId,
-    longUrl,
-    replace,
+    redirectUrl,
     length,
     qrCode,
-  }: createNewLink) {
+  }: createNewSingleLink): Promise<ApiResponse> {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -821,16 +823,13 @@ function AuthProvider({ children }: ChildrenProps) {
       }
       const token = JSON.parse(dataUser);
 
-      // console.log(token)
-
       const response = await api.post(
         "/links/single",
         {
           actionId,
           baseUrlId,
           alphabetId,
-          longUrl,
-          replace,
+          redirectUrl,
           length,
           qrCode,
         },
@@ -843,6 +842,8 @@ function AuthProvider({ children }: ChildrenProps) {
       console.log(response.data);
 
       AlertMessage("Link criado com sucesso.", "success");
+      return response.data; // Retorna a resposta da API
+
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
@@ -852,6 +853,7 @@ function AuthProvider({ children }: ChildrenProps) {
           "error"
         );
       }
+      throw error;
     }
   }
 

@@ -92,6 +92,7 @@ export function AcaoPage() {
             <TableHead>Status</TableHead>
             <TableHead className="min-w-[100px]">Cliente</TableHead>
             <TableHead>Campanha</TableHead>
+            <TableHead>Personalização URL</TableHead>
             <TableHead>Ação</TableHead>
             <TableHead>Início</TableHead>
             <TableHead>Fim</TableHead>
@@ -128,6 +129,7 @@ export function AcaoPage() {
             </TableCell>
             <TableCell>{i.campaign.client.name}</TableCell>
             <TableCell>{i.campaign.name}</TableCell>
+            <TableCell>{i.customPath ? i.customPath: '/' }</TableCell>
             <TableCell>{i.name}</TableCell>
             <TableCell>{dataFormatada(i.startAt)}</TableCell>
             <TableCell>{dataFormatada(i.endAt)}</TableCell>

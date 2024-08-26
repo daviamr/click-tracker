@@ -92,6 +92,7 @@ export type CreateNewUser = {
       }
       name: string;
     }
+    customPath: string;
     startAt: string;
     endAt: string;
     status: string;

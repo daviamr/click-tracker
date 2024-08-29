@@ -18,23 +18,23 @@ import { AxiosError } from "axios";
 import { CircleArrowLeft, UserRoundX } from "lucide-react";
 import { useEffect, useState } from "react";
 
-type dataCustomerProps = {data: DataProps}
+type dataCustomerProps = { data: DataProps };
 
 export function ClientesPage() {
-  const {setIsFocus} = useContextState();
-  const { data } = useAuth() as dataCustomerProps
+  const { setIsFocus } = useContextState();
+  const { data } = useAuth() as dataCustomerProps;
   const { deleteCustomer } = useAuth();
   const [customerData, setCustomerData] = useState<customerData[]>([]);
 
-  useEffect(() => {
-    async function handleGetUsers()
-    {
+  const handleGetClient = async () => {
     try {
-      const response = await api.get('/clients',
-        {headers: {
-        "Authorization": `Bearer ${data.jwtToken}`,
-      }})
-      setCustomerData(response.data)
+      const response = await api.get("/clients", {
+        headers: {
+          Authorization: `Bearer ${data.jwtToken}`,
+        },
+      });
+      setCustomerData(response.data);
+      console.log(response.data);
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
@@ -45,9 +45,16 @@ export function ClientesPage() {
         );
       }
     }
-  }
-  handleGetUsers()
-},[customerData])
+  };
+  useEffect(() => {
+    handleGetClient();
+  }, [data.jwtToken]);
+
+  /* deletar cliente */
+  const handleDeleteCustomer = async (id: string) => {
+    await deleteCustomer({ id });
+    handleGetClient();
+  };
 
   return (
     <>
@@ -63,7 +70,7 @@ export function ClientesPage() {
         </Button>
       </div>
       <div className="flex gap-4 justify-end">
-        <NovoCliente/>
+        <NovoCliente onCreateClient={handleGetClient} />
       </div>
       <Table>
         <TableHeader>
@@ -81,32 +88,24 @@ export function ClientesPage() {
           {customerData.map((i, index) => (
             <TableRow key={index}>
               <TableCell>
-                <img src={`${aws}${i.logo}`}
-                alt={'Logo'+i.logo}/>
+                <img src={`${aws}${i.logo}`} alt={"Logo" + i.logo} />
               </TableCell>
-              <TableCell>
-                {i.name}
-              </TableCell>
-              <TableCell>
-                {i._count.campaigns}
-              </TableCell>
-              <TableCell>
-                açõesAqui
-              </TableCell>
-              <TableCell>
-                {i.totalClicks}
-              </TableCell>
-              <TableCell>
-                {i.totalLinks}
-              </TableCell>
-              <TableCell
-              className="flex items-center justify-end gap-2">
-                <EditarCliente id={i.id} name={i.name}/>
+              <TableCell>{i.name}</TableCell>
+              <TableCell>{i._count.campaigns}</TableCell>
+              <TableCell>açõesAqui</TableCell>
+              <TableCell>{i.totalClicks}</TableCell>
+              <TableCell>{i.totalLinks}</TableCell>
+              <TableCell className="flex items-center justify-end gap-2">
+                <EditarCliente
+                  onEditClient={handleGetClient}
+                  id={i.id}
+                  name={i.name}
+                />
                 <Button
                   className="p-2 duration-300 hover:text-red-700"
                   variant={"outline"}
-                  onClick={() => deleteCustomer({id: i.id})}
-                  >
+                  onClick={() => handleDeleteCustomer(i.id)}
+                >
                   <UserRoundX size={18} />
                 </Button>
               </TableCell>

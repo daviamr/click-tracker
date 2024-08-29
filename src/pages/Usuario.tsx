@@ -14,22 +14,22 @@ import { api } from "@/services/Api";
 import { useAuth } from "@/hook/Auth";
 import { DataProps, userDataProps } from "@/interface/auth";
 
-type dataUserProps = {data: DataProps}
+type dataUserProps = { data: DataProps };
 
 export function UsuarioPage() {
   const { data } = useAuth() as dataUserProps;
 
   const [userData, setUserData] = useState<userDataProps[]>([]);
 
-  useEffect(() => {
-    async function handleGetUsers()
-    {
+  const handleGetUsers = async () => {
     try {
-      const response = await api.get('/users',
-        {headers: {
-        "Authorization": `Bearer ${data.jwtToken}`,
-      }})
-      setUserData(response.data)
+      const response = await api.get("/users", {
+        headers: {
+          Authorization: `Bearer ${data.jwtToken}`,
+        },
+      });
+      setUserData(response.data);
+      console.log(response.data)
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
@@ -40,14 +40,16 @@ export function UsuarioPage() {
         );
       }
     }
-  }
-  handleGetUsers()
-},[userData])
+  };
 
-return (
+  useEffect(() => {
+    handleGetUsers();
+  }, [data.jwtToken]);
+
+  return (
     <>
-    <div className="flex gap-4 justify-end">
-        <NovoUsuario />
+      <div className="flex gap-4 justify-end">
+        <NovoUsuario onCreateUser={handleGetUsers} />
       </div>
       <Table>
         <TableHeader>

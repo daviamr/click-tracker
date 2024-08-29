@@ -17,7 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { editConversor } from "@/interface/auth";
 import { useAuth } from "@/hook/Auth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const verifyEditConversor = z.object({
   id: z.number(),
@@ -30,8 +30,21 @@ type HandleCreateUsersProps = {
   handleEditConversor: ({ id, name, characters }: editConversor) => void;
 };
 
-export function EditarConversor({id, name, characters,} : {id: number; name: string; characters: string;}) {
+type editConversorProps = {
+  id: number;
+  name: string;
+  characters: string;
+  onEditConversor: () => void;
+};
+
+export function EditarConversor({
+  id,
+  name,
+  characters,
+  onEditConversor,
+}: editConversorProps) {
   const { handleEditConversor } = useAuth() as HandleCreateUsersProps;
+  const [isOpen, setIsOpen] = useState(false);
   const {
     formState: { errors },
     handleSubmit,
@@ -49,18 +62,24 @@ export function EditarConversor({id, name, characters,} : {id: number; name: str
   });
   const charactersValue = watch("characters");
 
-  function editConversor(data: conversorData) {
+  async function editConversor(data: conversorData) {
     console.log(data);
     const { id, name, characters } = data;
-    handleEditConversor({ id, name, characters });
+    try {
+      await handleEditConversor({ id, name, characters });
+      onEditConversor();
+    } catch (error) {
+      console.log("Erro ao editar o conversor:", error);
+    }
+    setIsOpen(false);
   }
 
   useEffect(() => {
-    reset({ id, name: "", characters: ""});
+    reset({ id, name: "", characters: "" });
   }, [id, reset]);
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="p-2" variant={"outline"}>
           <Pencil size={18} />
@@ -75,9 +94,7 @@ export function EditarConversor({id, name, characters,} : {id: number; name: str
           </DialogDescription>
         </DialogHeader>
         <form action="" onSubmit={handleSubmit(editConversor)}>
-        <input type="hidden"
-          value={id}
-          {...register("id")}/>
+          <input type="hidden" value={id} {...register("id")} />
           <div className="grid grid-cols-4 gap-4 py-4">
             <div className="col-span-4">
               <Label htmlFor="url" className="text-right">
@@ -118,6 +135,7 @@ export function EditarConversor({id, name, characters,} : {id: number; name: str
               className="flex items-center gap-2"
               type="submit"
               variant={"secondary"}
+              onClick={() => setIsOpen(true)}
             >
               <Pencil size={18} />
               Editar

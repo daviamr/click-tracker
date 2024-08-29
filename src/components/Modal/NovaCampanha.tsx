@@ -43,7 +43,11 @@ type HandleCreateUsersProps = {
   data: DataProps;
 };
 
-export function NovaCampanha() {
+type createCampaignProps = {
+  onCreateCampaign: () => void;
+}
+
+export function NovaCampanha({onCreateCampaign}: createCampaignProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { data, handleCreateCampaign } = useAuth() as HandleCreateUsersProps;
   const [customerData, setCustomerData] = useState<customerData[]>([]);
@@ -99,7 +103,7 @@ export function NovaCampanha() {
     setValue('startAt', getCurrentDateTime());
   }, [setValue]);
 
-  function createCampaign(data: campaignData) {
+  async function createCampaign(data: campaignData) {
     const { name, clientId, startAt, endAt } = data;
     const idClient = customerData.find((i) => i.name === clientId)?.id;
     const dataInicioFormatado = new Date(startAt);
@@ -109,7 +113,11 @@ export function NovaCampanha() {
 
     console.log(data);
     if (idClient) {
-      handleCreateCampaign({ name, clientId: idClient, startAt: inicioIso, endAt: fimIso });
+      try {
+        await handleCreateCampaign({ name, clientId: idClient, startAt: inicioIso, endAt: fimIso });
+        onCreateCampaign();
+      } catch (error) {
+        console.error("Erro ao criar campanha:", error);}
       setIsOpen(false);
       reset();
     } else {

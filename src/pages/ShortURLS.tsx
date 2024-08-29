@@ -18,23 +18,23 @@ import { AxiosError } from "axios";
 import { api } from "@/services/Api";
 import { DataProps, urlData } from "@/interface/auth";
 
-type dataUrlProps = {data: DataProps}
+type dataUrlProps = { data: DataProps };
 
 export function ShortUrlsPage() {
   const { setIsFocus } = useContextState();
   const [url, setUrl] = useState<urlData[]>([]);
-  const {data} = useAuth() as dataUrlProps
-  const {deleteURL} = useAuth();
+  const { data } = useAuth() as dataUrlProps;
+  const { deleteURL } = useAuth();
 
-  useEffect(() => {
-    async function handleGetUsers()
-    {
+  const handleGetUrl = async () => {
     try {
-      const response = await api.get('/base-url',
-        {headers: {
-        "Authorization": `Bearer ${data.jwtToken}`,
-      }})
-      setUrl(response.data)
+      const response = await api.get("/base-url", {
+        headers: {
+          Authorization: `Bearer ${data.jwtToken}`,
+        },
+      });
+      setUrl(response.data);
+      console.log(response.data);
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
@@ -45,13 +45,17 @@ export function ShortUrlsPage() {
         );
       }
     }
-  }
-  handleGetUsers()
-},[url])
+  };
 
-  // const removeUrl = (id: number) => {
-  //   setUrls((state) => state.filter((i) => i.id !== id));
-  // }
+  useEffect(() => {
+    handleGetUrl();
+  }, [data.jwtToken]);
+
+  /* deletar url */
+  const handleDeleteUrl = async (id: number) => {
+    await deleteURL({ id });
+    handleGetUrl();
+  };
 
   return (
     <>
@@ -67,7 +71,7 @@ export function ShortUrlsPage() {
         </Button>
       </div>
       <div className="flex gap-4 justify-end">
-        <NovaUrl />
+        <NovaUrl onCreateUrl={handleGetUrl} />
       </div>
       <Table>
         <TableHeader>
@@ -81,11 +85,11 @@ export function ShortUrlsPage() {
             <TableRow key={i.id}>
               <TableCell>{i.url}</TableCell>
               <TableCell className="flex items-center justify-end gap-2">
-                <EditarUrl id={i.id} url={i.url}/>
+                <EditarUrl id={i.id} url={i.url} onEditUrl={handleGetUrl} />
                 <Button
                   className="p-2 duration-300 hover:text-red-700"
                   variant={"outline"}
-                  onClick={() => deleteURL({id: i.id})}
+                  onClick={() => handleDeleteUrl(i.id)}
                 >
                   <CircleX size={18} />
                 </Button>

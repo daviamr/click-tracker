@@ -29,8 +29,11 @@ type customerData = z.infer<typeof verifyCreateCustomer>;
 type HandleCreateUsersProps = {
   handleCreateCustomers: ({ image, name }: createNewCustomer) => void;
 };
+type createClientProps = {
+  onCreateClient: () => void;
+}
 
-export function NovoCliente() {
+export function NovoCliente({onCreateClient}: createClientProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { handleCreateCustomers } = useAuth() as HandleCreateUsersProps;
   const {
@@ -46,10 +49,15 @@ export function NovoCliente() {
     },
   });
 
-  function createCustomer(data: customerData) {
+  async function createCustomer(data: customerData) {
     const { image, name } = data;
     console.log(data);
-    handleCreateCustomers({ image: image[0], name });
+    try {
+      await handleCreateCustomers({ image: image[0], name });
+      onCreateClient();
+    } catch (error) {
+      console.error("Erro ao criar cliente:", error);
+    }
     setIsOpen(false);
     reset();
   }

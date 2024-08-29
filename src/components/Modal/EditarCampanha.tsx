@@ -41,11 +41,18 @@ type HandleCreateUsersProps = {
   handleEditCampaign: ({id, name, clientId }: editCampaign) => void;
   data: DataProps;
 };
+type editCampaignProps = {
+  name: string;
+  id: number;
+  nameClient: string;
+  onEditCampaign: () => void;
+}
 
-export function EditarCampanha({name, id, nameClient} : {name: string; id: number, nameClient: string;}) {
+export function EditarCampanha({name, id, nameClient, onEditCampaign}: editCampaignProps) {
   // GET NA API RETORNANDO OS CLIENTES
   const { data, handleEditCampaign } = useAuth() as HandleCreateUsersProps;
   const [customerData, setCustomerData] = useState<customerData[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     async function handleGetUsers() {
@@ -85,24 +92,30 @@ export function EditarCampanha({name, id, nameClient} : {name: string; id: numbe
   });
 
   useEffect(() => {
-    reset({ id, name: "", clientId: "" });
   }, [id, reset]);
 
-  function editCampaign(data: campaignData) {
+  async function editCampaign(data: campaignData) {
     console.log('enviado')
     const { id, name, clientId } = data;
     const idClient = customerData.find((i) => i.name === clientId)?.id;
 
     if (idClient) {
-      handleEditCampaign({ id, name, clientId: idClient});
+      try {
+        await handleEditCampaign({ id, name, clientId: idClient});
+        onEditCampaign();
+      } catch (error) {
+        console.error("Erro editar campanha:", error);
+      }
 
     } else {
       console.error("Id do cliente não encontrado.");
     }
+    setIsOpen(false);
+    reset({ id, name: "", clientId: "" });
   }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="p-2" variant={"outline"}>
           <FilePenLine size={18} />
@@ -176,6 +189,7 @@ export function EditarCampanha({name, id, nameClient} : {name: string; id: numbe
               className="flex items-center gap-2"
               type="submit"
               variant={"secondary"}
+              onClick={() => setIsOpen(true)}
             >
               <FilePenLine size={18} />
               Editar

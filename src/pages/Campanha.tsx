@@ -27,68 +27,76 @@ export function CampanhaPage() {
   const [customerData, setCustomerData] = useState<customerData[]>([]);
   const { deleteCampaign, handleStatusCampaign } = useAuth();
   const { data } = useAuth() as dataCampaignProps;
-  const [switchStates, setSwitchStates] = useState<{ [key: string]: boolean }>({});
+  const [switchStates, setSwitchStates] = useState<{ [key: string]: boolean }>(
+    {}
+  );
 
   const handleSwitchChange = (id: number, checked: boolean) => {
     setSwitchStates((prev) => ({ ...prev, [id]: checked }));
 
-    handleStatusCampaign({id})
+    handleStatusCampaign({ id });
   };
 
-  useEffect(() => {
-    async function handleGetUsers() {
-      try {
-        const response = await api.get("/campaigns", {
-          headers: {
-            Authorization: `Bearer ${data.jwtToken}`,
-          },
-        });
-        setCampanhas(response.data);
+  const handleGetCampaign = async () => {
+    try {
+      const response = await api.get("/campaigns", {
+        headers: {
+          Authorization: `Bearer ${data.jwtToken}`,
+        },
+      });
+      setCampanhas(response.data);
 
-        const initialSwitchStates: { [key: number]: boolean } = {};
+      const initialSwitchStates: { [key: number]: boolean } = {};
       response.data.forEach((campaign: campaignData) => {
         // Switch marcado apenas se o status for 'Active'
         initialSwitchStates[campaign.id] = campaign.status === "Active";
       });
 
       setSwitchStates(initialSwitchStates);
-
-      } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response) {
-          AlertMessage(error.response.data.message, "error");
-        } else {
-          AlertMessage(
-            "Não foi possível carregar as campanhas, tente novamente mais tarde.",
-            "error"
-          );
-        }
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível carregar as campanhas, tente novamente mais tarde.",
+          "error"
+        );
       }
     }
-    handleGetUsers();
-  }, [campanhas]);
-
+  };
   useEffect(() => {
-    async function handleGetUsers() {
-      try {
-        const response = await api.get("/clients", {
-          headers: {
-            Authorization: `Bearer ${data.jwtToken}`,
-          },
-        });
-        setCustomerData(response.data);
-      } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response) {
-          AlertMessage(error.response.data.message, "error");
-        } else {
-          AlertMessage(
-            "Não foi possível carregar os clientes, tente novamente mais tarde.",
-            "error"
-          );
-        }
+    handleGetCampaign();
+  }, [data.jwtToken]);
+
+  const handleGetClient = async () => {
+    try {
+      const response = await api.get("/clients", {
+        headers: {
+          Authorization: `Bearer ${data.jwtToken}`,
+        },
+      });
+      setCustomerData(response.data);
+      console.log(response.data)
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível carregar os clientes, tente novamente mais tarde.",
+          "error"
+        );
       }
     }
-    handleGetUsers();
-  }, [customerData]);
+  };
+  useEffect(() => {
+    handleGetClient();
+  }, [data.jwtToken]);
+
+    /* deletar campanha */
+    const handleDeleteCampaign = async (id: number) => {
+      await deleteCampaign({ id });
+      handleGetCampaign();
+    };
 
   return (
     <>
@@ -104,7 +112,7 @@ export function CampanhaPage() {
         </Button>
       </div>
       <div className="flex gap-4 justify-end">
-        <NovaCampanha />
+        <NovaCampanha onCreateCampaign={handleGetCampaign}/>
       </div>
       <Table>
         <TableHeader>
@@ -121,18 +129,22 @@ export function CampanhaPage() {
         </TableHeader>
         <TableBody>
           {campanhas.map((i, index) => {
-            const customerName = customerData.filter((customer) => i.clientId === customer.id).map((customer) => customer.name).join(", ") || "Cliente não encontrado";
+            const customerName =
+              customerData
+                .filter((customer) => i.clientId === customer.id)
+                .map((customer) => customer.name)
+                .join(", ") || "Cliente não encontrado";
             const dataFormatada = (data: string) => {
-              return new Date(data).toLocaleString('pt-BR', {
-              day: '2-digit',
-              month: '2-digit',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-              second: '2-digit',
-              hour12: false,
-              })
-            }      
+              return new Date(data).toLocaleString("pt-BR", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: false,
+              });
+            };
             return (
               <TableRow key={index}>
                 <TableCell>{i.name}</TableCell>
@@ -143,17 +155,23 @@ export function CampanhaPage() {
                 <TableCell>{dataFormatada(i.startAt)}</TableCell>
                 <TableCell>{dataFormatada(i.endAt)}</TableCell>
                 <TableCell className="flex items-center justify-end gap-2">
-                <Switch
-              value={i.id}
-              checked={switchStates[i.id] || false}
-              onCheckedChange={(checked) =>
-                handleSwitchChange(i.id, checked)
-              }/>
-                  <EditarCampanha name={i.name} id={i.id} nameClient={customerName} />
+                  <Switch
+                    value={i.id}
+                    checked={switchStates[i.id] || false}
+                    onCheckedChange={(checked) =>
+                      handleSwitchChange(i.id, checked)
+                    }
+                  />
+                  <EditarCampanha
+                    name={i.name}
+                    id={i.id}
+                    nameClient={customerName}
+                    onEditCampaign={handleGetCampaign}
+                  />
                   <Button
                     className="p-2 duration-300 hover:text-red-700"
                     variant={"outline"}
-                    onClick={() => deleteCampaign({ id: i.id })}
+                    onClick={() => handleDeleteCampaign(i.id)}
                   >
                     <FileX2 size={18} />
                   </Button>

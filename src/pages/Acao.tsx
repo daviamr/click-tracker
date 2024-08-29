@@ -37,8 +37,7 @@ export function AcaoPage() {
     console.log(`Valor do Switch para ação ${id}:`, checked);
   };
 
-  useEffect(() => {
-    async function handleGetUsers()
+    const handleGetAction = async () =>
     {
     try {
       const response = await api.get('/actions',
@@ -67,8 +66,15 @@ export function AcaoPage() {
       }
     }
   }
-  handleGetUsers()
-},[dataAction])
+  useEffect(() => {
+    handleGetAction();
+  }, [data.jwtToken]);
+
+  /* deletar Ação */
+  const handleDeleteCampaign = async (id: number) => {
+    await deleteAction({ id });
+    handleGetAction();
+  };
 
   return (
     <>
@@ -84,7 +90,7 @@ export function AcaoPage() {
         </Button>
       </div>
       <div className="flex gap-4 justify-end">
-        <NovaAcao />
+        <NovaAcao onCreateAction={handleGetAction}/>
       </div>
       <Table>
         <TableHeader>
@@ -144,11 +150,11 @@ export function AcaoPage() {
               onCheckedChange={(checked) =>
               handleSwitchChange(i.id, checked)
               }/>
-              <EditarAcao id={i.id} cliente={i.campaign.client.name} campanha={i.campaign.name} acao={i.name} dataInicio={i.startAt} dataFim={i.endAt}/>
+              <EditarAcao id={i.id} cliente={i.campaign.client.name} campanha={i.campaign.name} acao={i.name} dataInicio={i.startAt} dataFim={i.endAt} onEditAction={handleGetAction}/>
               <Button
                 className="p-2 duration-300 hover:text-red-700"
                 variant={"outline"}
-                onClick={() => deleteAction({id: i.id})}
+                onClick={() => handleDeleteCampaign(i.id)}
               >
                 <CircleX size={18} />
               </Button>

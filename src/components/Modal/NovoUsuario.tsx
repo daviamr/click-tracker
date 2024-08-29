@@ -32,8 +32,11 @@ type HandleCreateUsersProps = {
     password,
   }: CreateNewUser) => void;
 };
+type createUserProps = {
+  onCreateUser: () => void;
+}
 
-export function NovoUsuario() {
+export function NovoUsuario({onCreateUser}: createUserProps) {
   const [isOpen, setIsOpen] = useState(false);
   const {handleCreateUsers} = useAuth() as HandleCreateUsersProps;
   const {
@@ -54,6 +57,7 @@ export function NovoUsuario() {
     console.log(data)
     const {name, email, password} = data
     handleCreateUsers({name, email, password})
+    onCreateUser();
     setIsOpen(false);
     reset();
   }

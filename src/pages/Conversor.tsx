@@ -18,23 +18,22 @@ import { api } from "@/services/Api";
 import { AxiosError } from "axios";
 import { AlertMessage } from "@/components/alert_message";
 
-type dataConversorProps = {data: DataProps}
+type dataConversorProps = { data: DataProps };
 
 export function ConversorPage() {
   const { setIsFocus } = useContextState();
   const [conversor, setConversor] = useState<conversorData[]>([]);
-  const { data } = useAuth() as dataConversorProps
-  const {deleteConversor} = useAuth()
+  const { data } = useAuth() as dataConversorProps;
+  const { deleteConversor } = useAuth();
 
-  useEffect(() => {
-    async function handleGetUsers()
-    {
+  const handleGetConversor = async () => {
     try {
-      const response = await api.get('/alphabets',
-        {headers: {
-        "Authorization": `Bearer ${data.jwtToken}`,
-      }})
-      setConversor(response.data)
+      const response = await api.get("/alphabets", {
+        headers: {
+          Authorization: `Bearer ${data.jwtToken}`,
+        },
+      });
+      setConversor(response.data);
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
@@ -45,14 +44,16 @@ export function ConversorPage() {
         );
       }
     }
-  }
-  handleGetUsers()
-},[conversor])
+  };
+  useEffect(() => {
+    handleGetConversor();
+  }, [data.jwtToken]);
 
-  // const removeUrl = (id: number) => {
-  //   setConversor((state) => state.filter((i) => i.id !== id));
-  // }
-
+  /* deletar conversor */
+  const handleDeleteConversor = async (id: number) => {
+    await deleteConversor({ id });
+    handleGetConversor();
+  };
   return (
     <>
       <div className="flex items-center justify-between mb-8">
@@ -67,7 +68,7 @@ export function ConversorPage() {
         </Button>
       </div>
       <div className="flex gap-4 justify-end">
-        <NovoConversor />
+        <NovoConversor onCreateConversor={handleGetConversor} />
       </div>
       <Table>
         <TableHeader>
@@ -83,11 +84,16 @@ export function ConversorPage() {
               <TableCell>{i.name}</TableCell>
               <TableCell>{i.characters}</TableCell>
               <TableCell className="flex items-center justify-end gap-2">
-                <EditarConversor id={i.id} name={i.name} characters={i.characters}/>
+                <EditarConversor
+                  id={i.id}
+                  name={i.name}
+                  characters={i.characters}
+                  onEditConversor={handleGetConversor}
+                />
                 <Button
                   className="p-2 duration-300 hover:text-red-700"
                   variant={"outline"}
-                  onClick={() => deleteConversor({id: i.id})}
+                  onClick={() => handleDeleteConversor(i.id)}
                 >
                   <CircleX size={18} />
                 </Button>

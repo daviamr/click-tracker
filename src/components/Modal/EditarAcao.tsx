@@ -58,6 +58,16 @@ type HandleCreateUsersProps = {
   data: DataProps;
 };
 
+type editActionProps = {
+  id: number;
+  cliente: string;
+  campanha: string;
+  acao: string;
+  dataInicio: string;
+  dataFim: string;
+  onEditAction: () => void;
+};
+
 export function EditarAcao({
   id,
   cliente,
@@ -65,14 +75,8 @@ export function EditarAcao({
   acao,
   dataInicio,
   dataFim,
-}: {
-  id: number;
-  cliente: string;
-  campanha: string;
-  acao: string;
-  dataInicio: string;
-  dataFim: string;
-}) {
+  onEditAction,
+}: editActionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { data, handleEditAction } = useAuth() as HandleCreateUsersProps;
   const [customerData, setCustomerData] = useState<customerData[]>([]);
@@ -176,7 +180,7 @@ export function EditarAcao({
     }
   };
 
-  const editAction = (data: editAction) => {
+  const editAction = async (data: editAction) => {
     const { id, name, campaignId, customPath, startAt, endAt } = data;
     const dataInicioFormatado = new Date(startAt);
     const dataFimFormatado = new Date(endAt);
@@ -186,15 +190,19 @@ export function EditarAcao({
     if (campaignId === 0) {
       alert("Campanha não encontrada.");
     } else {
-      handleEditAction({ id, name, campaignId, customPath, startAt: inicioIso, endAt: fimIso });
-      console.log({
-        id,
-        name,
-        campaignId,
-        customPath,
-        startAt: inicioIso,
-        endAt: fimIso,
-      });
+      try {
+        await handleEditAction({
+          id,
+          name,
+          campaignId,
+          customPath,
+          startAt: inicioIso,
+          endAt: fimIso,
+        });
+        onEditAction();
+      } catch (error) {
+        console.log('Não foi possível editar a ação:', error)
+      }
       setIsOpen(false);
       reset();
     }

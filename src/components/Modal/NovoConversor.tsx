@@ -29,7 +29,11 @@ type HandleCreateUsersProps = {
   handleCreateConversor: ({ name, characters }: createNewConversor) => void;
 };
 
-export function NovoConversor() {
+type createConversorProps = {
+  onCreateConversor: () => void;
+}
+
+export function NovoConversor({onCreateConversor}: createConversorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { handleCreateConversor } = useAuth() as HandleCreateUsersProps;
   const {
@@ -47,10 +51,15 @@ export function NovoConversor() {
     },
   });
 
-  function createConversor(data: conversorData) {
+  async function createConversor(data: conversorData) {
     const { name, characters } = data;
     console.log(data);
-    handleCreateConversor({ name, characters });
+    try {
+      await handleCreateConversor({ name, characters });
+      onCreateConversor();
+    } catch (error) {
+      console.log('Erro ao criar conversor', error)
+    }
     setIsOpen(false);
     reset();
   }

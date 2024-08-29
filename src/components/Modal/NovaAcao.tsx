@@ -50,7 +50,11 @@ type HandleCreateUsersProps = {
   data: DataProps;
 };
 
-export function NovaAcao() {
+type createActionProps = {
+  onCreateAction: () => void;
+}
+
+export function NovaAcao({onCreateAction}: createActionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { data, handleCreateAction } = useAuth() as HandleCreateUsersProps;
   const [selectedClient, setSelectedClient] = useState<string>("");
@@ -146,7 +150,7 @@ export function NovaAcao() {
     }
   };
 
-  const createAction = (data: actionData) => {
+  const createAction = async (data: actionData) => {
     const { name, campaignId, customPath, startAt, endAt } = data;
     const dataInicioFormatado = new Date(startAt);
     const dataFimFormatado = new Date(endAt);
@@ -156,8 +160,13 @@ export function NovaAcao() {
     if (campaignId === 0) {
       alert('Campanha não encontrada.')
     } else {
-      handleCreateAction({ name, campaignId, customPath, startAt: inicioIso, endAt: fimIso });
-      console.log({ name, campaignId, customPath, startAt: inicioIso, endAt: fimIso });
+      try {
+        await handleCreateAction({ name, campaignId, customPath, startAt: inicioIso, endAt: fimIso });
+        console.log({ name, campaignId, customPath, startAt: inicioIso, endAt: fimIso });
+        onCreateAction();
+      } catch (error) {
+        console.error("Erro ao criar ação:", error);
+      }
       setIsOpen(false);
       reset();
     }

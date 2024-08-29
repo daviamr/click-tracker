@@ -14,7 +14,7 @@ import { useAuth } from "@/hook/Auth";
 import { editURL } from "@/interface/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Pencil } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -28,9 +28,16 @@ type HandleCreateUsersProps = {
   handleEditURL: ({ id, url }: editURL) => void;
 };
 
-export function EditarUrl({id, url} : {id: number, url: string}) {
+type editUrlProps = {
+  id: number;
+  url: string;
+  onEditUrl: () => void;
+}
+
+export function EditarUrl({id, url, onEditUrl}: editUrlProps) {
 
   const { handleEditURL } = useAuth() as HandleCreateUsersProps;
+  const [isOpen, setIsOpen] = useState(false);
   const {
     register,
     handleSubmit,
@@ -43,18 +50,25 @@ export function EditarUrl({id, url} : {id: number, url: string}) {
     },
   });
 
-  function editURL(data: urlData) {
+  async function editURL(data: urlData) {
     console.log(data);
     const { id, url } = data;
-    handleEditURL({ id, url });
+    const newUrl = url.replace(/^https?:\/\//, "").replace(/\/.*$/, "");
+    
+    try {
+      await handleEditURL({ id, url: newUrl});
+      onEditUrl();
+    } catch (error) {
+      console.error("Erro ao editar url:", error);
+    }
+    setIsOpen(false);
   }
-
   useEffect(() => {
     reset({ id, url: ""});
   }, [id, reset]);
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="p-2"
         variant={"outline"}>
@@ -91,7 +105,11 @@ export function EditarUrl({id, url} : {id: number, url: string}) {
           </div>
         </div>
         <DialogFooter>
-          <Button className="flex items-center gap-2" type="submit" variant={'secondary'}>
+          <Button
+          className="flex items-center gap-2"
+          type="submit"
+          variant={'secondary'}
+          onClick={() => setIsOpen(true)}>
           <Pencil size={18}/>
             Editar
             </Button>

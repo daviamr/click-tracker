@@ -33,7 +33,6 @@ import {
   createNewLink,
   createNewSingleLink,
   ApiResponse,
-  campaignData,
   statusCampaign,
 } from "@/interface/auth";
 import { AlertMessage } from "@/components/alert_message";

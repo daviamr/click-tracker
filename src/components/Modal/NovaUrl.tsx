@@ -44,9 +44,10 @@ export function NovaUrl() {
   });
 
   function createURL(data: urlData) {
-    console.log(data);
     const { url } = data;
-    handleCreateURL({ url });
+    const newUrl = url.replace(/^https?:\/\//, "").replace(/\/.*$/, "");
+
+    handleCreateURL({ url: newUrl });
     setIsOpen(false);
     reset();
   }

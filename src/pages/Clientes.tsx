@@ -68,8 +68,12 @@ export function ClientesPage() {
       <Table>
         <TableHeader>
           <TableRow className="pointer-events-none">
-            <TableHead className="w-[120px]">Logo</TableHead>
+            <TableHead className="w-[80px] text-center">Logo</TableHead>
             <TableHead>Cliente</TableHead>
+            <TableHead>Campanhas</TableHead>
+            <TableHead>Ações</TableHead>
+            <TableHead>Cliques</TableHead>
+            <TableHead>Links</TableHead>
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
@@ -82,6 +86,18 @@ export function ClientesPage() {
               </TableCell>
               <TableCell>
                 {i.name}
+              </TableCell>
+              <TableCell>
+                {i._count.campaigns}
+              </TableCell>
+              <TableCell>
+                açõesAqui
+              </TableCell>
+              <TableCell>
+                {i.totalClicks}
+              </TableCell>
+              <TableCell>
+                {i.totalLinks}
               </TableCell>
               <TableCell
               className="flex items-center justify-end gap-2">

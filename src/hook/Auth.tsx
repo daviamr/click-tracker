@@ -33,6 +33,8 @@ import {
   createNewLink,
   createNewSingleLink,
   ApiResponse,
+  campaignData,
+  statusCampaign,
 } from "@/interface/auth";
 import { AlertMessage } from "@/components/alert_message";
 
@@ -46,6 +48,7 @@ interface AuthContextType {
   handleEditCampaign: (data: editCampaign) => Promise<void>;
   deleteCampaign: (data: deleteCampaign) => Promise<void>;
   handleCreateAction: (data: createNewAction) => Promise<void>;
+  handleStatusCampaign: (data: statusCampaign) => Promise<void>;
   handleEditAction: (data: editAction) => Promise<void>;
   handleStatusAction: (data: statusAction) => Promise<void>;
   deleteAction: (data: deleteAction) => Promise<void>;
@@ -258,7 +261,7 @@ function AuthProvider({ children }: ChildrenProps) {
   }
 
   //CAMPAIGNS
-  async function handleCreateCampaign({ name, clientId }: createNewCampaign) {
+  async function handleCreateCampaign({ name, clientId, startAt, endAt }: createNewCampaign) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -266,14 +269,14 @@ function AuthProvider({ children }: ChildrenProps) {
         throw new Error("Token não encontrado.");
       }
       const token = JSON.parse(dataUser);
-
-      // console.log(token)
-
+      console.log(name, clientId, startAt, endAt)
       const response = await api.post(
         "/campaigns",
         {
           name,
           clientId,
+          startAt,
+          endAt,
         },
         {
           headers: {
@@ -359,6 +362,39 @@ function AuthProvider({ children }: ChildrenProps) {
       } else {
         AlertMessage(
           "Não foi possível deletar a campanha, tente novamente.",
+          "error"
+        );
+      }
+    }
+  }
+
+  async function handleStatusCampaign({ id }: statusCampaign) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      const response = await api.put(
+        `/campaigns/${id}/toggle`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token.jwtToken}`,
+          },
+        }
+      );
+      console.log(response.data);
+
+      AlertMessage("Status da campanha alterado com sucesso.", "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível mudar o status da campanha agora, tente novamente mais tarde.",
           "error"
         );
       }
@@ -479,7 +515,7 @@ function AuthProvider({ children }: ChildrenProps) {
       );
       console.log(response.data);
 
-      AlertMessage("Status da campanha alterado com sucesso.", "success");
+      AlertMessage("Status da ação alterado com sucesso.", "success");
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
@@ -868,6 +904,7 @@ function AuthProvider({ children }: ChildrenProps) {
           deleteCustomer,
           handleCreateCampaign,
           handleEditCampaign,
+          handleStatusCampaign,
           deleteCampaign,
           handleCreateAction,
           handleEditAction,

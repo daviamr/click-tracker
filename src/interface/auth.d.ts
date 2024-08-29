@@ -36,6 +36,11 @@ export type CreateNewUser = {
     image: File;
     name: string;
     logo?: string;
+    _count: {
+      campaigns: number;
+    }
+    totalClicks: number;
+    totalLinks: number;
   }
 
   export type deleteCustomer = {
@@ -45,6 +50,8 @@ export type CreateNewUser = {
   export type createNewCampaign = {
     name: string;
     clientId: string;
+    startAt?: string;
+    endAt?: string;
   }
 
   export type editCampaign = {
@@ -64,6 +71,14 @@ export type CreateNewUser = {
     Client: {name: string};
     startAt: string;
     endAt: string;
+    totalClicks: number;
+    totalLinks: number;
+    status: string;
+    _count: {actions: number};
+  }
+
+  export type statusCampaign = {
+    id: number;
   }
 
   export type createNewAction = {
@@ -96,6 +111,8 @@ export type CreateNewUser = {
     startAt: string;
     endAt: string;
     status: string;
+    totalClicks: number;
+    totalLinks: number;
   }
 
   export type statusAction = {

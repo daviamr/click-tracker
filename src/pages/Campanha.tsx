@@ -17,6 +17,7 @@ import { AlertMessage } from "@/components/alert_message";
 import { api } from "@/services/Api";
 import { useAuth } from "@/hook/Auth";
 import { campaignData, customerData, DataProps } from "@/interface/auth";
+import { Switch } from "@/components/ui/switch";
 
 type dataCampaignProps = { data: DataProps };
 
@@ -24,8 +25,15 @@ export function CampanhaPage() {
   const { setIsFocus } = useContextState();
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
   const [customerData, setCustomerData] = useState<customerData[]>([]);
-  const { deleteCampaign } = useAuth();
+  const { deleteCampaign, handleStatusCampaign } = useAuth();
   const { data } = useAuth() as dataCampaignProps;
+  const [switchStates, setSwitchStates] = useState<{ [key: string]: boolean }>({});
+
+  const handleSwitchChange = (id: number, checked: boolean) => {
+    setSwitchStates((prev) => ({ ...prev, [id]: checked }));
+
+    handleStatusCampaign({id})
+  };
 
   useEffect(() => {
     async function handleGetUsers() {
@@ -36,6 +44,15 @@ export function CampanhaPage() {
           },
         });
         setCampanhas(response.data);
+
+        const initialSwitchStates: { [key: number]: boolean } = {};
+      response.data.forEach((campaign: campaignData) => {
+        // Switch marcado apenas se o status for 'Active'
+        initialSwitchStates[campaign.id] = campaign.status === "Active";
+      });
+
+      setSwitchStates(initialSwitchStates);
+
       } catch (error: unknown) {
         if (error instanceof AxiosError && error.response) {
           AlertMessage(error.response.data.message, "error");
@@ -92,19 +109,46 @@ export function CampanhaPage() {
       <Table>
         <TableHeader>
           <TableRow className="pointer-events-none">
-            <TableHead className="w-[120px]">Campanha</TableHead>
+            <TableHead className="w-[200px]">Campanha</TableHead>
             <TableHead>Cliente</TableHead>
+            <TableHead>Ações</TableHead>
+            <TableHead>Cliques</TableHead>
+            <TableHead>Links</TableHead>
+            <TableHead>Início</TableHead>
+            <TableHead>Fim</TableHead>
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {campanhas.map((i, index) => {
             const customerName = customerData.filter((customer) => i.clientId === customer.id).map((customer) => customer.name).join(", ") || "Cliente não encontrado";
+            const dataFormatada = (data: string) => {
+              return new Date(data).toLocaleString('pt-BR', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false,
+              })
+            }      
             return (
               <TableRow key={index}>
                 <TableCell>{i.name}</TableCell>
                 <TableCell>{customerName}</TableCell>
+                <TableCell>{i._count.actions}</TableCell>
+                <TableCell>{i.totalClicks}</TableCell>
+                <TableCell>{i.totalLinks}</TableCell>
+                <TableCell>{dataFormatada(i.startAt)}</TableCell>
+                <TableCell>{dataFormatada(i.endAt)}</TableCell>
                 <TableCell className="flex items-center justify-end gap-2">
+                <Switch
+              value={i.id}
+              checked={switchStates[i.id] || false}
+              onCheckedChange={(checked) =>
+                handleSwitchChange(i.id, checked)
+              }/>
                   <EditarCampanha name={i.name} id={i.id} nameClient={customerName} />
                   <Button
                     className="p-2 duration-300 hover:text-red-700"

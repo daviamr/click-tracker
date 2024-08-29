@@ -33,11 +33,13 @@ import { AlertMessage } from "../alert_message";
 const verifyCreateCampaign = z.object({
   name: z.string().min(4, "*Mínimo de 4 caracteres"),
   clientId: z.string().min(1, ""),
+  startAt: z.string(),
+  endAt: z.string(),
 });
 
 type campaignData = z.infer<typeof verifyCreateCampaign>;
 type HandleCreateUsersProps = {
-  handleCreateCampaign: ({ name, clientId }: createNewCampaign) => void;
+  handleCreateCampaign: ({ name, clientId, startAt, endAt }: createNewCampaign) => void;
   data: DataProps;
 };
 
@@ -69,27 +71,45 @@ export function NovaCampanha() {
     handleGetUsers();
   }, []);
 
+  //data atual
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); // Ajusta o fuso horário
+    return now.toISOString().slice(0, 16); // Formato compatível com datetime-local
+  };
+
   const {
     register,
     handleSubmit,
     control,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<campaignData>({
     resolver: zodResolver(verifyCreateCampaign),
     defaultValues: {
       name: '',
       clientId: '',
+      startAt: '',
+      endAt: '',
     },
   });
 
+  useEffect(() => {
+    setValue('startAt', getCurrentDateTime());
+  }, [setValue]);
+
   function createCampaign(data: campaignData) {
-    const { name, clientId } = data;
+    const { name, clientId, startAt, endAt } = data;
     const idClient = customerData.find((i) => i.name === clientId)?.id;
+    const dataInicioFormatado = new Date(startAt);
+    const dataFimFormatado = new Date(endAt);
+    const inicioIso = dataInicioFormatado.toISOString();
+    const fimIso = dataFimFormatado.toISOString();
 
     console.log(data);
     if (idClient) {
-      handleCreateCampaign({ name, clientId: idClient });
+      handleCreateCampaign({ name, clientId: idClient, startAt: inicioIso, endAt: fimIso });
       setIsOpen(false);
       reset();
     } else {
@@ -132,7 +152,7 @@ export function NovaCampanha() {
                 </span>
               )}
             </div>
-            <div>
+            <div className="col-span-4">
               <Label htmlFor="campanhas">Cliente</Label>
               {/* SELECT CUSTOMER */}
 
@@ -141,7 +161,7 @@ export function NovaCampanha() {
                 control={control}
                 render={({ field }) => (
                   <Select onValueChange={field.onChange}>
-                    <SelectTrigger className="w-[200px]">
+                    <SelectTrigger>
                       <SelectValue placeholder="Selecione o cliente" />
                     </SelectTrigger>
                     <SelectContent className={`${errors.clientId}`}>
@@ -164,6 +184,24 @@ export function NovaCampanha() {
               )}
               {/* FINAL SELECT CUSTOMER */}
             </div>
+            <div className="col-span-2">
+            <Label id="dataInicio">Data/Hora Início</Label>
+            <Input
+            id="dataInicio"
+            type="datetime-local"
+            {...register("startAt")}
+                className={`${errors.startAt && "border-rose-400 bg-rose-100"}`}
+            />
+          </div>
+          <div className="col-span-2">
+            <Label id="dataFim">Data/Hora Início</Label>
+            <Input
+            id="dataFim"
+            type="datetime-local"
+            {...register("endAt")}
+                className={`${errors.endAt && "border-rose-400 bg-rose-100"}`}
+            />
+          </div>
           </div>
           <DialogFooter>
             <Button

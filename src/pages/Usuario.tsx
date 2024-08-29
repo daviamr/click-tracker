@@ -55,7 +55,7 @@ return (
             <TableHead>ID</TableHead>
             <TableHead>Nome</TableHead>
             <TableHead>E-mail</TableHead>
-            <TableHead>Data</TableHead>
+            <TableHead>Data de Criação</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

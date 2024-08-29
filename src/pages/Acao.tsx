@@ -90,10 +90,12 @@ export function AcaoPage() {
         <TableHeader>
           <TableRow className="pointer-events-none">
             <TableHead>Status</TableHead>
+            <TableHead>Ação</TableHead>
             <TableHead className="min-w-[100px]">Cliente</TableHead>
             <TableHead>Campanha</TableHead>
             <TableHead>Personalização URL</TableHead>
-            <TableHead>Ação</TableHead>
+            <TableHead>Cliques</TableHead>
+            <TableHead>Links</TableHead>
             <TableHead>Início</TableHead>
             <TableHead>Fim</TableHead>
           </TableRow>
@@ -127,10 +129,12 @@ export function AcaoPage() {
                 {i.status}
               </p>}
             </TableCell>
+            <TableCell>{i.name}</TableCell>
             <TableCell>{i.campaign.client.name}</TableCell>
             <TableCell>{i.campaign.name}</TableCell>
             <TableCell>{i.customPath ? i.customPath: '/' }</TableCell>
-            <TableCell>{i.name}</TableCell>
+            <TableCell>{i.totalClicks}</TableCell>
+            <TableCell>{i.totalLinks}</TableCell>
             <TableCell>{dataFormatada(i.startAt)}</TableCell>
             <TableCell>{dataFormatada(i.endAt)}</TableCell>
             <TableCell className="flex items-center justify-end gap-2">

@@ -65,7 +65,6 @@ type HandleCreateLinkProps = {
 
 export function EncurtadorDois() {
   const { data, handleCreateSingleLink } = useAuth() as HandleCreateLinkProps;
-  const [actions, setActions] = useState([]);
   const [clients, setClients] = useState<customerData[]>([]);
   // const [progress, setProgress] = useState(0);
   // const [loading, setLoading] = useState(false);
@@ -160,71 +159,6 @@ export function EncurtadorDois() {
   const handleSelectChange = (value: string) => {
     setSelectedClient(value);
   };
-
-  //SUBMIT PARA A PROGRESSBAR
-  // const handleSubmitProgressBar = async (event: React.FormEvent) => {
-  //   event.preventDefault();
-  //   setLoading(true);
-  //   setProgress(20);
-
-  //   try {
-  //     const interval = setInterval(() => {
-  //       setProgress((prev) => (prev < 90 ? prev + 10 : prev));
-  //     }, 500);
-
-  //     const response = await api.post(`/links`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${data.jwtToken}`,
-  //       },
-  //       // Passe os dados do formulário aqui
-  //       body: JSON.stringify({
-  //         dados: "seus dados aqui",
-  //       }),
-  //     });
-
-  //     clearInterval(interval);
-  //     if (response.status >= 200 && response.status < 300) {
-  //       const data = response.data;
-  //       setProgress(100);
-  //       console.log("Dados recebidos:", data);
-  //     } else {
-  //       console.error("Erro na requisição");
-  //       setProgress(0);
-  //     }
-  //   } catch (error) {
-  //     console.error("Erro na requisição:", error);
-  //     setProgress(0);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  //GET AÇÕES
-  useEffect(() => {
-    async function handleGetUsers() {
-      try {
-        const response = await api.get(`/actions`, {
-          headers: {
-            Authorization: `Bearer ${data.jwtToken}`,
-          },
-        });
-        setActions(response.data);
-        console.log(response.data)
-      } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response) {
-          AlertMessage(error.response.data.message, "error");
-        } else {
-          AlertMessage(
-            "Não foi possível carregar as campanhas, tente novamente mais tarde.",
-            "error"
-          );
-        }
-      }
-    }
-    handleGetUsers();
-  }, [data.jwtToken]);
 
   //GET CLIENTES
   useEffect(() => {
@@ -706,7 +640,7 @@ export function EncurtadorDois() {
       </div>
 
       {returnData && (
-        <Dialog open={!!returnData} onOpenChange={handleCloseModal}>
+        <Dialog open={isModalOpen} onOpenChange={handleCloseModal}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader className="mb-4">
               <DialogTitle className="text-center">Dados da URL</DialogTitle>

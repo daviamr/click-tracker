@@ -66,7 +66,6 @@ type HandleCreateLinkProps = {
 
 export function EncutadorUm() {
   const { data, handleCreateLink } = useAuth() as HandleCreateLinkProps;
-  const [actions, setActions] = useState([]);
   const [clients, setClients] = useState<customerData[]>([]);
   // const [progress, setProgress] = useState(0);
   // const [loading, setLoading] = useState(false);
@@ -161,31 +160,6 @@ export function EncutadorUm() {
   const handleSelectChange = (value: string) => {
     setSelectedClient(value);
   };
-
-  //GET AÇÕES
-  useEffect(() => {
-    async function handleGetUsers() {
-      try {
-        const response = await api.get(`/actions`, {
-          headers: {
-            Authorization: `Bearer ${data.jwtToken}`,
-          },
-        });
-        setActions(response.data);
-        console.log(response.data);
-      } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response) {
-          AlertMessage(error.response.data.message, "error");
-        } else {
-          AlertMessage(
-            "Não foi possível carregar as campanhas, tente novamente mais tarde.",
-            "error"
-          );
-        }
-      }
-    }
-    handleGetUsers();
-  }, [data.jwtToken]);
 
   //GET CLIENTES
   useEffect(() => {

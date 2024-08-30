@@ -799,7 +799,7 @@ function AuthProvider({ children }: ChildrenProps) {
         `alphabetId: ` + alphabetId,
         `longUrl: ` + redirectUrl,
         `replace: ` + replace,
-        sheet,
+        `sheet:` + sheet,
         `length: ` + length,
         `qrCode: ` + qrCode,
       ]);
@@ -816,7 +816,7 @@ function AuthProvider({ children }: ChildrenProps) {
         formData.append("sheet", sheet);
       }
       if (replace) {
-        formData.append("sheet", replace);
+        formData.append("replace", replace);
       }
 
       // Envio da requisição com FormData

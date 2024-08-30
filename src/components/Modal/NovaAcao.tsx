@@ -75,8 +75,7 @@ export function NovaAcao({onCreateAction}: createActionProps) {
     setIsChecked(!isChecked)
   }
 
-  useEffect(() => {
-    async function handleGetUsers() {
+     const handleGetClient = async () => {
       try {
         const response = await api.get("/clients", {
           headers: {
@@ -84,6 +83,7 @@ export function NovaAcao({onCreateAction}: createActionProps) {
           },
         });
         setCustomerData(response.data);
+        console.log(response.data)
       } catch (error: unknown) {
         if (error instanceof AxiosError && error.response) {
           AlertMessage(error.response.data.message, "error");
@@ -95,11 +95,13 @@ export function NovaAcao({onCreateAction}: createActionProps) {
         }
       }
     }
-    handleGetUsers();
-  }, [customerData]);
+
+    useEffect(() => {
+      handleGetClient();
+    }, [data.jwtToken])
 
   useEffect(() => {
-    async function handleGetClient() {
+    async function handleGetSingleClient() {
       try {
         const response = await api.get(`/campaigns?clientId=${clientId}`, {
           headers: {
@@ -107,6 +109,7 @@ export function NovaAcao({onCreateAction}: createActionProps) {
           },
         });
         setCampanhas(response.data);
+        console.log(response.data)
       } catch (error: unknown) {
         if (error instanceof AxiosError && error.response) {
           AlertMessage(error.response.data.message, "error");
@@ -119,7 +122,7 @@ export function NovaAcao({onCreateAction}: createActionProps) {
       }
     }
     if (clientId) {
-      handleGetClient();
+      handleGetSingleClient();
     }
   }, [clientId]);
 

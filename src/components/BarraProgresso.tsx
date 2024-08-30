@@ -7,5 +7,5 @@ interface BarraProgressoProps {
 }
 
 export function BarraProgresso({ value }: BarraProgressoProps) {
-  return <Progress value={value} className="w-[60%]" />
+  return <Progress value={value} />
 }

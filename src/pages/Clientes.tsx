@@ -92,7 +92,7 @@ export function ClientesPage() {
               </TableCell>
               <TableCell>{i.name}</TableCell>
               <TableCell>{i._count.campaigns}</TableCell>
-              <TableCell>açõesAqui</TableCell>
+              <TableCell>{i.totalActions}</TableCell>
               <TableCell>{i.totalClicks}</TableCell>
               <TableCell>{i.totalLinks}</TableCell>
               <TableCell className="flex items-center justify-end gap-2">

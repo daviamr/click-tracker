@@ -99,7 +99,6 @@ export function EncurtadorDois() {
   ];
   const [returnData, setReturnData] = useState<ApiResponse | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log(isModalOpen)
 
   //FUNÇÃO SALVANDO NO ESTADO O VALOR DE COMPRIMENTO
   const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -212,6 +211,7 @@ export function EncurtadorDois() {
           },
         });
         setActions(response.data);
+        console.log(response.data)
       } catch (error: unknown) {
         if (error instanceof AxiosError && error.response) {
           AlertMessage(error.response.data.message, "error");
@@ -224,7 +224,7 @@ export function EncurtadorDois() {
       }
     }
     handleGetUsers();
-  }, [actions]);
+  }, [data.jwtToken]);
 
   //GET CLIENTES
   useEffect(() => {
@@ -236,6 +236,7 @@ export function EncurtadorDois() {
           },
         });
         setClients(response.data);
+        console.log(response.data)
       } catch (error: unknown) {
         if (error instanceof AxiosError && error.response) {
           AlertMessage(error.response.data.message, "error");
@@ -248,7 +249,7 @@ export function EncurtadorDois() {
       }
     }
     handleGetUsers();
-  }, [clients]);
+  }, [data.jwtToken]);
 
   //GET BASEURL
   useEffect(() => {
@@ -260,6 +261,7 @@ export function EncurtadorDois() {
           },
         });
         setBaseUrl(response.data);
+        console.log(response.data)
       } catch (error: unknown) {
         if (error instanceof AxiosError && error.response) {
           AlertMessage(error.response.data.message, "error");
@@ -272,7 +274,7 @@ export function EncurtadorDois() {
       }
     }
     handleGetBaseUrl();
-  }, [baseUrl]);
+  }, [data.jwtToken]);
 
   //GET CONVERSOR
   useEffect(() => {
@@ -284,6 +286,7 @@ export function EncurtadorDois() {
           },
         });
         setConversor(response.data);
+        console.log(response.data)
       } catch (error: unknown) {
         if (error instanceof AxiosError && error.response) {
           AlertMessage(error.response.data.message, "error");
@@ -296,7 +299,7 @@ export function EncurtadorDois() {
       }
     }
     handleGetConversor();
-  }, [conversor]);
+  }, [data.jwtToken]);
 
   //GET BUSCANDO AS CAMPANHAS DO CLIENTE SELECIONADO
   useEffect(() => {
@@ -311,6 +314,7 @@ export function EncurtadorDois() {
           }
         );
         setCampanhas(response.data);
+        console.log(response.data)
       } catch (error: unknown) {
         if (error instanceof AxiosError && error.response) {
           AlertMessage(error.response.data.message, "error");
@@ -323,7 +327,7 @@ export function EncurtadorDois() {
       }
     }
     handleGetUsers();
-  }, [campanhas]);
+  }, [clienteSelecionado]);
 
   //GET BUSCANDO AS AÇÕES DO CLIENTE SELECIONADO
   useEffect(() => {
@@ -338,6 +342,7 @@ export function EncurtadorDois() {
           }
         );
         setAcoes(response.data);
+        console.log(response.data)
       } catch (error: unknown) {
         if (error instanceof AxiosError && error.response) {
           AlertMessage(error.response.data.message, "error");
@@ -350,7 +355,7 @@ export function EncurtadorDois() {
       }
     }
     handleGetUsers();
-  }, [acoes]);
+  }, [clienteSelecionado]);
 
   //VALIDAÇÃO
   const {

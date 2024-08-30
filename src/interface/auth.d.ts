@@ -39,6 +39,7 @@ export type CreateNewUser = {
     _count: {
       campaigns: number;
     }
+    totalActions: number;
     totalClicks: number;
     totalLinks: number;
   }

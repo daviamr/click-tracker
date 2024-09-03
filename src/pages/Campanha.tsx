@@ -117,6 +117,7 @@ export function CampanhaPage() {
       <Table>
         <TableHeader>
           <TableRow className="pointer-events-none">
+            <TableHead>Status</TableHead>
             <TableHead className="w-[200px]">Campanha</TableHead>
             <TableHead>Cliente</TableHead>
             <TableHead>Ações</TableHead>
@@ -147,6 +148,7 @@ export function CampanhaPage() {
             };
             return (
               <TableRow key={index}>
+                <TableCell></TableCell>
                 <TableCell>{i.name}</TableCell>
                 <TableCell>{customerName}</TableCell>
                 <TableCell>{i._count.actions}</TableCell>
@@ -166,6 +168,8 @@ export function CampanhaPage() {
                     name={i.name}
                     id={i.id}
                     nameClient={customerName}
+                    dataInicio={i.startAt}
+                    dataFim={i.endAt}
                     onEditCampaign={handleGetCampaign}
                   />
                   <Button

@@ -202,7 +202,7 @@ export function NovaCampanha({onCreateCampaign}: createCampaignProps) {
             />
           </div>
           <div className="col-span-2">
-            <Label id="dataFim">Data/Hora Início</Label>
+            <Label id="dataFim">Data/Hora Fim</Label>
             <Input
             id="dataFim"
             type="datetime-local"

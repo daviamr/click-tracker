@@ -64,7 +64,7 @@ export function EditarUrl({id, url, onEditUrl}: editUrlProps) {
     setIsOpen(false);
   }
   useEffect(() => {
-    reset({ id, url: ""});
+    reset({ id, url: url});
   }, [id, reset]);
 
   return (
@@ -94,7 +94,6 @@ export function EditarUrl({id, url, onEditUrl}: editUrlProps) {
             </Label>
             <Input
             id="url"
-            placeholder={url}
             {...register('url')}
             className={`${errors.url && "border-rose-400 bg-rose-100"}`}
               />

@@ -1,5 +1,4 @@
 import { AlertMessage } from "@/components/alert_message";
-// import { BarraProgresso } from "@/components/BarraProgresso";
 import {
   Select,
   SelectContent,
@@ -368,7 +367,7 @@ export function EncurtadorDois() {
 
   return (
     <>
-      <div className="pt-12 px-8 bg-transparent rounded-md border border-input w-[480px] m-auto">
+      <div className="pt-12 px-8 bg-transparent rounded-md border border-input w-[581px] m-auto">
         <h1 className="text-3xl font-semibold w-max m-auto pb-8">
           Lorem ipsum dolor
         </h1>
@@ -495,7 +494,7 @@ export function EncurtadorDois() {
                 render={() => (
                   <Select onValueChange={handleSelectBaseUrl}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione o encurtador" />
+                      <SelectValue placeholder="ShortURL" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>

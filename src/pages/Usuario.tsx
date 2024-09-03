@@ -13,6 +13,9 @@ import { AxiosError } from "axios";
 import { api } from "@/services/Api";
 import { useAuth } from "@/hook/Auth";
 import { DataProps, userDataProps } from "@/interface/auth";
+import { Button } from "@/components/ui/button";
+import { UserRoundX } from "lucide-react";
+import { EditarUsuario } from "@/components/Modal/EditarUsuario";
 
 type dataUserProps = { data: DataProps };
 
@@ -79,6 +82,20 @@ export function UsuarioPage() {
               <TableCell>{i.name}</TableCell>
               <TableCell>{i.email}</TableCell>
               <TableCell>{dataFormatada(i.createdAt)}</TableCell>
+              <TableCell className="flex items-center justify-end gap-2">
+                <EditarUsuario
+                  onEditUser={handleGetUsers}
+                  name={i.name}
+                  email={i.email}
+                />
+                <Button
+                  className="p-2 duration-300 hover:text-red-700"
+                  variant={"outline"}
+                  // onClick={() => handleDeleteCustomer(i.id)}
+                >
+                  <UserRoundX size={18} />
+                </Button>
+              </TableCell>
             </TableRow>
           )})}
         </TableBody>

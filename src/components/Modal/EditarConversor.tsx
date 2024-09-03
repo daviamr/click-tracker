@@ -75,7 +75,7 @@ export function EditarConversor({
   }
 
   useEffect(() => {
-    reset({ id, name: "", characters: "" });
+    reset({ id, name: name, characters: characters });
   }, [id, reset]);
 
   return (
@@ -103,7 +103,6 @@ export function EditarConversor({
               <TextareaWithCounter
                 maxLength={999}
                 value={charactersValue}
-                placeholder={characters}
                 onChange={(e) => {
                   setValue("characters", e.target.value);
                 }}
@@ -119,7 +118,6 @@ export function EditarConversor({
               <Label>Novo Título</Label>
               <Input
                 type="text"
-                placeholder={name}
                 {...register("name")}
                 className={`${errors.name && "border-rose-400"}`}
               />

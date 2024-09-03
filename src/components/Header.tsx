@@ -48,7 +48,7 @@ export function Header() {
                 }`}
                 onClick={() => setIsFocus("campaign")}
               >
-                Campanha
+                Campanhas
               </button>
             </li>
 
@@ -59,7 +59,7 @@ export function Header() {
                 }`}
                 onClick={() => setIsFocus("action")}
               >
-                Ação
+                Ações
               </button>
             </li>
 
@@ -92,7 +92,7 @@ export function Header() {
                 }`}
                 onClick={() => setIsFocus("shorter")}
               >
-                Shortener
+                Tracker
               </button>
             </li>
             <li className="hover:opacity-40 duration-300">

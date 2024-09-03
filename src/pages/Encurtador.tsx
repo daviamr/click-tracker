@@ -5,6 +5,7 @@ import { CircleArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { EncutadorUm } from "./EncurtadorUm";
 import { EncurtadorDois } from "./EncurtadorDois";
+import { EncurtadorTres } from "./EncurtadorTres";
 
 export function EncurtadorPage() {
   const { setIsFocus } = useContextState();
@@ -39,12 +40,19 @@ export function EncurtadorPage() {
             OPÇÃO 1
         </Label>
         <Label
-        className={`p-2 px-16 rounded-r-lg cursor-pointer ${selectedOption === 'option2' ? 'font-semibold bg-slate-600' : 'bg-slate-800'}`}
+        className={`p-2 px-16 cursor-pointer ${selectedOption === 'option2' ? 'font-semibold bg-slate-600' : 'bg-slate-800'}`}
         onClick={() => setSelectedOption('option2')}>
             OPÇÃO 2
         </Label>
+        <Label
+        className={`p-2 px-16 rounded-r-lg cursor-pointer ${selectedOption === 'option3' ? 'font-semibold bg-slate-600' : 'bg-slate-800'}`}
+        onClick={() => setSelectedOption('option3')}>
+            OPÇÃO 3
+        </Label>
         </div>
-        {selectedOption === 'option1' ? <EncutadorUm/> : <EncurtadorDois/>}
+        {selectedOption === 'option1' && <EncutadorUm/>}
+        {selectedOption === 'option2' && <EncurtadorDois/>}
+        {selectedOption === 'option3' && <EncurtadorTres/>}
       </div>
     </>
   );

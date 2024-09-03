@@ -15,7 +15,7 @@ import { useAuth } from "@/hook/Auth";
 import {
   campaignData,
   conversorData,
-  createNewLink,
+  createNewSingleLinkOptionThree,
   customerData,
   dataAction,
   DataProps,
@@ -39,11 +39,6 @@ const verifyCreateLink = z.object({
   alphabetId: z.number().min(1, ""),
   redirectUrl: z.string().min(4, "*Digite uma url válida"),
   replace: z.string().min(2, "*Mínimo de 2 caracteres."),
-  sheet: z
-    .any()
-    .refine((files) => files instanceof FileList && files.length > 0, {
-      message: "*Selecione um arquivo",
-    }),
   length: z.number(),
   qrCode: z.boolean(),
 });
@@ -57,14 +52,13 @@ type HandleCreateLinkProps = {
     alphabetId,
     redirectUrl,
     replace,
-    sheet,
     length,
     qrCode,
-  }: createNewLink) => void;
+  }: createNewSingleLinkOptionThree) => void;
   data: DataProps;
 };
 
-export function EncutadorUm() {
+export function EncurtadorTres() {
   const { data, handleCreateLink } = useAuth() as HandleCreateLinkProps;
   const [clients, setClients] = useState<customerData[]>([]);
   const [selectedClient, setSelectedClient] = useState<string>("");
@@ -305,7 +299,6 @@ export function EncutadorUm() {
       baseUrlId: 0,
       redirectUrl: "",
       replace: "",
-      sheet: null,
       length: 6,
       qrCode: false,
     },
@@ -321,17 +314,10 @@ export function EncutadorUm() {
         alphabetId,
         redirectUrl,
         replace,
-        sheet,
         length,
         qrCode,
       } = data;
       setProgress(50);
-
-      const file = sheet instanceof FileList ? sheet[0] : sheet;
-      if (!file) {
-        console.error("Nenhum arquivo foi selecionado.");
-        return;
-      }
 
       // console.log([
       //   `actionId: ` + actionId,
@@ -350,7 +336,6 @@ export function EncutadorUm() {
         alphabetId,
         redirectUrl,
         replace,
-        sheet: file,
         length,
         qrCode,
       });
@@ -543,22 +528,6 @@ export function EncutadorUm() {
               )}
               {/* FINAL SELECT CONVERSOR */}
             </div>
-            <div className="flex flex-col gap-1 col-span-4">
-              <input
-                type="file"
-                {...register("sheet")}
-                className={`cursor-pointer p-1 bg-transparent rounded-md border border-input col-span-4 ${
-                  errors.sheet && "border-rose-400 bg-rose-100"
-                }"col-span-4"`}
-              />
-              {errors.sheet && (
-                <span className="col-span-4 text-nowrap text-xs text-rose-400 font-normal">
-                  {typeof errors.sheet.message === "string"
-                    ? errors.sheet.message
-                    : ""}
-                </span>
-              )}
-            </div>
             <div className="flex flex-col gap-1 col-span-2">
               <label htmlFor="urlFinal" className="font-semibold">
                 Preencha a URL final
@@ -580,7 +549,7 @@ export function EncutadorUm() {
             </div>
             <div className="flex flex-col gap-1 col-span-2">
               <label htmlFor="urlFinal" className="font-semibold">
-                Personalizar URL
+                Parâmetro a Substituir
               </label>
               <input
                 id="urlSubstituida"

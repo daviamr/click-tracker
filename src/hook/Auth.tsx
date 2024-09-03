@@ -298,7 +298,7 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
-  async function handleEditCampaign({ id, name, clientId }: editCampaign) {
+  async function handleEditCampaign({ id, name, clientId, startAt, endAt }: editCampaign) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -314,6 +314,8 @@ function AuthProvider({ children }: ChildrenProps) {
         {
           name,
           clientId,
+          startAt,
+          endAt,
         },
         {
           headers: {

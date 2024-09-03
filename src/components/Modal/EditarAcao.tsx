@@ -83,17 +83,9 @@ export function EditarAcao({
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
   const [isChecked, setIsChecked] = useState(false);
 
-  const dataFormatada = (data: string) => {
-    return new Date(data).toLocaleString("pt-BR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    });
-  };
+  const dataPadraoFormatada = (data: string) => {
+    return data.slice(0, 16);
+  }
 
   const clienteId =
     customerData
@@ -151,6 +143,15 @@ export function EditarAcao({
     handleGetUsers();
   }, [campanhas]);
 
+  useEffect(() => {
+    if (campanha && campanhas.length > 0) {
+      const selectedCampaign = campanhas.find((camp) => camp.name === campanha);
+      if (selectedCampaign) {
+        setValue("campaignId", selectedCampaign.id);
+      }
+    }
+  }, [campanha, campanhas]);
+
   const {
     register,
     handleSubmit,
@@ -161,14 +162,15 @@ export function EditarAcao({
     resolver: zodResolver(verifyEditAction),
     defaultValues: {
       id,
-      name: "",
-      campaignId: 0,
+      name: acao,
       customPath: "",
       selectCliente: cliente,
-      startAt: "",
-      endAt: "",
+      startAt: dataPadraoFormatada(dataInicio),
+      endAt: dataPadraoFormatada(dataFim),
     },
   });
+  
+
 
   const handleSelectCampaign = (value: string) => {
     const selectedCampaign = campanhas.find(
@@ -261,7 +263,7 @@ export function EditarAcao({
               <Input
                 id="nome"
                 type="text"
-                placeholder={acao}
+                defaultValue={acao}
                 {...register("name")}
                 className={`${errors.name && "border-rose-400 bg-rose-100"}`}
               />
@@ -299,9 +301,6 @@ export function EditarAcao({
                   *Campo obrigatório
                 </span>
               )}
-              <span className="text-xs text-nowrap opacity-40">
-                *Atual: <strong>{dataFormatada(dataInicio)}</strong>
-              </span>
             </div>
             <div className="col-span-2">
               <Label id="dataFim">Data/Hora Fim</Label>
@@ -316,9 +315,6 @@ export function EditarAcao({
                   *Campo obrigatório
                 </span>
               )}
-              <span className="text-xs text-nowrap opacity-40">
-                *Atual: <strong>{dataFormatada(dataFim)}</strong>
-              </span>
             </div>
             <input
               type="hidden"

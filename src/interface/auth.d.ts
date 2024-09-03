@@ -59,6 +59,8 @@ export type CreateNewUser = {
     id: number;
     name: string;
     clientId: string;
+    startAt: string;
+    endAt: string;
   }
 
   export type deleteCampaign = {
@@ -183,6 +185,16 @@ export type CreateNewUser = {
     baseUrlId: number;
     alphabetId: number;
     redirectUrl: string;
+    length: number;
+    qrCode: boolean;
+  }
+
+  export type createNewSingleLinkOptionThree = {
+    actionId: number;
+    baseUrlId: number;
+    alphabetId: number;
+    redirectUrl: string;
+    replace?: string;
     length: number;
     qrCode: boolean;
   }

@@ -48,12 +48,13 @@ export function EditarCliente({ id, name, onEditClient }: editClientProps) {
   } = useForm<dataEditCustomer>({
     resolver: zodResolver(verifyEditCustomer),
     defaultValues: {
-      name: ""
+      id: '',
+      name: '',
     },
   });
 
   useEffect(() => {
-    reset({id, name: ''});
+    reset({id, name: name});
   }, [id, reset])
 
   async function editCustomer(data: dataEditCustomer) {
@@ -110,7 +111,7 @@ export function EditarCliente({ id, name, onEditClient }: editClientProps) {
               <Input
               id="username"
               type="text"
-              placeholder={name}
+              defaultValue={name}
               {...register("name")}
                 className={`${
                   errors.name && "border-rose-400 bg-rose-100"

@@ -5,11 +5,10 @@ interface TextareaWithCounterProps {
   maxLength: number;
   onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   value: string;
-  placeholder: string;
 }
 
 const TextareaWithCounter = forwardRef<HTMLTextAreaElement, TextareaWithCounterProps>(
-  ({ maxLength, onChange, value, placeholder }, ref) => {
+  ({ maxLength, onChange, value }, ref) => {
     return (
       <div>
         <Textarea
@@ -17,7 +16,6 @@ const TextareaWithCounter = forwardRef<HTMLTextAreaElement, TextareaWithCounterP
           onChange={onChange}
           rows={5}
           maxLength={maxLength}
-          placeholder={placeholder}
           ref={ref}
         />
         <div>

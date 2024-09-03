@@ -90,7 +90,6 @@ export function NovoConversor({onCreateConversor}: createConversorProps) {
               <TextareaWithCounter
                 maxLength={999}
                 value={charactersValue}
-                placeholder="..."
                 onChange={(e) => {
                   setValue('characters', e.target.value);
                 }}

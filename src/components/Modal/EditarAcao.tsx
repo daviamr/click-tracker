@@ -81,7 +81,7 @@ export function EditarAcao({
   const { data, handleEditAction } = useAuth() as HandleCreateUsersProps;
   const [customerData, setCustomerData] = useState<customerData[]>([]);
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
-  const [isChecked, setIsChecked] = useState(false);
+  // const [isChecked, setIsChecked] = useState(false);
 
   const dataPadraoFormatada = (data: string) => {
     return data.slice(0, 16);
@@ -93,9 +93,9 @@ export function EditarAcao({
       .map((customer) => customer.id)
       .join(", ") || "Cliente não encontrado";
 
-  const handleChecked = () => {
-    setIsChecked(!isChecked);
-  };
+  // const handleChecked = () => {
+  //   setIsChecked(!isChecked);
+  // };
 
   useEffect(() => {
     async function handleGetUsers() {
@@ -143,15 +143,6 @@ export function EditarAcao({
     handleGetUsers();
   }, [campanhas]);
 
-  useEffect(() => {
-    if (campanha && campanhas.length > 0) {
-      const selectedCampaign = campanhas.find((camp) => camp.name === campanha);
-      if (selectedCampaign) {
-        setValue("campaignId", selectedCampaign.id);
-      }
-    }
-  }, [campanha, campanhas]);
-
   const {
     register,
     handleSubmit,
@@ -163,15 +154,36 @@ export function EditarAcao({
     defaultValues: {
       id,
       name: acao,
-      customPath: "",
+      customPath: '',
       selectCliente: cliente,
       startAt: dataPadraoFormatada(dataInicio),
       endAt: dataPadraoFormatada(dataFim),
     },
   });
+
+  useEffect(() => {
+    if (isOpen) {
+      reset({
+        id,
+        name: acao,
+        customPath: '',
+        campaignId: campanhas.find(camp => camp.name === campanha)?.id || 0,
+        selectCliente: cliente,
+        startAt: dataPadraoFormatada(dataInicio),
+        endAt: dataPadraoFormatada(dataFim),
+      });
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (campanha && campanhas.length > 0) {
+      const selectedCampaign = campanhas.find((camp) => camp.name === campanha);
+      if (selectedCampaign) {
+        setValue("campaignId", selectedCampaign.id);
+      }
+    }
+  }, [isOpen, campanha, campanhas]);
   
-
-
   const handleSelectCampaign = (value: string) => {
     const selectedCampaign = campanhas.find(
       (campanha) => campanha.name === value
@@ -273,7 +285,7 @@ export function EditarAcao({
                 </span>
               )}
             </div>
-            <div className="flex gap-4 col-span-4">
+            {/* <div className="flex gap-4 col-span-4">
               <Input
                 type="checkbox"
                 className="max-w-[16px]"
@@ -287,7 +299,7 @@ export function EditarAcao({
                 {...register("customPath")}
                 className="col-span-4"
               />
-            </div>
+            </div> */}
             <div className="col-span-2">
               <Label id="dataInicio">Data/Hora Início</Label>
               <Input

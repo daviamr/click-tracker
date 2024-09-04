@@ -31,10 +31,11 @@ export function CampanhaPage() {
     {}
   );
 
-  const handleSwitchChange = (id: number, checked: boolean) => {
+  const handleSwitchChange = async (id: number, checked: boolean) => {
     setSwitchStates((prev) => ({ ...prev, [id]: checked }));
 
-    handleStatusCampaign({ id });
+    await handleStatusCampaign({ id });
+    await handleGetCampaign();
   };
 
   const handleGetCampaign = async () => {
@@ -101,7 +102,7 @@ export function CampanhaPage() {
   return (
     <>
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl">Cadastrar campanha</h1>
+        <h1 className="text-3xl">Campanhas</h1>
         <Button
           onClick={() => setIsFocus("customers")}
           variant={"outline"}
@@ -148,7 +149,20 @@ export function CampanhaPage() {
             };
             return (
               <TableRow key={index}>
-                <TableCell></TableCell>
+                <TableCell>
+              {i.status === 'Active' ?
+                <p className="flex itemns-center gap-2 text-xs">
+                <span
+                className="w-4 h-4 bg-green-600 rounded-full animate-pulse"></span>
+                {i.status}
+              </p>
+              : 
+              <p className="flex itemns-center gap-2 text-xs">
+                <span
+                className="w-4 h-4 bg-red-600 rounded-full animate-pulse"></span>
+                {i.status}
+              </p>}
+            </TableCell>
                 <TableCell>{i.name}</TableCell>
                 <TableCell>{customerName}</TableCell>
                 <TableCell>{i._count.actions}</TableCell>

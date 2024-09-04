@@ -204,8 +204,11 @@ function AuthProvider({ children }: ChildrenProps) {
 
       // Cria um objeto FormData e adiciona a imagem e o nome
       const formData = new FormData();
-      formData.append("image", image);
       formData.append("name", name);
+
+      if (image) {
+        formData.append("image", image);
+      }
 
       const response = await api.put(`/clients/${id}`, formData, {
         headers: {

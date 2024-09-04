@@ -57,7 +57,6 @@ export function UsuarioPage() {
       <Table>
         <TableHeader>
           <TableRow className="pointer-events-none">
-            <TableHead>ID</TableHead>
             <TableHead>Nome</TableHead>
             <TableHead>E-mail</TableHead>
             <TableHead>Data de Criação</TableHead>
@@ -78,7 +77,6 @@ export function UsuarioPage() {
             };
             return (
             <TableRow key={index}>
-              <TableCell className="max-w-[100px]">{i.id}</TableCell>
               <TableCell>{i.name}</TableCell>
               <TableCell>{i.email}</TableCell>
               <TableCell>{dataFormatada(i.createdAt)}</TableCell>

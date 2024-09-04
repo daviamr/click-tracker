@@ -46,6 +46,7 @@ const verifyCreateLink = z.object({
     }),
   length: z.number(),
   qrCode: z.boolean(),
+  conversionPosition: z.string(),
 });
 
 type encurtadorDados = z.infer<typeof verifyCreateLink>;
@@ -68,6 +69,7 @@ export function EncutadorUm() {
   const { data, handleCreateLink } = useAuth() as HandleCreateLinkProps;
   const [clients, setClients] = useState<customerData[]>([]);
   const [selectedClient, setSelectedClient] = useState<string>("");
+  const [isSelectedCampaign, setIsSelectedCampaign] = useState<boolean>(false);
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
   const [acoes, setAcoes] = useState<dataAction[]>([]);
   const [baseUrl, setBaseUrl] = useState<urlData[]>([]);
@@ -97,8 +99,11 @@ export function EncutadorUm() {
   ];
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [url, setUrl] = useState<string>('');
+  const [url, setUrl] = useState<string>("");
+  const [valorPersonalizarUrl, setValorPersonalizarUrl] = useState<string>("");
+  const [selectedPositionValue, setselectedPositionValue] = useState('pre');
 
+  //Auxiliares
   //FUNÇÃO SALVANDO NO ESTADO O VALOR DE COMPRIMENTO
   const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = Number(event.target.value);
@@ -119,8 +124,10 @@ export function EncutadorUm() {
       (campanha) => campanha.name === value
     );
     if (selectedCampaign) {
+      console.log(selectedCampaign);
       setValue("campaignId", selectedCampaign.id);
       console.log(`id da campanha: ${selectedCampaign.id}`);
+      setIsSelectedCampaign(!!value);
     }
   };
 
@@ -136,7 +143,7 @@ export function EncutadorUm() {
     const selectedBaseUrl = baseUrl.find((url) => url.url === value);
     if (selectedBaseUrl) {
       setValue("baseUrlId", selectedBaseUrl.id);
-      setUrl(selectedBaseUrl.url)
+      setUrl(selectedBaseUrl.url);
       console.log(`id da baseUrl: ${selectedBaseUrl.id}`);
     }
   };
@@ -151,6 +158,10 @@ export function EncutadorUm() {
     }
   };
 
+  const handleSelectedPositionValue = (value: string) => {
+    setselectedPositionValue(value);
+  };
+
   //FUNÇÃO SALVANDO NO ESTADO A QUANTIDADE DE CARACTERES DO LINK
   const generateLink = () => {
     return linkLength.slice(0, selectedValue).join("");
@@ -161,6 +172,7 @@ export function EncutadorUm() {
     setSelectedClient(value);
   };
 
+  //Hooks
   //GET CLIENTES
   useEffect(() => {
     async function handleGetUsers() {
@@ -290,12 +302,13 @@ export function EncutadorUm() {
     handleGetUsers();
   }, [clienteSelecionado]);
 
-  //VALIDAÇÃO
+  //Form
   const {
     register,
     handleSubmit,
     reset,
     setValue,
+    watch,
     control,
     formState: { errors },
   } = useForm<encurtadorDados>({
@@ -311,8 +324,15 @@ export function EncutadorUm() {
     },
   });
 
+  //Assistindo o valor do input de personalizar url
+  const valorAssistido = watch("replace");
+
+  useEffect(() => {
+    setValorPersonalizarUrl(valorPersonalizarUrl || "");
+  }, [valorAssistido]);
+
   async function createLink(data: encurtadorDados) {
-    setLoading(true); // Inicia o carregamento
+    setLoading(true);
     setProgress(20);
     try {
       const {
@@ -332,17 +352,6 @@ export function EncutadorUm() {
         console.error("Nenhum arquivo foi selecionado.");
         return;
       }
-
-      // console.log([
-      //   `actionId: ` + actionId,
-      //   `baseUrlId: ` + baseUrlId,
-      //   `alphabetId: ` + alphabetId,
-      //   `longUrl: ` + redirectUrl,
-      //   `replace: ` + replace,
-      //   `sheet: ` + (file ? file.name : 'Nenhum arquivo selecionado'),
-      //   `length: ` + length,
-      //   `qrCode: ` + qrCode,
-      // ]);
 
       await handleCreateLink({
         actionId,
@@ -451,14 +460,14 @@ export function EncutadorUm() {
                 control={control}
                 render={() => (
                   <Select
-                    disabled={!selectedClient}
+                    disabled={!isSelectedCampaign}
                     onValueChange={handleSelectAction}
                   >
                     <SelectTrigger>
                       <SelectValue
                         placeholder={
                           !selectedClient
-                            ? "Cliente não selecionado"
+                            ? "Campanha não selecionada"
                             : "Selecione a ação"
                         }
                       />
@@ -559,7 +568,7 @@ export function EncutadorUm() {
                 </span>
               )}
             </div>
-            <div className="flex flex-col gap-1 col-span-2">
+            <div className="flex flex-col gap-1 col-span-4">
               <label htmlFor="urlFinal" className="font-semibold">
                 Preencha a URL final
               </label>
@@ -579,13 +588,13 @@ export function EncutadorUm() {
               )}
             </div>
             <div className="flex flex-col gap-1 col-span-2">
-              <label htmlFor="urlFinal" className="font-semibold">
+              <label htmlFor="personalizarUrl" className="font-semibold">
                 Personalizar URL
               </label>
               <input
-                id="urlSubstituida"
+                id="personalizarUrl"
                 type="text"
-                placeholder=""
+                placeholder="/url-personalizada"
                 {...register("replace")}
                 className={`pl-4 bg-transparent rounded-md border border-input min-h-[36px] ${
                   errors.replace && "border-rose-400"
@@ -596,6 +605,28 @@ export function EncutadorUm() {
                   {errors.replace.message}
                 </span>
               )}
+            </div>
+            <div className="flex flex-col gap-1 col-span-2">
+              <Label className="font-semibold">Pré/Pós Conversão</Label>
+              <Controller
+                name="conversionPosition"
+                control={control}
+                defaultValue=""
+                render={() => (
+                  <Select value={selectedPositionValue} onValueChange={handleSelectedPositionValue}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Posição da URL" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Selecione a posição</SelectLabel>
+                        <SelectItem value="pre">Pré Conversão</SelectItem>
+                        <SelectItem value="pos">Pós Conversão</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
             <div className="flex flex-col gap-1">
               <Label htmlFor="comprimento" className="font-semibold">
@@ -614,7 +645,19 @@ export function EncutadorUm() {
             <div className="flex items-end col-span-3">
               <Input
                 type="text"
-                value={`${url ? url : 'exemplo.com'}/${generateLink()}`}
+                value={!url && valorAssistido === ''
+                  ? `https://exemplo.com/${generateLink()}`
+                  : !url && valorAssistido !== '' && selectedPositionValue === 'pre'
+                    ? `https://exemplo.com/${valorAssistido}/${generateLink()}`
+                    : !url && valorAssistido !== '' && selectedPositionValue === 'pos'
+                      ? `https://exemplo.com/${generateLink()}/${valorAssistido}`
+                      : url && valorAssistido === ''
+                        ? `https://${url}/${generateLink()}`
+                        : url && valorAssistido !== '' && selectedPositionValue === 'pre'
+                          ? `https://${url}/${valorAssistido}/${generateLink()}`
+                          : url && valorAssistido !== '' && selectedPositionValue === 'pos'
+                            ? `https://${url}/${generateLink()}/${valorAssistido}`
+                            : ''}
                 disabled
               />
             </div>
@@ -644,14 +687,14 @@ export function EncutadorUm() {
             <Button className="w-full" variant="secondary" disabled={loading}>
               <div className="flex items-center gap-2">
                 <Send size={18} />
-                {loading ? 'Enviando...' : 'Enviar'}
+                {loading ? "Enviando..." : "Enviar"}
               </div>
             </Button>
           </div>
         </form>
         {/* ProgressBar */}
         <div className="col-span-4 pb-6">
-        {loading && <BarraProgresso value={progress}/>}
+          {loading && <BarraProgresso value={progress} />}
         </div>
       </div>
     </>

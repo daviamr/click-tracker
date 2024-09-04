@@ -105,14 +105,23 @@ export function EditarCampanha({
     },
   });
 
-  useEffect(() => {}, [id, reset]);
+  useEffect(() => {
+    if (isOpen) {
+      reset({
+        id,
+        name: name,
+        startAt: dataPadraoFormatada(dataInicio),
+        endAt: dataPadraoFormatada(dataFim),
+      });
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     const selectedClient = customerData.find(client => client.name === nameClient);
     if (selectedClient) {
       setValue("clientId", selectedClient.name);
     }
-  }, [nameClient, customerData, setValue]);
+  }, [isOpen, nameClient, customerData, setValue]);
 
   async function editCampaign(data: campaignData) {
     console.log("enviado");

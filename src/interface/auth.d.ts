@@ -14,7 +14,6 @@ export type CreateNewUser = {
   }
 
   export type userDataProps = {
-    id: string; 
     email: string; 
     name: string; 
     createdAt: string
@@ -27,7 +26,7 @@ export type CreateNewUser = {
 
   export type editCustomer = {
     id: string;
-    image: File;
+    image?: File;
     name: string;
   }
 

@@ -60,7 +60,7 @@ export function NovaAcao({onCreateAction}: createActionProps) {
   const [selectedClient, setSelectedClient] = useState<string>("");
   const [customerData, setCustomerData] = useState<customerData[]>([]);
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
-  const [isChecked, setIsChecked] = useState(false);
+  // const [isChecked, setIsChecked] = useState(false);
   const [clientId, setClientId] = useState<string>('');
 
   const handleSelectChange = (value: string) => {
@@ -71,9 +71,9 @@ export function NovaAcao({onCreateAction}: createActionProps) {
     }
   };
 
-  const handleChecked = () => {
-    setIsChecked(!isChecked)
-  }
+  // const handleChecked = () => {
+  //   setIsChecked(!isChecked)
+  // }
 
      const handleGetClient = async () => {
       try {
@@ -274,7 +274,7 @@ export function NovaAcao({onCreateAction}: createActionProps) {
                 </span>
               )}
             </div>
-          <div className="flex gap-4 col-span-4">
+          {/* <div className="flex gap-4 col-span-4">
             <Input
             type="checkbox"
             className="max-w-[16px]"
@@ -287,7 +287,7 @@ export function NovaAcao({onCreateAction}: createActionProps) {
             disabled={!isChecked}
             {...register("customPath")}
             className="col-span-4"/>
-          </div>
+          </div> */}
           <div className="col-span-2">
             <Label id="dataInicio">Data/Hora Início</Label>
             <Input

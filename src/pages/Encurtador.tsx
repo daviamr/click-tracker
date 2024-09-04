@@ -14,7 +14,7 @@ export function EncurtadorPage() {
   return (
     <>
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl">Encurtador</h1>
+        <h1 className="text-3xl">Tracker</h1>
         <Button
           onClick={() => setIsFocus("campaign")}
           variant={"outline"}

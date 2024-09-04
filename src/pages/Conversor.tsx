@@ -75,6 +75,7 @@ export function ConversorPage() {
           <TableRow className="pointer-events-none">
             <TableHead className="min-w-[100px]">Título</TableHead>
             <TableHead>Conversor</TableHead>
+            <TableHead>Caracteres</TableHead>
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
@@ -83,6 +84,7 @@ export function ConversorPage() {
             <TableRow key={i.id}>
               <TableCell>{i.name}</TableCell>
               <TableCell>{i.characters}</TableCell>
+              <TableCell></TableCell>
               <TableCell className="flex items-center justify-end gap-2">
                 <EditarConversor
                   id={i.id}

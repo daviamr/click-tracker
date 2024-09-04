@@ -30,11 +30,12 @@ export function AcaoPage() {
     {}
   );
 
-  const handleSwitchChange = (id: number, checked: boolean) => {
+  const handleSwitchChange = async (id: number, checked: boolean) => {
     setSwitchStates((prev) => ({ ...prev, [id]: checked }));
 
-    handleStatusAction({id})
+    await handleStatusAction({id})
     console.log(`Valor do Switch para ação ${id}:`, checked);
+    await handleGetAction();
   };
 
     const handleGetAction = async () =>
@@ -79,7 +80,7 @@ export function AcaoPage() {
   return (
     <>
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl">Ação</h1>
+        <h1 className="text-3xl">Ações</h1>
         <Button
           onClick={() => setIsFocus("campaign")}
           variant={"outline"}

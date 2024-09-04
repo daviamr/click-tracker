@@ -22,7 +22,10 @@ const verifyEditCustomer = z.object({
   id: z.string(),
   image: z
     .any()
-    .refine((files) => files instanceof FileList && files.length > 0, { message: "*Campo obrigatório" }),
+    .refine((files) => files === undefined || (files instanceof FileList && files.length <= 1), {
+      message: "*Campo obrigatório",
+    })
+    .optional(),
   name: z.string().min(2, "O nome deve ter no mínimo 2 caracteres"),
 });
 
@@ -60,7 +63,8 @@ export function EditarCliente({ id, name, onEditClient }: editClientProps) {
   async function editCustomer(data: dataEditCustomer) {
     const { id, image, name } = data;
     try {
-      await handleEditCustomer({ id, image: image[0], name });
+      const file = image && image.length > 0 ? image[0] : undefined;
+      await handleEditCustomer({ id, image: file, name });
       onEditClient();
       setIsOpen(false);
     } catch (error) {
@@ -94,15 +98,15 @@ export function EditarCliente({ id, name, onEditClient }: editClientProps) {
               id="logo"
               type="file"
               {...register("image")}
-                className={`col-span-4${
-                  errors.image && "border-rose-400 bg-rose-100"
-                }"col-span-4"`}
+                className={`col-span-4$ ${
+                  errors.image ? "border-rose-400" : ""
+                }`}
               />
               {errors.image && (
                 <span className="text-xs text-rose-400 font-normal">
                   {typeof errors.image.message === "string" ? errors.image.message : "Campo obrigatório"}
                 </span>
-              )}
+              )}             
             </div>
             <div className="col-span-4">
               <Label htmlFor="username" className="text-right">

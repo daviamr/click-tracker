@@ -63,9 +63,12 @@ export function EditarUrl({id, url, onEditUrl}: editUrlProps) {
     }
     setIsOpen(false);
   }
+  
   useEffect(() => {
-    reset({ id, url: url});
-  }, [id, reset]);
+    if (isOpen) {
+      reset({ id, url: `https://${url}`});
+    }
+  }, [isOpen, id, reset]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

@@ -1,5 +1,4 @@
 import { AlertMessage } from "@/components/alert_message";
-// import { BarraProgresso } from "@/components/BarraProgresso";
 import {
   Select,
   SelectContent,
@@ -19,7 +18,6 @@ import {
   customerData,
   dataAction,
   DataProps,
-  urlData,
 } from "@/interface/auth";
 import { api } from "@/services/Api";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -64,34 +62,33 @@ export function EncurtadorTres() {
   const [selectedClient, setSelectedClient] = useState<string>("");
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
   const [acoes, setAcoes] = useState<dataAction[]>([]);
-  const [baseUrl, setBaseUrl] = useState<urlData[]>([]);
   const [conversor, setConversor] = useState<conversorData[]>([]);
   const [selectedValue, setSelectedValue] = useState<number>(6);
-  const linkLength = [
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
-    "i",
-    "j",
-    "k",
-    "l",
-    "m",
-    "n",
-    "o",
-    "p",
-    "q",
-    "r",
-    "s",
-    "t",
-  ];
+  // const linkLength = [
+  //   "a",
+  //   "b",
+  //   "c",
+  //   "d",
+  //   "e",
+  //   "f",
+  //   "g",
+  //   "h",
+  //   "i",
+  //   "j",
+  //   "k",
+  //   "l",
+  //   "m",
+  //   "n",
+  //   "o",
+  //   "p",
+  //   "q",
+  //   "r",
+  //   "s",
+  //   "t",
+  // ];
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [url, setUrl] = useState<string>('');
+  const [isSelectedCampaign, setIsSelectedCampaign] = useState<boolean>(false);
 
   //FUNÇÃO SALVANDO NO ESTADO O VALOR DE COMPRIMENTO
   const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,6 +111,7 @@ export function EncurtadorTres() {
     );
     if (selectedCampaign) {
       setValue("campaignId", selectedCampaign.id);
+      setIsSelectedCampaign(!!value);
       console.log(`id da campanha: ${selectedCampaign.id}`);
     }
   };
@@ -123,15 +121,6 @@ export function EncurtadorTres() {
     if (selectedAction) {
       setValue("actionId", selectedAction.id);
       console.log(`id da ação: ${selectedAction.id}`);
-    }
-  };
-
-  const handleSelectBaseUrl = (value: string) => {
-    const selectedBaseUrl = baseUrl.find((url) => url.url === value);
-    if (selectedBaseUrl) {
-      setValue("baseUrlId", selectedBaseUrl.id);
-      setUrl(selectedBaseUrl.url)
-      console.log(`id da baseUrl: ${selectedBaseUrl.id}`);
     }
   };
 
@@ -146,9 +135,9 @@ export function EncurtadorTres() {
   };
 
   //FUNÇÃO SALVANDO NO ESTADO A QUANTIDADE DE CARACTERES DO LINK
-  const generateLink = () => {
-    return linkLength.slice(0, selectedValue).join("");
-  };
+  // const generateLink = () => {
+  //   return linkLength.slice(0, selectedValue).join("");
+  // };
 
   //FUNÇÃO SALVANDO NO ESTADO O CLIENTE SELECIONADO
   const handleSelectChange = (value: string) => {
@@ -178,31 +167,6 @@ export function EncurtadorTres() {
       }
     }
     handleGetUsers();
-  }, [data.jwtToken]);
-
-  //GET BASEURL
-  useEffect(() => {
-    async function handleGetBaseUrl() {
-      try {
-        const response = await api.get("/base-url", {
-          headers: {
-            Authorization: `Bearer ${data.jwtToken}`,
-          },
-        });
-        setBaseUrl(response.data);
-        console.log(response.data);
-      } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response) {
-          AlertMessage(error.response.data.message, "error");
-        } else {
-          AlertMessage(
-            "Não foi possível carregar as URLs, tente novamente mais tarde.",
-            "error"
-          );
-        }
-      }
-    }
-    handleGetBaseUrl();
   }, [data.jwtToken]);
 
   //GET CONVERSOR
@@ -436,13 +400,13 @@ export function EncurtadorTres() {
                 control={control}
                 render={() => (
                   <Select
-                    disabled={!selectedClient}
+                    disabled={!isSelectedCampaign}
                     onValueChange={handleSelectAction}
                   >
                     <SelectTrigger>
                       <SelectValue
                         placeholder={
-                          !selectedClient
+                          !isSelectedCampaign
                             ? "Cliente não selecionado"
                             : "Selecione a ação"
                         }
@@ -469,36 +433,6 @@ export function EncurtadorTres() {
               {/* FINAL SELECT ACTION */}
             </div>
             <div className="col-span-2">
-              {/* SELECT SHORTENER */}
-              <Controller
-                name="baseUrlId"
-                control={control}
-                render={() => (
-                  <Select onValueChange={handleSelectBaseUrl}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="ShortURL" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Encurtadores</SelectLabel>
-                        {baseUrl.map((i, index) => (
-                          <SelectItem value={i.url} key={index}>
-                            {i.url}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              {errors.baseUrlId && (
-                <span className="text-xs text-rose-400 font-normal">
-                  *Campo obrigatório
-                </span>
-              )}
-              {/* FINAL SELECT SHORTENER */}
-            </div>
-            <div className="col-span-4">
               {/* SELECT CONVERSOR */}
               <Controller
                 name="alphabetId"
@@ -511,6 +445,7 @@ export function EncurtadorTres() {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Conversores</SelectLabel>
+                        <SelectItem value="nenhum">Nenhum</SelectItem>
                         {conversor.map((i, index) => (
                           <SelectItem value={i.name} key={index}>
                             {i.name}
@@ -583,7 +518,7 @@ export function EncurtadorTres() {
             <div className="flex items-end col-span-3">
               <Input
                 type="text"
-                value={`${url ? url : 'exemplo.com'}/${generateLink()}`}
+                value={`https://exemplo.com`}
                 disabled
               />
             </div>
@@ -613,14 +548,14 @@ export function EncurtadorTres() {
             <Button className="w-full" variant="secondary" disabled={loading}>
               <div className="flex items-center gap-2">
                 <Send size={18} />
-                {loading ? 'Enviando...' : 'Enviar'}
+                {loading ? "Enviando..." : "Enviar"}
               </div>
             </Button>
           </div>
         </form>
         {/* ProgressBar */}
         <div className="col-span-4 pb-6">
-        {loading && <BarraProgresso value={progress}/>}
+          {loading && <BarraProgresso value={progress} />}
         </div>
       </div>
     </>

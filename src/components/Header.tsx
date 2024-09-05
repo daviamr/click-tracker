@@ -16,14 +16,16 @@ export function Header() {
   }
 
   return (
-    <div className="flex bg-gray-900">
+    <div className="flex bg-white shadow-sm dark:bg-[#1e1e21]">
       <header className="flex justify-between items-center w-full max-w-7xl mx-auto px-8 py-4">
-        <p className="text-white text-xl">Logo</p>
+        <p className="text-xl relative z-10">
+          <span className="absolute w-[140%] h-4 bg-[#799b09] z-[-1] left-[-8px] bottom-0"></span>
+          Logo.</p>
         <nav>
           <ul className="flex gap-8 cursor-pointer">
             <li className="hover:opacity-40 duration-300">
               <button
-                className={`${isFocus === "user" ? "font-bold" : "text-white"}`}
+                className={`${isFocus === "user" ? "font-bold" : ""}`}
                 onClick={() => setIsFocus("user")}
               >
                 Usuários
@@ -33,7 +35,7 @@ export function Header() {
             <li className="hover:opacity-40 duration-300">
               <button
                 className={`${
-                  isFocus === "customers" ? "font-bold" : "text-white"
+                  isFocus === "customers" ? "font-bold" : ""
                 }`}
                 onClick={() => setIsFocus("customers")}
               >
@@ -44,7 +46,7 @@ export function Header() {
             <li className="hover:opacity-40 duration-300">
               <button
                 className={`${
-                  isFocus === "campaign" ? "font-bold" : "text-white"
+                  isFocus === "campaign" ? "font-bold" : ""
                 }`}
                 onClick={() => setIsFocus("campaign")}
               >
@@ -55,7 +57,7 @@ export function Header() {
             <li className="hover:opacity-40 duration-300">
               <button
                 className={`${
-                  isFocus === "action" ? "font-bold" : "text-white"
+                  isFocus === "action" ? "font-bold" : ""
                 }`}
                 onClick={() => setIsFocus("action")}
               >
@@ -66,7 +68,7 @@ export function Header() {
             <li className="hover:opacity-40 duration-300">
               <button
                 className={`${
-                  isFocus === "shorturl" ? "font-bold" : "text-white"
+                  isFocus === "shorturl" ? "font-bold" : ""
                 }`}
                 onClick={() => setIsFocus("shorturl")}
               >
@@ -77,7 +79,7 @@ export function Header() {
             <li className="hover:opacity-40 duration-300">
               <button
                 className={`${
-                  isFocus === "conversor" ? "font-bold" : "text-white"
+                  isFocus === "conversor" ? "font-bold" : ""
                 }`}
                 onClick={() => setIsFocus("conversor")}
               >
@@ -88,7 +90,7 @@ export function Header() {
             <li className="hover:opacity-40 duration-300">
               <button
                 className={`${
-                  isFocus === "shorter" ? "font-bold" : "text-white"
+                  isFocus === "shorter" ? "font-bold" : ""
                 }`}
                 onClick={() => setIsFocus("shorter")}
               >
@@ -98,7 +100,7 @@ export function Header() {
             <li className="hover:opacity-40 duration-300">
               <button
                 className={`${
-                  isFocus === "dashboard" ? "font-bold" : "text-white"
+                  isFocus === "dashboard" ? "font-bold" : ""
                 }`}
                 onClick={() => setIsFocus("dashboard")}
               >
@@ -116,7 +118,7 @@ export function Header() {
               <LogOut size={18} />
             </Button>
           </div>
-          <p className="text-sm mt-2 text-white">
+          <p className="text-sm mt-2 ">
             Olá, <span className="font-bold">Juvencio</span>!
           </p>
         </div>

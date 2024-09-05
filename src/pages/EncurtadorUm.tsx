@@ -1,5 +1,4 @@
 import { AlertMessage } from "@/components/alert_message";
-// import { BarraProgresso } from "@/components/BarraProgresso";
 import {
   Select,
   SelectContent,
@@ -466,7 +465,7 @@ export function EncutadorUm() {
                     <SelectTrigger>
                       <SelectValue
                         placeholder={
-                          !selectedClient
+                          !isSelectedCampaign
                             ? "Campanha não selecionada"
                             : "Selecione a ação"
                         }
@@ -535,6 +534,7 @@ export function EncutadorUm() {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Conversores</SelectLabel>
+                        <SelectItem value="nenhum">Nenhum</SelectItem>
                         {conversor.map((i, index) => (
                           <SelectItem value={i.name} key={index}>
                             {i.name}

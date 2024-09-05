@@ -32,7 +32,7 @@ export function UsuarioPage() {
         },
       });
       setUserData(response.data);
-      console.log(response.data)
+      console.log(response.data);
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
@@ -51,7 +51,11 @@ export function UsuarioPage() {
 
   return (
     <>
-      <div className="flex gap-4 justify-end">
+      <div className="flex gap-4 justify-between mb-8">
+        <div className="flex items-center gap-2">
+          <span className="bg-[#8b8b8b63] rounded-full w-3 h-3"></span>
+          <h1 className="text-3xl">Usuários</h1>
+        </div>
         <NovoUsuario onCreateUser={handleGetUsers} />
       </div>
       <Table>
@@ -76,26 +80,27 @@ export function UsuarioPage() {
               });
             };
             return (
-            <TableRow key={index}>
-              <TableCell>{i.name}</TableCell>
-              <TableCell>{i.email}</TableCell>
-              <TableCell>{dataFormatada(i.createdAt)}</TableCell>
-              <TableCell className="flex items-center justify-end gap-2">
-                <EditarUsuario
-                  onEditUser={handleGetUsers}
-                  name={i.name}
-                  email={i.email}
-                />
-                <Button
-                  className="p-2 duration-300 hover:text-red-700"
-                  variant={"outline"}
-                  // onClick={() => handleDeleteCustomer(i.id)}
-                >
-                  <UserRoundX size={18} />
-                </Button>
-              </TableCell>
-            </TableRow>
-          )})}
+              <TableRow key={index}>
+                <TableCell>{i.name}</TableCell>
+                <TableCell>{i.email}</TableCell>
+                <TableCell>{dataFormatada(i.createdAt)}</TableCell>
+                <TableCell className="flex items-center justify-end gap-2">
+                  <EditarUsuario
+                    onEditUser={handleGetUsers}
+                    name={i.name}
+                    email={i.email}
+                  />
+                  <Button
+                    className="p-2 duration-300 hover:text-red-700"
+                    variant={"outline"}
+                    // onClick={() => handleDeleteCustomer(i.id)}
+                  >
+                    <UserRoundX size={18} />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </>

@@ -60,9 +60,12 @@ export function ShortUrlsPage() {
   return (
     <>
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl">Short URL's</h1>
+      <div className="flex items-center gap-2">
+          <span className="bg-[#8b8b8b63] rounded-full w-3 h-3"></span>
+          <h1 className="text-3xl">Short URL's</h1>
+        </div>
         <Button
-          onClick={() => setIsFocus("campaign")}
+          onClick={() => setIsFocus("action")}
           variant={"outline"}
           className="flex gap-2 items-center"
         >

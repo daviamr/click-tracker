@@ -59,7 +59,10 @@ export function ClientesPage() {
   return (
     <>
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl">Clientes</h1>
+      <div className="flex items-center gap-2">
+          <span className="bg-[#8b8b8b63] rounded-full w-3 h-3"></span>
+          <h1 className="text-3xl">Clientes</h1>
+        </div>
         <Button
           onClick={() => setIsFocus("user")}
           variant={"outline"}

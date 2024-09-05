@@ -46,6 +46,8 @@ const verifyCreateLink = z.object({
   redirectUrl: z.string().min(4, "*Digite uma url válida"),
   length: z.number(),
   qrCode: z.boolean(),
+  replace: z.string(),
+  conversionPosition: z.string(),
 });
 
 type encurtadorDados = z.infer<typeof verifyCreateLink>;
@@ -97,6 +99,9 @@ export function EncurtadorDois() {
   ];
   const [returnData, setReturnData] = useState<ApiResponse | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSelectedCampaign, setIsSelectedCampaign] = useState<boolean>(false);
+  const [url, setUrl] = useState<string>("");
+  const [selectedPositionValue, setselectedPositionValue] = useState("pre");
 
   //FUNÇÃO SALVANDO NO ESTADO O VALOR DE COMPRIMENTO
   const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,6 +125,7 @@ export function EncurtadorDois() {
     if (selectedCampaign) {
       setValue("campaignId", selectedCampaign.id);
       console.log(`id da campanha: ${selectedCampaign.id}`);
+      setIsSelectedCampaign(!!value);
     }
   };
 
@@ -135,6 +141,7 @@ export function EncurtadorDois() {
     const selectedBaseUrl = baseUrl.find((url) => url.url === value);
     if (selectedBaseUrl) {
       setValue("baseUrlId", selectedBaseUrl.id);
+      setUrl(selectedBaseUrl.url);
       console.log(`id da baseUrl: ${selectedBaseUrl.id}`);
     }
   };
@@ -147,6 +154,10 @@ export function EncurtadorDois() {
       setValue("alphabetId", selectedConversor.id);
       console.log(`id do conversor: ${selectedConversor.id}`);
     }
+  };
+
+  const handleSelectedPositionValue = (value: string) => {
+    setselectedPositionValue(value);
   };
 
   //FUNÇÃO SALVANDO NO ESTADO A QUANTIDADE DE CARACTERES DO LINK
@@ -169,7 +180,7 @@ export function EncurtadorDois() {
           },
         });
         setClients(response.data);
-        console.log(response.data)
+        console.log(response.data);
       } catch (error: unknown) {
         if (error instanceof AxiosError && error.response) {
           AlertMessage(error.response.data.message, "error");
@@ -194,7 +205,7 @@ export function EncurtadorDois() {
           },
         });
         setBaseUrl(response.data);
-        console.log(response.data)
+        console.log(response.data);
       } catch (error: unknown) {
         if (error instanceof AxiosError && error.response) {
           AlertMessage(error.response.data.message, "error");
@@ -219,7 +230,7 @@ export function EncurtadorDois() {
           },
         });
         setConversor(response.data);
-        console.log(response.data)
+        console.log(response.data);
       } catch (error: unknown) {
         if (error instanceof AxiosError && error.response) {
           AlertMessage(error.response.data.message, "error");
@@ -247,7 +258,7 @@ export function EncurtadorDois() {
           }
         );
         setCampanhas(response.data);
-        console.log(response.data)
+        console.log(response.data);
       } catch (error: unknown) {
         if (error instanceof AxiosError && error.response) {
           AlertMessage(error.response.data.message, "error");
@@ -275,7 +286,7 @@ export function EncurtadorDois() {
           }
         );
         setAcoes(response.data);
-        console.log(response.data)
+        console.log(response.data);
       } catch (error: unknown) {
         if (error instanceof AxiosError && error.response) {
           AlertMessage(error.response.data.message, "error");
@@ -297,6 +308,7 @@ export function EncurtadorDois() {
     setValue,
     reset,
     control,
+    watch,
     formState: { errors },
   } = useForm<encurtadorDados>({
     resolver: zodResolver(verifyCreateLink),
@@ -309,6 +321,9 @@ export function EncurtadorDois() {
       qrCode: false,
     },
   });
+
+  //Assistindo o valor do input de personalizar url
+  const valorAssistido = watch("replace");
 
   async function createLink(data: createNewSingleLink) {
     const { actionId, baseUrlId, alphabetId, redirectUrl, length, qrCode } =
@@ -454,14 +469,14 @@ export function EncurtadorDois() {
                 control={control}
                 render={() => (
                   <Select
-                    disabled={!selectedClient}
-                    onValueChange={handleSelectAction}
+                  disabled={!isSelectedCampaign}
+                  onValueChange={handleSelectAction}
                   >
                     <SelectTrigger>
                       <SelectValue
                         placeholder={
-                          !selectedClient
-                            ? "Cliente não selecionado"
+                          !isSelectedCampaign
+                            ? "Campanha não selecionada"
                             : "Selecione a ação"
                         }
                       />
@@ -529,6 +544,7 @@ export function EncurtadorDois() {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Conversores</SelectLabel>
+                        <SelectItem value="nenhum">Nenhum</SelectItem>
                         {conversor.map((i, index) => (
                           <SelectItem value={i.name} key={index}>
                             {i.name}
@@ -565,25 +581,50 @@ export function EncurtadorDois() {
                 </span>
               )}
             </div>
-            {/* <div className="flex flex-col gap-1 col-span-2">
-              <label htmlFor="urlFinal" className="font-semibold">
-                Parâmetro a substituir
+            <div className="flex flex-col gap-1 col-span-2">
+              <label htmlFor="personalizarUrl" className="font-semibold">
+                Personalizar URL
               </label>
               <input
-                id="urlSubstituida"
+                id="personalizarUrl"
                 type="text"
-                placeholder=""
+                placeholder="/url-personalizada"
                 {...register("replace")}
                 className={`pl-4 bg-transparent rounded-md border border-input min-h-[36px] ${
                   errors.replace && "border-rose-400"
                 }`}
-            />
-            {errors.replace && (
+              />
+              {errors.replace && (
                 <span className="text-xs text-rose-400 font-normal">
                   {errors.replace.message}
                 </span>
               )}
-            </div> */}
+            </div>
+            <div className="flex flex-col gap-1 col-span-2">
+              <Label className="font-semibold">Pré/Pós Conversão</Label>
+              <Controller
+                name="conversionPosition"
+                control={control}
+                defaultValue=""
+                render={() => (
+                  <Select
+                    value={selectedPositionValue}
+                    onValueChange={handleSelectedPositionValue}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Posição da URL" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Selecione a posição</SelectLabel>
+                        <SelectItem value="pre">Pré Conversão</SelectItem>
+                        <SelectItem value="pos">Pós Conversão</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
             <div className="flex flex-col gap-1">
               <Label htmlFor="comprimento" className="font-semibold">
                 Comprimento
@@ -601,7 +642,29 @@ export function EncurtadorDois() {
             <div className="flex items-end col-span-3">
               <Input
                 type="text"
-                value={`exemplo.com/${generateLink()}`}
+                value={
+                  !url && valorAssistido === ""
+                    ? `https://exemplo.com/${generateLink()}`
+                    : !url &&
+                      valorAssistido !== "" &&
+                      selectedPositionValue === "pre"
+                    ? `https://exemplo.com/${valorAssistido}/${generateLink()}`
+                    : !url &&
+                      valorAssistido !== "" &&
+                      selectedPositionValue === "pos"
+                    ? `https://exemplo.com/${generateLink()}/${valorAssistido}`
+                    : url && valorAssistido === ""
+                    ? `https://${url}/${generateLink()}`
+                    : url &&
+                      valorAssistido !== "" &&
+                      selectedPositionValue === "pre"
+                    ? `https://${url}/${valorAssistido}/${generateLink()}`
+                    : url &&
+                      valorAssistido !== "" &&
+                      selectedPositionValue === "pos"
+                    ? `https://${url}/${generateLink()}/${valorAssistido}`
+                    : ""
+                }
                 disabled
               />
             </div>

@@ -14,9 +14,12 @@ export function EncurtadorPage() {
   return (
     <>
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl">Tracker</h1>
+      <div className="flex items-center gap-2">
+          <span className="bg-[#8b8b8b63] rounded-full w-3 h-3"></span>
+          <h1 className="text-3xl">Tracker</h1>
+        </div>
         <Button
-          onClick={() => setIsFocus("campaign")}
+          onClick={() => setIsFocus("conversor")}
           variant={"outline"}
           className="flex gap-2 items-center"
         >
@@ -31,21 +34,21 @@ export function EncurtadorPage() {
         </Button> */}
       </div>
 
-      <div className="flex flex-col justify-center m-10">
+      <div className="flex flex-col justify-center mt-10">
         <div className="flex 
         justify-center mb-6">
         <Label
-        className={`p-2 px-16 rounded-l-lg cursor-pointer ${selectedOption === 'option1' ? 'font-semibold bg-slate-600' : 'bg-slate-800'}`}
+        className={`p-2 px-16 rounded-l-lg cursor-pointer ${selectedOption === 'option1' ? 'font-semibold bg-[#a2d515]' : 'bg-[#608104]'}`}
         onClick={() => setSelectedOption('option1')}>
             OPÇÃO 1
         </Label>
         <Label
-        className={`p-2 px-16 cursor-pointer ${selectedOption === 'option2' ? 'font-semibold bg-slate-600' : 'bg-slate-800'}`}
+        className={`p-2 px-16 cursor-pointer ${selectedOption === 'option2' ? 'font-semibold bg-[#a2d515]' : 'bg-[#608104]'}`}
         onClick={() => setSelectedOption('option2')}>
             OPÇÃO 2
         </Label>
         <Label
-        className={`p-2 px-16 rounded-r-lg cursor-pointer ${selectedOption === 'option3' ? 'font-semibold bg-slate-600' : 'bg-slate-800'}`}
+        className={`p-2 px-16 rounded-r-lg cursor-pointer ${selectedOption === 'option3' ? 'font-semibold bg-[#a2d515]' : 'bg-[#608104]'}`}
         onClick={() => setSelectedOption('option3')}>
             OPÇÃO 3
         </Label>

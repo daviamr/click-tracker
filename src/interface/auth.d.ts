@@ -190,7 +190,7 @@ export type CreateNewUser = {
 
   export type createNewSingleLinkOptionThree = {
     actionId: number;
-    baseUrlId: number;
+    baseUrlId?: number;
     alphabetId: number;
     redirectUrl: string;
     replace?: string;

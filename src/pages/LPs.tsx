@@ -23,6 +23,7 @@ export function LPsPage() {
   const { data } = useAuth() as dataUserProps;
 
   const [userData, setUserData] = useState<userDataProps[]>([]);
+  console.log(userData)
 
   const handleGetUsers = async () => {
     try {

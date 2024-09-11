@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, UserRoundCheck, UserRoundPlus } from "lucide-react";
+import { Plus, UserRoundCheck } from "lucide-react";
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -92,6 +92,7 @@ export function NovaLP({ onCreateLP }: createLPProps) {
   function createLP(data: createLPForm) {
     console.log(data);
     const { name, campaignId, baseUrlId } = data;
+    console.log(campaignId, baseUrlId);
     handleCreateLP({ name, campaignId: 1, baseUrlId: 2 });
     onCreateLP();
     setIsOpen(false);

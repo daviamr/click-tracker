@@ -198,6 +198,12 @@ export type CreateNewUser = {
     qrCode: boolean;
   }
 
+  export type createLP = {
+    name: string;
+    campaignId: number;
+    baseUrlId: number;
+  }
+
   export interface ApiResponse {
     qrCode: string;
     redirectUrl: string;

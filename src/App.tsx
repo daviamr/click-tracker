@@ -4,6 +4,7 @@ import { CampanhaPage } from "./pages/Campanha";
 import { ClientesPage } from "./pages/Clientes";
 import { ConversorPage } from "./pages/Conversor";
 import { EncurtadorPage } from "./pages/Encurtador";
+import { LPsPage } from "./pages/LPs";
 import { PainelPage } from "./pages/Painel";
 import { ShortUrlsPage } from "./pages/ShortURLS";
 import { UsuarioPage } from "./pages/Usuario";
@@ -17,6 +18,7 @@ export function App() {
         {isFocus === "customers" && <ClientesPage />}
         {isFocus === "campaign" && <CampanhaPage />}
         {isFocus === "action" && <AcaoPage />}
+        {isFocus === "lps" && <LPsPage />}
         {isFocus === "shorturl" && <ShortUrlsPage />}
         {isFocus === "conversor" && <ConversorPage />}
         {isFocus === "shorter" && <EncurtadorPage />}

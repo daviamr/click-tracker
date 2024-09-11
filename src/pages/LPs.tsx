@@ -7,20 +7,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { NovoUsuario } from "@/components/Modal/NovoUsuario";
 import { AlertMessage } from "@/components/alert_message";
 import { AxiosError } from "axios";
 import { api } from "@/services/Api";
 import { useAuth } from "@/hook/Auth";
 import { DataProps, userDataProps } from "@/interface/auth";
 import { Button } from "@/components/ui/button";
-import { UserRoundX } from "lucide-react";
-import { EditarUsuario } from "@/components/Modal/EditarUsuario";
-import { Skeleton } from "@/components/ui/skeleton";
+import { UserRoundPen, UserRoundX } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { NovaLP } from "@/components/Modal/NovaLP";
 
 type dataUserProps = { data: DataProps };
 
-export function UsuarioPage() {
+export function LPsPage() {
   const { data } = useAuth() as dataUserProps;
 
   const [userData, setUserData] = useState<userDataProps[]>([]);
@@ -55,45 +54,36 @@ export function UsuarioPage() {
       <div className="flex gap-4 justify-between mb-8">
         <div className="flex items-center gap-2">
           <span className="bg-[#8b8b8b63] rounded-full w-3 h-3"></span>
-          <h1 className="text-3xl">Usuários</h1>
+          <h1 className="text-3xl">LPs</h1>
         </div>
-        <NovoUsuario onCreateUser={handleGetUsers} />
+        <NovaLP onCreateLP={handleGetUsers}/>
       </div>
       <Table>
         <TableHeader>
-          <TableRow className="pointer-events-none">
-            <TableHead>Nome</TableHead>
-            <TableHead>E-mail</TableHead>
-            <TableHead>Data de Criação</TableHead>
+          <TableRow className="hover:bg-transparent">
+            <TableHead>
+                <Checkbox className="pointer-events-auto"/>
+            </TableHead>
+            <TableHead>LP</TableHead>
+            <TableHead>Campanha</TableHead>
+            <TableHead>Ações</TableHead>
+            <TableHead>Leads</TableHead>
+            <TableHead>URL</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {userData.map((i, index) => {
-            const dataFormatada = (data: string) => {
-              return new Date(data).toLocaleString("pt-BR", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-                hour12: false,
-              });
-            };
-            return (
-              <TableRow key={index}>
-                <TableCell>{
-                i.name ? i.name : <Skeleton className="h-4 w-full"/>}
+              <TableRow>
+                <TableCell>
+                    <Checkbox/>
                 </TableCell>
-                <TableCell>{
-                i.email ? i.email : <Skeleton className="h-4 w-full"/>}</TableCell>
-                <TableCell>{dataFormatada(i.createdAt)}</TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
                 <TableCell className="flex items-center justify-end gap-2">
-                  <EditarUsuario
-                    onEditUser={handleGetUsers}
-                    name={i.name}
-                    email={i.email}
-                  />
+                  <Button className="p-2" variant={"outline"}>
+                    <UserRoundPen size={18} />
+                  </Button>
                   <Button
                     className="p-2 duration-300 hover:text-red-700"
                     variant={"outline"}
@@ -103,8 +93,6 @@ export function UsuarioPage() {
                   </Button>
                 </TableCell>
               </TableRow>
-            );
-          })}
         </TableBody>
       </Table>
     </>

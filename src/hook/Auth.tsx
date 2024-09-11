@@ -34,6 +34,7 @@ import {
   createNewSingleLink,
   ApiResponse,
   statusCampaign,
+  createLP,
 } from "@/interface/auth";
 import { AlertMessage } from "@/components/alert_message";
 
@@ -59,6 +60,7 @@ interface AuthContextType {
   deleteConversor: (data: deleteConversor) => Promise<void>;
   handleCreateLink: (data: createNewLink) => Promise<void>;
   handleCreateSingleLink: (data: createNewSingleLink) => Promise<ApiResponse>;
+  handleCreateLP: (data: createLP) => Promise<void>;
   data: DataProps | null;
 }
 
@@ -897,6 +899,46 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
+  //LP
+  async function handleCreateLP({ name, campaignId, baseUrlId }: createLP) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      // console.log(token)
+
+      const response = await api.post(
+        "/users",
+        {
+          name,
+          campaignId,
+          baseUrlId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token.jwtToken}`,
+          },
+        }
+      );
+      console.log(response.data);
+
+      AlertMessage("LP criada com sucesso.", "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível criar uma LP agora, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  }
+
   return (
     <>
       <AuthContext.Provider
@@ -922,6 +964,7 @@ function AuthProvider({ children }: ChildrenProps) {
           deleteConversor,
           handleCreateLink,
           handleCreateSingleLink,
+          handleCreateLP,
           data,
         }}
       >

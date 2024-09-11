@@ -29,6 +29,11 @@ import { AlertMessage } from "../alert_message";
 import { api } from "@/services/Api";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SelectCategoria } from "../SelectCategoria";
+import { SelectSubCategoria } from "../SelectSubCategoria";
+import { Textarea } from "../ui/textarea";
+import { SelectModelo } from "../SelectModelo";
+import { SelectTipo } from "../SelectTipo";
 
 const verifyEditCampaign = z.object({
   id: z.number(),
@@ -60,13 +65,12 @@ export function EditarCampanha({
   dataFim,
   onEditCampaign,
 }: editCampaignProps) {
-
   const { data, handleEditCampaign } = useAuth() as HandleCreateUsersProps;
   const [customerData, setCustomerData] = useState<customerData[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const dataPadraoFormatada = (data: string) => {
     return data.slice(0, 16);
-  }
+  };
 
   useEffect(() => {
     async function handleGetUsers() {
@@ -117,7 +121,9 @@ export function EditarCampanha({
   }, [isOpen]);
 
   useEffect(() => {
-    const selectedClient = customerData.find(client => client.name === nameClient);
+    const selectedClient = customerData.find(
+      (client) => client.name === nameClient
+    );
     if (selectedClient) {
       setValue("clientId", selectedClient.name);
     }
@@ -136,7 +142,13 @@ export function EditarCampanha({
 
     if (idClient) {
       try {
-        await handleEditCampaign({ id, name, clientId: idClient, startAt: inicioIso, endAt: fimIso });
+        await handleEditCampaign({
+          id,
+          name,
+          clientId: idClient,
+          startAt: inicioIso,
+          endAt: fimIso,
+        });
         onEditCampaign();
       } catch (error) {
         console.error("Erro editar campanha:", error);
@@ -215,23 +227,46 @@ export function EditarCampanha({
               {/* FINAL SELECT CUSTOMER */}
             </div>
             <div className="col-span-2">
-            <Label id="dataInicio">Data/Hora Início</Label>
-            <Input
-            id="dataInicio"
-            type="datetime-local"
-            {...register("startAt")}
+              <Label htmlFor="categoria">Categoria</Label>
+              <SelectCategoria />
+            </div>
+            <div className="col-span-2">
+              <Label htmlFor="subcategoria">Subcategoria</Label>
+              <SelectSubCategoria />
+            </div>
+            <div className="col-span-2">
+              <Label htmlFor="modelo">Modelo</Label>
+              <SelectModelo/>
+            </div>
+            <div className="col-span-2">
+              <Label htmlFor="tipo">Tipo</Label>
+              <SelectTipo/>
+            </div>
+            <div className="col-span-2">
+              <Label id="dataInicio">Data/Hora Início</Label>
+              <Input
+                id="dataInicio"
+                type="datetime-local"
+                {...register("startAt")}
                 className={`${errors.startAt && "border-rose-400 bg-rose-100"}`}
-            />
-          </div>
-          <div className="col-span-2">
-            <Label id="dataFim">Data/Hora Fim</Label>
-            <Input
-            id="dataFim"
-            type="datetime-local"
-            {...register("endAt")}
+              />
+            </div>
+            <div className="col-span-2">
+              <Label id="dataFim">Data/Hora Fim</Label>
+              <Input
+                id="dataFim"
+                type="datetime-local"
+                {...register("endAt")}
                 className={`${errors.endAt && "border-rose-400 bg-rose-100"}`}
-            />
-          </div>
+              />
+            </div>
+            <div className="col-span-4">
+              <Label htmlFor="observacao">Observação</Label>
+              <Textarea
+                id="observacao"
+                placeholder="Digite uma observação, campo não obrigatório"
+              />
+            </div>
           </div>
           <DialogFooter>
             <Button

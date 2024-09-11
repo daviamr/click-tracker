@@ -258,6 +258,9 @@ export function NovaAcao({onCreateAction}: createActionProps) {
               </Select>
             </div>
             <div className="col-span-4">
+              <Label htmlFor="lprelacionada">LP Relacionada</Label>
+            </div>
+            <div className="col-span-4">
               <Label htmlFor="nome" className="text-right">
                 Ação
               </Label>

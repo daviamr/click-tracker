@@ -29,6 +29,11 @@ import { api } from "@/services/Api";
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import { AlertMessage } from "../alert_message";
+import { SelectCategoria } from "../SelectCategoria";
+import { SelectSubCategoria } from "../SelectSubCategoria";
+import { Textarea } from "../ui/textarea";
+import { SelectTipo } from "../SelectTipo";
+import { SelectModelo } from "../SelectModelo";
 
 const verifyCreateCampaign = z.object({
   name: z.string().min(4, "*Mínimo de 4 caracteres"),
@@ -39,15 +44,20 @@ const verifyCreateCampaign = z.object({
 
 type campaignData = z.infer<typeof verifyCreateCampaign>;
 type HandleCreateUsersProps = {
-  handleCreateCampaign: ({ name, clientId, startAt, endAt }: createNewCampaign) => void;
+  handleCreateCampaign: ({
+    name,
+    clientId,
+    startAt,
+    endAt,
+  }: createNewCampaign) => void;
   data: DataProps;
 };
 
 type createCampaignProps = {
   onCreateCampaign: () => void;
-}
+};
 
-export function NovaCampanha({onCreateCampaign}: createCampaignProps) {
+export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { data, handleCreateCampaign } = useAuth() as HandleCreateUsersProps;
   const [customerData, setCustomerData] = useState<customerData[]>([]);
@@ -92,15 +102,15 @@ export function NovaCampanha({onCreateCampaign}: createCampaignProps) {
   } = useForm<campaignData>({
     resolver: zodResolver(verifyCreateCampaign),
     defaultValues: {
-      name: '',
-      clientId: '',
-      startAt: '',
-      endAt: '',
+      name: "",
+      clientId: "",
+      startAt: "",
+      endAt: "",
     },
   });
 
   useEffect(() => {
-    setValue('startAt', getCurrentDateTime());
+    setValue("startAt", getCurrentDateTime());
   }, [setValue]);
 
   async function createCampaign(data: campaignData) {
@@ -114,10 +124,16 @@ export function NovaCampanha({onCreateCampaign}: createCampaignProps) {
     console.log(data);
     if (idClient) {
       try {
-        await handleCreateCampaign({ name, clientId: idClient, startAt: inicioIso, endAt: fimIso });
+        await handleCreateCampaign({
+          name,
+          clientId: idClient,
+          startAt: inicioIso,
+          endAt: fimIso,
+        });
         onCreateCampaign();
       } catch (error) {
-        console.error("Erro ao criar campanha:", error);}
+        console.error("Erro ao criar campanha:", error);
+      }
       setIsOpen(false);
       reset();
     } else {
@@ -192,24 +208,45 @@ export function NovaCampanha({onCreateCampaign}: createCampaignProps) {
               )}
               {/* FINAL SELECT CUSTOMER */}
             </div>
+
             <div className="col-span-2">
-            <Label id="dataInicio">Data/Hora Início</Label>
-            <Input
-            id="dataInicio"
-            type="datetime-local"
-            {...register("startAt")}
+              <Label htmlFor="categoria">Categoria</Label>
+              <SelectCategoria/>
+            </div>
+            <div className="col-span-2">
+              <Label htmlFor="subcategoria">Subcategoria</Label>
+              <SelectSubCategoria/>
+            </div>
+            <div className="col-span-2">
+              <Label htmlFor="modelo">Modelo</Label>
+              <SelectModelo/>
+            </div>
+            <div className="col-span-2">
+              <Label htmlFor="tipo">Tipo</Label>
+              <SelectTipo/>
+            </div>
+            <div className="col-span-2">
+              <Label htmlFor="dataInicio">Data/Hora Início</Label>
+              <Input
+                id="dataInicio"
+                type="datetime-local"
+                {...register("startAt")}
                 className={`${errors.startAt && "border-rose-400 bg-rose-100"}`}
-            />
-          </div>
-          <div className="col-span-2">
-            <Label id="dataFim">Data/Hora Fim</Label>
-            <Input
-            id="dataFim"
-            type="datetime-local"
-            {...register("endAt")}
+              />
+            </div>
+            <div className="col-span-2">
+              <Label htmlFor="dataFim">Data/Hora Fim</Label>
+              <Input
+                id="dataFim"
+                type="datetime-local"
+                {...register("endAt")}
                 className={`${errors.endAt && "border-rose-400 bg-rose-100"}`}
-            />
-          </div>
+              />
+            </div>
+            <div className="col-span-4">
+              <Label htmlFor="observacao">Observação</Label>
+              <Textarea id="observacao" placeholder="Digite uma observação, campo não obrigatório"/>
+            </div>
           </div>
           <DialogFooter>
             <Button

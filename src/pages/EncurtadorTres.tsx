@@ -39,6 +39,11 @@ const verifyCreateLink = z.object({
   replace: z.string().min(2, "*Mínimo de 2 caracteres."),
   length: z.number(),
   qrCode: z.boolean(),
+  sheet: z
+    .any()
+    .refine((files) => files instanceof FileList && files.length > 0, {
+      message: "*Selecione um arquivo",
+    }),
 });
 
 type encurtadorDados = z.infer<typeof verifyCreateLink>;
@@ -407,7 +412,7 @@ export function EncurtadorTres() {
                       <SelectValue
                         placeholder={
                           !isSelectedCampaign
-                            ? "Cliente não selecionado"
+                            ? "Campanha não selecionada"
                             : "Selecione a ação"
                         }
                       />
@@ -498,6 +503,22 @@ export function EncurtadorTres() {
               {errors.replace && (
                 <span className="text-xs text-rose-400 font-normal">
                   {errors.replace.message}
+                </span>
+              )}
+            </div>
+            <div className="flex flex-col gap-1 col-span-4">
+              <input
+                type="file"
+                {...register("sheet")}
+                className={`cursor-pointer p-1 bg-transparent rounded-md border border-input col-span-4 ${
+                  errors.sheet && "border-rose-400 bg-rose-100"
+                }"col-span-4"`}
+              />
+              {errors.sheet && (
+                <span className="col-span-4 text-nowrap text-xs text-rose-400 font-normal">
+                  {typeof errors.sheet.message === "string"
+                    ? errors.sheet.message
+                    : ""}
                 </span>
               )}
             </div>

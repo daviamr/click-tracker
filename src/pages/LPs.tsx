@@ -14,7 +14,6 @@ import { useAuth } from "@/hook/Auth";
 import { DataProps, userDataProps } from "@/interface/auth";
 import { Button } from "@/components/ui/button";
 import { UserRoundPen, UserRoundX } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
 import { NovaLP } from "@/components/Modal/NovaLP";
 
 type dataUserProps = { data: DataProps };

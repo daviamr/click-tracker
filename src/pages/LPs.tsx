@@ -13,12 +13,14 @@ import { api } from "@/services/Api";
 import { useAuth } from "@/hook/Auth";
 import { DataProps, userDataProps } from "@/interface/auth";
 import { Button } from "@/components/ui/button";
-import { UserRoundPen, UserRoundX } from "lucide-react";
+import { CircleArrowLeft, UserRoundPen, UserRoundX } from "lucide-react";
 import { NovaLP } from "@/components/Modal/NovaLP";
+import { useContextState } from "@/hook/state";
 
 type dataUserProps = { data: DataProps };
 
 export function LPsPage() {
+  const { setIsFocus } = useContextState();
   const { data } = useAuth() as dataUserProps;
 
   const [userData, setUserData] = useState<userDataProps[]>([]);
@@ -56,7 +58,17 @@ export function LPsPage() {
           <span className="bg-[#8b8b8b63] rounded-full w-3 h-3"></span>
           <h1 className="text-3xl">LPs</h1>
         </div>
-        <NovaLP onCreateLP={handleGetUsers}/>
+        <Button
+          onClick={() => setIsFocus("action")}
+          variant={"outline"}
+          className="flex gap-2 items-center"
+        >
+          <CircleArrowLeft size={18} />
+          Voltar
+        </Button>
+      </div>
+      <div className="flex gap-4 justify-end">
+        <NovaLP onCreateLP={handleGetUsers} />
       </div>
       <Table>
         <TableHeader>

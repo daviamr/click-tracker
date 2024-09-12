@@ -45,6 +45,7 @@ const verifyCreateLink = z.object({
       message: "*Selecione um arquivo",
     }),
   customPath: z.string(),
+  conversionPosition: z.string(),
 });
 
 type encurtadorDados = z.infer<typeof verifyCreateLink>;
@@ -70,31 +71,32 @@ export function EncurtadorTres() {
   const [acoes, setAcoes] = useState<dataAction[]>([]);
   const [conversor, setConversor] = useState<conversorData[]>([]);
   const [selectedValue, setSelectedValue] = useState<number>(6);
-  // const linkLength = [
-  //   "a",
-  //   "b",
-  //   "c",
-  //   "d",
-  //   "e",
-  //   "f",
-  //   "g",
-  //   "h",
-  //   "i",
-  //   "j",
-  //   "k",
-  //   "l",
-  //   "m",
-  //   "n",
-  //   "o",
-  //   "p",
-  //   "q",
-  //   "r",
-  //   "s",
-  //   "t",
-  // ];
+  const linkLength = [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+  ];
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isSelectedCampaign, setIsSelectedCampaign] = useState<boolean>(false);
+  const [selectedPositionValue, setselectedPositionValue] = useState("pre");
 
   //FUNÇÃO SALVANDO NO ESTADO O VALOR DE COMPRIMENTO
   const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -140,10 +142,14 @@ export function EncurtadorTres() {
     }
   };
 
+  const handleSelectedPositionValue = (value: string) => {
+    setselectedPositionValue(value);
+  };
+
   //FUNÇÃO SALVANDO NO ESTADO A QUANTIDADE DE CARACTERES DO LINK
-  // const generateLink = () => {
-  //   return linkLength.slice(0, selectedValue).join("");
-  // };
+  const generateLink = () => {
+    return linkLength.slice(0, selectedValue).join("");
+  };
 
   //FUNÇÃO SALVANDO NO ESTADO O CLIENTE SELECIONADO
   const handleSelectChange = (value: string) => {
@@ -276,6 +282,8 @@ export function EncurtadorTres() {
   });
 
   const valorAssistido = watch("customPath");
+  const finalUrlAssistido = watch("redirectUrl");
+  const parametroAssistido = watch("replace");
 
   async function createLink(data: encurtadorDados) {
     setLoading(true); // Inicia o carregamento
@@ -494,7 +502,7 @@ export function EncurtadorTres() {
               </label>
               <input
                 id="urlFinal"
-                type="text"
+                type="url"
                 placeholder="https://"
                 {...register("redirectUrl")}
                 className={`pl-4 bg-transparent rounded-md border border-input min-h-[36px] ${
@@ -546,6 +554,31 @@ export function EncurtadorTres() {
                 </span>
               )}
             </div>
+            <div className="flex flex-col gap-1 col-span-4">
+              <Label className="font-semibold">Pré/Pós Conversão</Label>
+              <Controller
+                name="conversionPosition"
+                control={control}
+                defaultValue=""
+                render={() => (
+                  <Select
+                    value={selectedPositionValue}
+                    onValueChange={handleSelectedPositionValue}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Posição da URL" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Selecione a posição</SelectLabel>
+                        <SelectItem value="pre">Pré Conversão</SelectItem>
+                        <SelectItem value="pos">Pós Conversão</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
             <div className="flex flex-col gap-1">
               <Label htmlFor="comprimento" className="font-semibold">
                 Comprimento
@@ -563,7 +596,13 @@ export function EncurtadorTres() {
             <div className="flex items-end col-span-3">
               <Input
                 type="text"
-                value={`https://exemplo.com/${valorAssistido}`}
+                value={`${
+                  finalUrlAssistido || "https://exemplo.com"
+                }${
+                  selectedPositionValue === "pre"
+                    ? `${parametroAssistido ? `/${parametroAssistido}` : ""}${valorAssistido ? `/${valorAssistido}` : ""}${generateLink ? `/${generateLink()}` : ""}`
+                    : `${parametroAssistido ? `/${parametroAssistido}` : ""}${generateLink ? `/${generateLink()}` : ""}${valorAssistido ? `/${valorAssistido}` : ""}`
+                }`}   
                 disabled
               />
             </div>

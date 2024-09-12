@@ -13,16 +13,18 @@ export function App() {
   const { isFocus } = useContextState();
   return (
     <>
-      <div className="mt-16 max-w-7xl mx-auto px-8">
-        {isFocus === "user" && <UsuarioPage />}
-        {isFocus === "customers" && <ClientesPage />}
-        {isFocus === "campaign" && <CampanhaPage />}
-        {isFocus === "action" && <AcaoPage />}
-        {isFocus === "lps" && <LPsPage />}
-        {isFocus === "shorturl" && <ShortUrlsPage />}
-        {isFocus === "conversor" && <ConversorPage />}
-        {isFocus === "shorter" && <EncurtadorPage />}
-        {isFocus === "dashboard" && <PainelPage />}
+      <div className="pt-[60px] mt-[60px] overflow-y-auto h-[calc(100vh_-60px)]">
+        <div className="max-w-7xl mx-auto px-8">
+          {isFocus === "user" && <UsuarioPage />}
+          {isFocus === "customers" && <ClientesPage />}
+          {isFocus === "campaign" && <CampanhaPage />}
+          {isFocus === "action" && <AcaoPage />}
+          {isFocus === "lps" && <LPsPage />}
+          {isFocus === "shorturl" && <ShortUrlsPage />}
+          {isFocus === "conversor" && <ConversorPage />}
+          {isFocus === "shorter" && <EncurtadorPage />}
+          {isFocus === "dashboard" && <PainelPage />}
+        </div>
       </div>
     </>
   );

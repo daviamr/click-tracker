@@ -44,6 +44,7 @@ const verifyCreateLink = z.object({
     .refine((files) => files instanceof FileList && files.length > 0, {
       message: "*Selecione um arquivo",
     }),
+  customPath: z.string(),
 });
 
 type encurtadorDados = z.infer<typeof verifyCreateLink>;
@@ -260,6 +261,7 @@ export function EncurtadorTres() {
     reset,
     setValue,
     control,
+    watch,
     formState: { errors },
   } = useForm<encurtadorDados>({
     resolver: zodResolver(verifyCreateLink),
@@ -272,6 +274,8 @@ export function EncurtadorTres() {
       qrCode: false,
     },
   });
+
+  const valorAssistido = watch("customPath");
 
   async function createLink(data: encurtadorDados) {
     setLoading(true); // Inicia o carregamento
@@ -484,7 +488,7 @@ export function EncurtadorTres() {
                 </span>
               )}
             </div>
-            <div className="flex flex-col gap-1 col-span-2">
+            <div className="flex flex-col gap-1 col-span-4">
               <label htmlFor="urlFinal" className="font-semibold">
                 Preencha a URL final
               </label>
@@ -522,6 +526,26 @@ export function EncurtadorTres() {
                 </span>
               )}
             </div>
+            <div className="flex flex-col gap-1 col-span-2">
+              <label htmlFor="personalizarUrl" className="font-semibold">
+                Personalizar URL
+              </label>
+              <input
+                id="personalizarUrl"
+                type="text"
+                placeholder="/url-personalizada"
+                maxLength={16}
+                {...register("customPath")}
+                className={`pl-4 bg-transparent rounded-md border border-input min-h-[36px] ${
+                  errors.replace && "border-rose-400"
+                }`}
+              />
+              {errors.customPath && (
+                <span className="text-xs text-rose-400 font-normal">
+                  {errors.customPath.message}
+                </span>
+              )}
+            </div>
             <div className="flex flex-col gap-1">
               <Label htmlFor="comprimento" className="font-semibold">
                 Comprimento
@@ -539,7 +563,7 @@ export function EncurtadorTres() {
             <div className="flex items-end col-span-3">
               <Input
                 type="text"
-                value={`https://exemplo.com`}
+                value={`https://exemplo.com/${valorAssistido}`}
                 disabled
               />
             </div>

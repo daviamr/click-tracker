@@ -62,9 +62,9 @@ export function LPsPage() {
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
-            <TableHead>
+            {/* <TableHead>
                 <Checkbox className="pointer-events-auto"/>
-            </TableHead>
+            </TableHead> */}
             <TableHead>LP</TableHead>
             <TableHead>Campanha</TableHead>
             <TableHead>Ações</TableHead>
@@ -74,9 +74,9 @@ export function LPsPage() {
         </TableHeader>
         <TableBody>
               <TableRow>
-                <TableCell>
+                {/* <TableCell>
                     <Checkbox/>
-                </TableCell>
+                </TableCell> */}
                 <TableCell></TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>

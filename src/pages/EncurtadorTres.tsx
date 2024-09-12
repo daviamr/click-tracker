@@ -468,6 +468,22 @@ export function EncurtadorTres() {
               )}
               {/* FINAL SELECT CONVERSOR */}
             </div>
+            <div className="flex flex-col gap-1 col-span-4">
+              <input
+                type="file"
+                {...register("sheet")}
+                className={`cursor-pointer p-1 bg-transparent rounded-md border border-input col-span-4 ${
+                  errors.sheet && "border-rose-400 bg-rose-100"
+                }"col-span-4"`}
+              />
+              {errors.sheet && (
+                <span className="col-span-4 text-nowrap text-xs text-rose-400 font-normal">
+                  {typeof errors.sheet.message === "string"
+                    ? errors.sheet.message
+                    : ""}
+                </span>
+              )}
+            </div>
             <div className="flex flex-col gap-1 col-span-2">
               <label htmlFor="urlFinal" className="font-semibold">
                 Preencha a URL final
@@ -503,22 +519,6 @@ export function EncurtadorTres() {
               {errors.replace && (
                 <span className="text-xs text-rose-400 font-normal">
                   {errors.replace.message}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col gap-1 col-span-4">
-              <input
-                type="file"
-                {...register("sheet")}
-                className={`cursor-pointer p-1 bg-transparent rounded-md border border-input col-span-4 ${
-                  errors.sheet && "border-rose-400 bg-rose-100"
-                }"col-span-4"`}
-              />
-              {errors.sheet && (
-                <span className="col-span-4 text-nowrap text-xs text-rose-400 font-normal">
-                  {typeof errors.sheet.message === "string"
-                    ? errors.sheet.message
-                    : ""}
                 </span>
               )}
             </div>

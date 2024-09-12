@@ -102,10 +102,9 @@ export function NovaLP({ onCreateLP }: createLPProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-      <Button className="flex items-center gap-2"
-        variant={"secondary"}>
-        <Plus size={18} />
-        Cadastrar
+        <Button className="flex items-center gap-2" variant={"secondary"}>
+          <Plus size={18} />
+          Cadastrar
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -179,12 +178,15 @@ export function NovaLP({ onCreateLP }: createLPProps) {
               {/* FINAL SELECT CAMPAIGN */}
             </div>
             <div className="col-span-4">
-              <Label htmlFor="email">E-mail</Label>
+              <Label htmlFor="urlFinal">URL final</Label>
               <Input
+                id="urlFinal"
                 type="text"
                 placeholder="Insira a URL"
                 {...register("baseUrlId")}
-                className={`${errors.baseUrlId && "border-rose-400 bg-rose-100"}`}
+                className={`${
+                  errors.baseUrlId && "border-rose-400 bg-rose-100"
+                }`}
               />
 
               {errors.baseUrlId && (

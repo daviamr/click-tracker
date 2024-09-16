@@ -23,7 +23,7 @@ import { api } from "@/services/Api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "@radix-ui/react-label";
 import { AxiosError } from "axios";
-import { Replace, Send } from "lucide-react";
+import { Send } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -97,10 +97,6 @@ export function EncurtadorTres() {
   const [progress, setProgress] = useState(0);
   const [isSelectedCampaign, setIsSelectedCampaign] = useState<boolean>(false);
   const [selectedPositionValue, setselectedPositionValue] = useState("pre");
-  const [url, setUrl] = useState("");
-  const [wordToReplace, setWordToReplace] = useState("");
-  const [newWord, setNewWord] = useState("");
-  const [modifiedUrl, setModifiedUrl] = useState("");
 
   //FUNÇÃO SALVANDO NO ESTADO O VALOR DE COMPRIMENTO
   const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {

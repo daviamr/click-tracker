@@ -23,7 +23,7 @@ import { api } from "@/services/Api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "@radix-ui/react-label";
 import { AxiosError } from "axios";
-import { Send } from "lucide-react";
+import { Replace, Send } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -97,6 +97,10 @@ export function EncurtadorTres() {
   const [progress, setProgress] = useState(0);
   const [isSelectedCampaign, setIsSelectedCampaign] = useState<boolean>(false);
   const [selectedPositionValue, setselectedPositionValue] = useState("pre");
+  const [url, setUrl] = useState("");
+  const [wordToReplace, setWordToReplace] = useState("");
+  const [newWord, setNewWord] = useState("");
+  const [modifiedUrl, setModifiedUrl] = useState("");
 
   //FUNÇÃO SALVANDO NO ESTADO O VALOR DE COMPRIMENTO
   const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -281,9 +285,45 @@ export function EncurtadorTres() {
     },
   });
 
+  //
   const valorAssistido = watch("customPath");
   const finalUrlAssistido = watch("redirectUrl");
   const parametroAssistido = watch("replace");
+
+  // Define a URL base sem a substituição do parametroAssistido
+  const baseUrl = finalUrlAssistido || "https://exemplo.com";
+
+  // Função para remover a palavra (parametroAssistido) apenas das últimas partes da URL
+  const removeParametroAssistido = (url: string, parametro: string) => {
+    const urlParts = url.split("/"); // Quebra a URL em partes
+    const lastPart = urlParts[urlParts.length - 1]; // Pega a última parte
+
+    // Se a última parte da URL contiver o parametroAssistido, remove-o
+    if (lastPart.includes(parametro)) {
+      urlParts[urlParts.length - 1] = lastPart.replace(parametro, ""); // Remove a palavra
+    }
+
+    // Junta as partes novamente, removendo barras duplicadas
+    return urlParts.filter(Boolean).join("/"); // O filter(Boolean) remove strings vazias
+  };
+
+  // Remove parametroAssistido apenas das últimas partes da URL
+  const urlWithReplacement = parametroAssistido
+    ? removeParametroAssistido(baseUrl, parametroAssistido)
+    : baseUrl;
+
+  // Constrói a URL final para o valor, garantindo a posição correta de valorAssistido e generateLinkValue
+  const finalValue =
+    valorAssistido === "" && !urlWithReplacement
+      ? `https://exemplo.com/${generateLink()}`
+      : valorAssistido !== "" && selectedPositionValue === "pre"
+      ? `${urlWithReplacement}/${valorAssistido}/${generateLink()}`
+      : valorAssistido !== "" && selectedPositionValue === "pos"
+      ? `${urlWithReplacement}/${generateLink()}/${valorAssistido}`
+      : `${urlWithReplacement}/${generateLink()}`;
+
+  const finalUrl = finalValue.replace(/\/+/g, "/");
+  //
 
   async function createLink(data: encurtadorDados) {
     setLoading(true); // Inicia o carregamento
@@ -594,17 +634,7 @@ export function EncurtadorTres() {
               />
             </div>
             <div className="flex items-end col-span-3">
-              <Input
-                type="text"
-                value={`${
-                  finalUrlAssistido || "https://exemplo.com"
-                }${
-                  selectedPositionValue === "pre"
-                    ? `${parametroAssistido ? `/${parametroAssistido}` : ""}${valorAssistido ? `/${valorAssistido}` : ""}${generateLink ? `/${generateLink()}` : ""}`
-                    : `${parametroAssistido ? `/${parametroAssistido}` : ""}${generateLink ? `/${generateLink()}` : ""}${valorAssistido ? `/${valorAssistido}` : ""}`
-                }`}   
-                disabled
-              />
+              <Input type="text" value={finalUrl} disabled />
             </div>
             <Controller
               name="qrCode"

@@ -597,7 +597,6 @@ export function EncurtadorTres() {
                 id="personalizarUrl"
                 type="text"
                 placeholder="/url-personalizada"
-                maxLength={16}
                 {...register("customPath")}
                 className={`pl-4 bg-transparent rounded-md border border-input min-h-[36px] ${
                   errors.replace && "border-rose-400"

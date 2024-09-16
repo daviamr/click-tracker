@@ -505,7 +505,7 @@ export function EncurtadorDois() {
               )}
               {/* FINAL SELECT ACTION */}
             </div>
-            <div className="col-span-4">
+            <div className="col-span-1 flex items-end">
               {/* SELECT SHORTENER */}
               <Controller
                 name="baseUrlId"
@@ -535,7 +535,7 @@ export function EncurtadorDois() {
               )}
               {/* FINAL SELECT SHORTENER */}
             </div>
-            <div className="col-span-3">
+            <div className="col-span-2">
               <Label className="font-semibold">Conversor</Label>
               {/* SELECT CONVERSOR */}
               <Controller

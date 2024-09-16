@@ -85,7 +85,7 @@ export function AcaoPage() {
           <h1 className="text-3xl">Ações</h1>
         </div>
         <Button
-          onClick={() => setIsFocus("campaign")}
+          onClick={() => setIsFocus("lps")}
           variant={"outline"}
           className="flex gap-2 items-center"
         >

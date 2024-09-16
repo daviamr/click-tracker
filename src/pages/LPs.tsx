@@ -59,7 +59,7 @@ export function LPsPage() {
           <h1 className="text-3xl">LPs</h1>
         </div>
         <Button
-          onClick={() => setIsFocus("action")}
+          onClick={() => setIsFocus("campaign")}
           variant={"outline"}
           className="flex gap-2 items-center"
         >

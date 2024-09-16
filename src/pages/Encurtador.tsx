@@ -9,7 +9,7 @@ import { EncurtadorTres } from "./EncurtadorTres";
 
 export function EncurtadorPage() {
   const { setIsFocus } = useContextState();
-  const [selectedOption, setSelectedOption] = useState<string>('option1');
+  const [selectedOption, setSelectedOption] = useState<string>('trackera');
 
   return (
     <>
@@ -34,28 +34,28 @@ export function EncurtadorPage() {
         </Button> */}
       </div>
 
-      <div className="flex flex-col justify-center mt-10">
+      <div className="flex flex-col justify-center mt-10 mb-10">
         <div className="flex 
         justify-center mb-6">
         <Label
-        className={`p-2 px-16 rounded-l-lg cursor-pointer ${selectedOption === 'option1' ? 'font-semibold bg-[#a2d515]' : 'bg-[#608104]'}`}
-        onClick={() => setSelectedOption('option1')}>
-            OPÇÃO 1
+        className={`p-2 px-16 rounded-l-lg cursor-pointer ${selectedOption === 'trackera' ? 'font-semibold bg-[#a2d515]' : 'bg-[#608104]'}`}
+        onClick={() => setSelectedOption('trackera')}>
+            Tracker A
         </Label>
         <Label
-        className={`p-2 px-16 cursor-pointer ${selectedOption === 'option2' ? 'font-semibold bg-[#a2d515]' : 'bg-[#608104]'}`}
-        onClick={() => setSelectedOption('option2')}>
-            OPÇÃO 2
+        className={`p-2 px-16 cursor-pointer ${selectedOption === 'trackerb' ? 'font-semibold bg-[#a2d515]' : 'bg-[#608104]'}`}
+        onClick={() => setSelectedOption('trackerb')}>
+            Tracker B
         </Label>
         <Label
-        className={`p-2 px-16 rounded-r-lg cursor-pointer ${selectedOption === 'option3' ? 'font-semibold bg-[#a2d515]' : 'bg-[#608104]'}`}
-        onClick={() => setSelectedOption('option3')}>
-            OPÇÃO 3
+        className={`p-2 px-16 rounded-r-lg cursor-pointer ${selectedOption === 'trackerc' ? 'font-semibold bg-[#a2d515]' : 'bg-[#608104]'}`}
+        onClick={() => setSelectedOption('trackerc')}>
+            Tracker C
         </Label>
         </div>
-        {selectedOption === 'option1' && <EncutadorUm/>}
-        {selectedOption === 'option2' && <EncurtadorDois/>}
-        {selectedOption === 'option3' && <EncurtadorTres/>}
+        {selectedOption === 'trackera' && <EncutadorUm/>}
+        {selectedOption === 'trackerb' && <EncurtadorDois/>}
+        {selectedOption === 'trackerc' && <EncurtadorTres/>}
       </div>
     </>
   );

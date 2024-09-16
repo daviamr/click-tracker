@@ -65,7 +65,7 @@ export function ShortUrlsPage() {
           <h1 className="text-3xl">Short URL's</h1>
         </div>
         <Button
-          onClick={() => setIsFocus("lps")}
+          onClick={() => setIsFocus("action")}
           variant={"outline"}
           className="flex gap-2 items-center"
         >

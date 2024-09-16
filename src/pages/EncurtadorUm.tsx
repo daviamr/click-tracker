@@ -29,6 +29,7 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { BarraProgresso } from "@/components/BarraProgresso";
+import { SelectLP } from "@/components/SelectLP";
 
 const verifyCreateLink = z.object({
   customer: z.string().min(1, ""),
@@ -372,7 +373,7 @@ export function EncutadorUm() {
 
   return (
     <>
-      <div className="pt-12 px-8 bg-transparent rounded-md border border-input w-[581px] m-auto">
+      <div className="pt-12 px-8 bg-transparent rounded-md border border-input w-[601px] m-auto">
         <h1 className="text-3xl font-semibold w-max m-auto pb-8">
           Lorem ipsum dolor
         </h1>
@@ -453,6 +454,9 @@ export function EncutadorUm() {
               {/*FINAL CAMPAIGN*/}
             </div>
             <div className="col-span-2">
+              <SelectLP/>
+            </div>
+            <div className="col-span-2">
               {/* SELECT ACTION */}
               <Controller
                 name="actionId"
@@ -521,8 +525,25 @@ export function EncutadorUm() {
               )}
               {/* FINAL SELECT SHORTENER */}
             </div>
-            <div className="col-span-4">
+            <div className="flex flex-col gap-1 col-span-2">
+              <input
+                type="file"
+                {...register("sheet")}
+                className={`cursor-pointer p-1 bg-transparent rounded-md border border-input col-span-4 ${
+                  errors.sheet && "border-rose-400 bg-rose-100"
+                }"col-span-4"`}
+              />
+              {errors.sheet && (
+                <span className="col-span-4 text-nowrap text-xs text-rose-400 font-normal">
+                  {typeof errors.sheet.message === "string"
+                    ? errors.sheet.message
+                    : ""}
+                </span>
+              )}
+            </div>
+            <div className="col-span-3">
               {/* SELECT CONVERSOR */}
+              <Label className="font-semibold">Conversor</Label>
               <Controller
                 name="alphabetId"
                 control={control}
@@ -552,21 +573,20 @@ export function EncutadorUm() {
               )}
               {/* FINAL SELECT CONVERSOR */}
             </div>
-            <div className="flex flex-col gap-1 col-span-4">
-              <input
-                type="file"
-                {...register("sheet")}
-                className={`cursor-pointer p-1 bg-transparent rounded-md border border-input col-span-4 ${
-                  errors.sheet && "border-rose-400 bg-rose-100"
-                }"col-span-4"`}
+            <div className="flex flex-col col-span-1
+            ">
+              <Label htmlFor="comprimento" className="font-semibold">
+                Comprimento
+              </Label>
+              <Input
+                id="comprimento"
+                type="number"
+                value={selectedValue}
+                onChange={handleValueChange}
+                min={6}
+                max={20}
+                className="col-span-1"
               />
-              {errors.sheet && (
-                <span className="col-span-4 text-nowrap text-xs text-rose-400 font-normal">
-                  {typeof errors.sheet.message === "string"
-                    ? errors.sheet.message
-                    : ""}
-                </span>
-              )}
             </div>
             <div className="flex flex-col gap-1 col-span-4">
               <label htmlFor="urlFinal" className="font-semibold">
@@ -628,21 +648,8 @@ export function EncutadorUm() {
                 )}
               />
             </div>
-            <div className="flex flex-col gap-1">
-              <Label htmlFor="comprimento" className="font-semibold">
-                Comprimento
-              </Label>
-              <Input
-                id="comprimento"
-                type="number"
-                value={selectedValue}
-                onChange={handleValueChange}
-                min={6}
-                max={20}
-                className="col-span-1"
-              />
-            </div>
-            <div className="flex items-end col-span-3">
+            <div className="flex flex-col items-center gap-1 col-span-4">
+              <Label className="font-bold">Link Final</Label>
               <Input
                 type="text"
                 value={!url && valorAssistido === ''

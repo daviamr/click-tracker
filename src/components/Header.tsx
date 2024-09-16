@@ -60,24 +60,24 @@ export function Header() {
             <li className="hover:opacity-40 duration-300">
               <button
                 className={`flex items-center gap-1 ${
-                  isFocus === "action" ? "font-bold" : ""
-                }`}
-                onClick={() => setIsFocus("action")}
-              >
-                <Waypoints size={18}/>
-                Ações
-              </button>
-            </li>
-
-            <li className="hover:opacity-40 duration-300">
-              <button
-                className={`flex items-center gap-1 ${
                   isFocus === "lps" ? "font-bold" : ""
                 }`}
                 onClick={() => setIsFocus("lps")}
               >
                 <SquarePercent size={18}/>
                 LP's
+              </button>
+            </li>
+
+            <li className="hover:opacity-40 duration-300">
+              <button
+                className={`flex items-center gap-1 ${
+                  isFocus === "action" ? "font-bold" : ""
+                }`}
+                onClick={() => setIsFocus("action")}
+              >
+                <Waypoints size={18}/>
+                Ações
               </button>
             </li>
 

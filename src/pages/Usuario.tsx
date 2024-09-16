@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { UserRoundX } from "lucide-react";
 import { EditarUsuario } from "@/components/Modal/EditarUsuario";
 import { Skeleton } from "@/components/ui/skeleton";
+import { TooltipDemo } from "@/components/ToolTip";
 
 type dataUserProps = { data: DataProps };
 
@@ -53,9 +54,10 @@ export function UsuarioPage() {
   return (
     <>
       <div className="flex gap-4 justify-between mb-8">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 relative">
           <span className="bg-[#8b8b8b63] rounded-full w-3 h-3"></span>
           <h1 className="text-3xl">Usuários</h1>
+          <TooltipDemo side="right" align="start" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, suscipit quam iusto quisquam possimus deleniti aut nobis rerum."/>
         </div>
         <NovoUsuario onCreateUser={handleGetUsers} />
       </div>

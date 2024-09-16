@@ -1,7 +1,6 @@
 import { AlertMessage } from "@/components/alert_message";
 import { EditarCliente } from "@/components/Modal/EditarCliente";
 import { NovoCliente } from "@/components/Modal/NovoCliente";
-import { TooltipDemo } from "@/components/ToolTip";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -12,17 +11,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useAuth } from "@/hook/Auth";
-import { useContextState } from "@/hook/state";
 import { customerData, DataProps } from "@/interface/auth";
 import { api, aws } from "@/services/Api";
 import { AxiosError } from "axios";
-import { CircleArrowLeft, UserRoundX } from "lucide-react";
+import { Building2, UserRoundX } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type dataCustomerProps = { data: DataProps };
 
 export function ClientesPage() {
-  const { setIsFocus } = useContextState();
   const { data } = useAuth() as dataCustomerProps;
   const { deleteCustomer } = useAuth();
   const [customerData, setCustomerData] = useState<customerData[]>([]);
@@ -61,18 +58,17 @@ export function ClientesPage() {
     <>
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-2">
-          <span className="bg-[#8b8b8b63] rounded-full w-3 h-3"></span>
+          <Building2 size={24} />
           <h1 className="text-3xl">Clientes</h1>
-          <TooltipDemo side="right" align="start" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, suscipit quam iusto quisquam possimus deleniti aut nobis rerum."/>
         </div>
-        <Button
+        {/* <Button
           onClick={() => setIsFocus("user")}
           variant={"outline"}
           className="flex gap-2 items-center"
         >
           <CircleArrowLeft size={18} />
           Voltar
-        </Button>
+        </Button> */}
       </div>
       <div className="flex gap-4 justify-end">
         <NovoCliente onCreateClient={handleGetClient} />

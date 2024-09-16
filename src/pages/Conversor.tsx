@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useContextState } from "@/hook/state";
-import { CircleArrowLeft, CircleX } from "lucide-react";
+import { CaseLower, CircleX } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -17,12 +16,10 @@ import { conversorData, DataProps } from "@/interface/auth";
 import { api } from "@/services/Api";
 import { AxiosError } from "axios";
 import { AlertMessage } from "@/components/alert_message";
-import { TooltipDemo } from "@/components/ToolTip";
 
 type dataConversorProps = { data: DataProps };
 
 export function ConversorPage() {
-  const { setIsFocus } = useContextState();
   const [conversor, setConversor] = useState<conversorData[]>([]);
   const { data } = useAuth() as dataConversorProps;
   const { deleteConversor } = useAuth();
@@ -59,18 +56,17 @@ export function ConversorPage() {
     <>
       <div className="flex items-center justify-between mb-8">
       <div className="flex items-center gap-2">
-          <span className="bg-[#8b8b8b63] rounded-full w-3 h-3"></span>
+          <CaseLower size={24}/>
           <h1 className="text-3xl">Conversores</h1>
-          <TooltipDemo side="right" align="start" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, suscipit quam iusto quisquam possimus deleniti aut nobis rerum."/>
         </div>
-        <Button
+        {/* <Button
           onClick={() => setIsFocus("shorturl")}
           variant={"outline"}
           className="flex gap-2 items-center"
         >
           <CircleArrowLeft size={18} />
           Voltar
-        </Button>
+        </Button> */}
       </div>
       <div className="flex gap-4 justify-end">
         <NovoConversor onCreateConversor={handleGetConversor} />

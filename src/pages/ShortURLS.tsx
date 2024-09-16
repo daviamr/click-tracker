@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useContextState } from "@/hook/state";
-import { CircleArrowLeft, CircleX } from "lucide-react";
+import { CircleX, Link2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -17,12 +16,10 @@ import { AlertMessage } from "@/components/alert_message";
 import { AxiosError } from "axios";
 import { api } from "@/services/Api";
 import { DataProps, urlData } from "@/interface/auth";
-import { TooltipDemo } from "@/components/ToolTip";
 
 type dataUrlProps = { data: DataProps };
 
 export function ShortUrlsPage() {
-  const { setIsFocus } = useContextState();
   const [url, setUrl] = useState<urlData[]>([]);
   const { data } = useAuth() as dataUrlProps;
   const { deleteURL } = useAuth();
@@ -61,19 +58,18 @@ export function ShortUrlsPage() {
   return (
     <>
       <div className="flex items-center justify-between mb-8">
-      <div className="flex items-center gap-2">
-          <span className="bg-[#8b8b8b63] rounded-full w-3 h-3"></span>
+        <div className="flex items-center gap-2">
+          <Link2 size={24} />
           <h1 className="text-3xl">Short URL's</h1>
-          <TooltipDemo side="right" align="start" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, suscipit quam iusto quisquam possimus deleniti aut nobis rerum."/>
         </div>
-        <Button
+        {/* <Button
           onClick={() => setIsFocus("action")}
           variant={"outline"}
           className="flex gap-2 items-center"
         >
           <CircleArrowLeft size={18} />
           Voltar
-        </Button>
+        </Button> */}
       </div>
       <div className="flex gap-4 justify-end">
         <NovaUrl onCreateUrl={handleGetUrl} />

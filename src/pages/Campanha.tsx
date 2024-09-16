@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useContextState } from "@/hook/state";
-import { CircleArrowLeft, FileX2 } from "lucide-react";
+import { FileX2, Megaphone } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -18,12 +17,10 @@ import { api } from "@/services/Api";
 import { useAuth } from "@/hook/Auth";
 import { campaignData, customerData, DataProps } from "@/interface/auth";
 import { Switch } from "@/components/ui/switch";
-import { TooltipDemo } from "@/components/ToolTip";
 
 type dataCampaignProps = { data: DataProps };
 
 export function CampanhaPage() {
-  const { setIsFocus } = useContextState();
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
   const [customerData, setCustomerData] = useState<customerData[]>([]);
   const { deleteCampaign, handleStatusCampaign } = useAuth();
@@ -78,7 +75,7 @@ export function CampanhaPage() {
         },
       });
       setCustomerData(response.data);
-      console.log(response.data)
+      console.log(response.data);
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
@@ -94,31 +91,30 @@ export function CampanhaPage() {
     handleGetClient();
   }, [data.jwtToken]);
 
-    /* deletar campanha */
-    const handleDeleteCampaign = async (id: number) => {
-      await deleteCampaign({ id });
-      handleGetCampaign();
-    };
+  /* deletar campanha */
+  const handleDeleteCampaign = async (id: number) => {
+    await deleteCampaign({ id });
+    handleGetCampaign();
+  };
 
   return (
     <>
       <div className="flex items-center justify-between mb-8">
-      <div className="flex items-center gap-2">
-          <span className="bg-[#8b8b8b63] rounded-full w-3 h-3"></span>
+        <div className="flex items-center gap-2">
+          <Megaphone size={24} />
           <h1 className="text-3xl">Campanhas</h1>
-          <TooltipDemo side="right" align="start" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, suscipit quam iusto quisquam possimus deleniti aut nobis rerum."/>
         </div>
-        <Button
+        {/* <Button
           onClick={() => setIsFocus("customers")}
           variant={"outline"}
           className="flex gap-2 items-center"
         >
           <CircleArrowLeft size={18} />
           Voltar
-        </Button>
+        </Button> */}
       </div>
       <div className="flex gap-4 justify-end">
-        <NovaCampanha onCreateCampaign={handleGetCampaign}/>
+        <NovaCampanha onCreateCampaign={handleGetCampaign} />
       </div>
       <Table>
         <TableHeader>
@@ -155,19 +151,18 @@ export function CampanhaPage() {
             return (
               <TableRow key={index}>
                 <TableCell>
-              {i.status === 'Active' ?
-                <p className="flex itemns-center gap-2 text-xs">
-                <span
-                className="w-4 h-4 bg-green-600 rounded-full animate-pulse"></span>
-                {i.status}
-              </p>
-              : 
-              <p className="flex itemns-center gap-2 text-xs">
-                <span
-                className="w-4 h-4 bg-red-600 rounded-full animate-pulse"></span>
-                {i.status}
-              </p>}
-            </TableCell>
+                  {i.status === "Active" ? (
+                    <p className="flex itemns-center gap-2 text-xs">
+                      <span className="w-4 h-4 bg-green-600 rounded-full animate-pulse"></span>
+                      {i.status}
+                    </p>
+                  ) : (
+                    <p className="flex itemns-center gap-2 text-xs">
+                      <span className="w-4 h-4 bg-red-600 rounded-full animate-pulse"></span>
+                      {i.status}
+                    </p>
+                  )}
+                </TableCell>
                 <TableCell>{i.name}</TableCell>
                 <TableCell>{customerName}</TableCell>
                 <TableCell>{i._count.actions}</TableCell>

@@ -1,5 +1,5 @@
 import { Button } from "./ui/button";
-import { Building2, CaseLower, LayoutDashboard, Link2, LogOut, Megaphone, Radar, SquarePercent, UsersRound, Waypoints } from "lucide-react";
+import { Building2, CaseLower, Laptop, LayoutDashboard, Link2, LogOut, Megaphone, Radar, UsersRound, Waypoints } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import { useContextState } from "@/hook/state";
 
@@ -64,7 +64,7 @@ export function Header() {
                 }`}
                 onClick={() => setIsFocus("lps")}
               >
-                <SquarePercent size={18}/>
+                <Laptop size={18}/>
                 LP's
               </button>
             </li>
@@ -124,7 +124,7 @@ export function Header() {
                 onClick={() => setIsFocus("dashboard")}
               >
                 <LayoutDashboard size={18}/>
-                Painel
+                Dashboard
               </button>
             </li>
           </ul>

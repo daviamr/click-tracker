@@ -13,19 +13,20 @@ import { api } from "@/services/Api";
 import { useAuth } from "@/hook/Auth";
 import { DataProps, userDataProps } from "@/interface/auth";
 import { Button } from "@/components/ui/button";
-import { CircleArrowLeft, UserRoundPen, UserRoundX } from "lucide-react";
+import {
+  Laptop,
+  UserRoundPen,
+  UserRoundX,
+} from "lucide-react";
 import { NovaLP } from "@/components/Modal/NovaLP";
-import { useContextState } from "@/hook/state";
-import { TooltipDemo } from "@/components/ToolTip";
 
 type dataUserProps = { data: DataProps };
 
 export function LPsPage() {
-  const { setIsFocus } = useContextState();
   const { data } = useAuth() as dataUserProps;
 
   const [userData, setUserData] = useState<userDataProps[]>([]);
-  console.log(userData)
+  console.log(userData);
 
   const handleGetUsers = async () => {
     try {
@@ -56,18 +57,17 @@ export function LPsPage() {
     <>
       <div className="flex gap-4 justify-between mb-8">
         <div className="flex items-center gap-2">
-          <span className="bg-[#8b8b8b63] rounded-full w-3 h-3"></span>
+          <Laptop size={24} />
           <h1 className="text-3xl">LPs</h1>
-          <TooltipDemo side="right" align="start" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, suscipit quam iusto quisquam possimus deleniti aut nobis rerum."/>
         </div>
-        <Button
+        {/* <Button
           onClick={() => setIsFocus("campaign")}
           variant={"outline"}
           className="flex gap-2 items-center"
         >
           <CircleArrowLeft size={18} />
           Voltar
-        </Button>
+        </Button> */}
       </div>
       <div className="flex gap-4 justify-end">
         <NovaLP onCreateLP={handleGetUsers} />
@@ -86,27 +86,27 @@ export function LPsPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-              <TableRow>
-                {/* <TableCell>
+          <TableRow>
+            {/* <TableCell>
                     <Checkbox/>
                 </TableCell> */}
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell className="flex items-center justify-end gap-2">
-                  <Button className="p-2" variant={"outline"}>
-                    <UserRoundPen size={18} />
-                  </Button>
-                  <Button
-                    className="p-2 duration-300 hover:text-red-700"
-                    variant={"outline"}
-                    // onClick={() => handleDeleteCustomer(i.id)}
-                  >
-                    <UserRoundX size={18} />
-                  </Button>
-                </TableCell>
-              </TableRow>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell className="flex items-center justify-end gap-2">
+              <Button className="p-2" variant={"outline"}>
+                <UserRoundPen size={18} />
+              </Button>
+              <Button
+                className="p-2 duration-300 hover:text-red-700"
+                variant={"outline"}
+                // onClick={() => handleDeleteCustomer(i.id)}
+              >
+                <UserRoundX size={18} />
+              </Button>
+            </TableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </>

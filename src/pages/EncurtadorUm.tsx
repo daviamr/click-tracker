@@ -30,6 +30,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { BarraProgresso } from "@/components/BarraProgresso";
 import { SelectLP } from "@/components/SelectLP";
+import { TooltipTracker } from "@/components/TooltipTracker";
 
 const verifyCreateLink = z.object({
   customer: z.string().min(1, ""),
@@ -380,6 +381,10 @@ export function EncutadorUm() {
         <form onSubmit={handleSubmit(createLink)}>
           <div className="grid grid-cols-4 gap-4 max-w-[500px]">
             <div className="col-span-2">
+              <div className="flex">
+              <Label className="font-semibold">Cliente</Label>
+              <TooltipTracker side="right" align="start" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, suscipit quam iusto quisquam possimus deleniti aut nobis rerum."/>
+              </div>
               {/* SELECT CUSTOMER */}
               <Controller
                 name="customer"
@@ -415,6 +420,10 @@ export function EncutadorUm() {
               {/* FINAL SELECT CUSTOMER */}
             </div>
             <div className="col-span-2">
+            <div className="flex">
+              <Label className="font-semibold">Campanha</Label>
+              <TooltipTracker side="right" align="start" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, suscipit quam iusto quisquam possimus deleniti aut nobis rerum."/>
+              </div>
               {/* SELECT CAMPAIGN */}
               <Controller
                 name="customer"
@@ -454,9 +463,17 @@ export function EncutadorUm() {
               {/*FINAL CAMPAIGN*/}
             </div>
             <div className="col-span-2">
+            <div className="flex">
+              <Label className="font-semibold">LP Relacionada</Label>
+              <TooltipTracker side="right" align="start" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, suscipit quam iusto quisquam possimus deleniti aut nobis rerum."/>
+              </div>
               <SelectLP/>
             </div>
             <div className="col-span-2">
+            <div className="flex">
+              <Label className="font-semibold">Ação</Label>
+              <TooltipTracker side="right" align="start" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, suscipit quam iusto quisquam possimus deleniti aut nobis rerum."/>
+              </div>
               {/* SELECT ACTION */}
               <Controller
                 name="actionId"
@@ -496,6 +513,10 @@ export function EncutadorUm() {
               {/* FINAL SELECT ACTION */}
             </div>
             <div className="col-span-2">
+            <div className="flex">
+              <Label className="font-semibold">ShortURL</Label>
+              <TooltipTracker side="right" align="start" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, suscipit quam iusto quisquam possimus deleniti aut nobis rerum."/>
+              </div>
               {/* SELECT SHORTENER */}
               <Controller
                 name="baseUrlId"
@@ -526,8 +547,10 @@ export function EncutadorUm() {
               {/* FINAL SELECT SHORTENER */}
             </div>
             <div className="flex flex-col gap-1 col-span-2">
+            <Label className="font-semibold" htmlFor="planilha">Planilha</Label>
               <input
                 type="file"
+                id="planilha"
                 {...register("sheet")}
                 className={`cursor-pointer p-1 bg-transparent rounded-md border border-input col-span-4 ${
                   errors.sheet && "border-rose-400 bg-rose-100"
@@ -543,7 +566,10 @@ export function EncutadorUm() {
             </div>
             <div className="col-span-3">
               {/* SELECT CONVERSOR */}
+              <div className="flex">
               <Label className="font-semibold">Conversor</Label>
+              <TooltipTracker side="right" align="start" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, suscipit quam iusto quisquam possimus deleniti aut nobis rerum."/>
+              </div>
               <Controller
                 name="alphabetId"
                 control={control}
@@ -575,9 +601,10 @@ export function EncutadorUm() {
             </div>
             <div className="flex flex-col col-span-1
             ">
-              <Label htmlFor="comprimento" className="font-semibold">
-                Comprimento
-              </Label>
+              <div className="flex">
+              <Label className="font-semibold">Comprimento</Label>
+              <TooltipTracker side="right" align="start" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, suscipit quam iusto quisquam possimus deleniti aut nobis rerum."/>
+              </div>
               <Input
                 id="comprimento"
                 type="number"
@@ -589,9 +616,10 @@ export function EncutadorUm() {
               />
             </div>
             <div className="flex flex-col gap-1 col-span-4">
-              <label htmlFor="urlFinal" className="font-semibold">
-                Preencha a URL final
-              </label>
+            <div className="flex">
+              <Label className="font-semibold" htmlFor="urlFinal">URL Final</Label>
+              <TooltipTracker side="right" align="start" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, suscipit quam iusto quisquam possimus deleniti aut nobis rerum."/>
+              </div>
               <input
                 id="urlFinal"
                 type="text"
@@ -608,9 +636,10 @@ export function EncutadorUm() {
               )}
             </div>
             <div className="flex flex-col gap-1 col-span-2">
-              <label htmlFor="personalizarUrl" className="font-semibold">
-                Personalizar URL
-              </label>
+            <div className="flex">
+              <Label className="font-semibold" htmlFor="personalizarUrl">Personalizar URL</Label>
+              <TooltipTracker side="right" align="start" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, suscipit quam iusto quisquam possimus deleniti aut nobis rerum."/>
+              </div>
               <input
                 id="personalizarUrl"
                 type="text"
@@ -627,7 +656,10 @@ export function EncutadorUm() {
               )}
             </div>
             <div className="flex flex-col gap-1 col-span-2">
+            <div className="flex">
               <Label className="font-semibold">Pré/Pós Conversão</Label>
+              <TooltipTracker side="right" align="start" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, suscipit quam iusto quisquam possimus deleniti aut nobis rerum."/>
+              </div>
               <Controller
                 name="conversionPosition"
                 control={control}

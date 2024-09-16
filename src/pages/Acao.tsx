@@ -1,6 +1,7 @@
 import { AlertMessage } from "@/components/alert_message";
 import { EditarAcao } from "@/components/Modal/EditarAcao";
 import { NovaAcao } from "@/components/Modal/NovaAcao";
+import { TooltipDemo } from "@/components/ToolTip";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -83,6 +84,7 @@ export function AcaoPage() {
       <div className="flex items-center gap-2">
           <span className="bg-[#8b8b8b63] rounded-full w-3 h-3"></span>
           <h1 className="text-3xl">Ações</h1>
+        <TooltipDemo side="right" align="start" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, suscipit quam iusto quisquam possimus deleniti aut nobis rerum."/>
         </div>
         <Button
           onClick={() => setIsFocus("lps")}

@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { CircleArrowLeft, UserRoundPen, UserRoundX } from "lucide-react";
 import { NovaLP } from "@/components/Modal/NovaLP";
 import { useContextState } from "@/hook/state";
+import { TooltipDemo } from "@/components/ToolTip";
 
 type dataUserProps = { data: DataProps };
 
@@ -57,6 +58,7 @@ export function LPsPage() {
         <div className="flex items-center gap-2">
           <span className="bg-[#8b8b8b63] rounded-full w-3 h-3"></span>
           <h1 className="text-3xl">LPs</h1>
+          <TooltipDemo side="right" align="start" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, suscipit quam iusto quisquam possimus deleniti aut nobis rerum."/>
         </div>
         <Button
           onClick={() => setIsFocus("campaign")}

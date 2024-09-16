@@ -18,6 +18,7 @@ import { api } from "@/services/Api";
 import { useAuth } from "@/hook/Auth";
 import { campaignData, customerData, DataProps } from "@/interface/auth";
 import { Switch } from "@/components/ui/switch";
+import { TooltipDemo } from "@/components/ToolTip";
 
 type dataCampaignProps = { data: DataProps };
 
@@ -105,6 +106,7 @@ export function CampanhaPage() {
       <div className="flex items-center gap-2">
           <span className="bg-[#8b8b8b63] rounded-full w-3 h-3"></span>
           <h1 className="text-3xl">Campanhas</h1>
+          <TooltipDemo side="right" align="start" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, suscipit quam iusto quisquam possimus deleniti aut nobis rerum."/>
         </div>
         <Button
           onClick={() => setIsFocus("customers")}

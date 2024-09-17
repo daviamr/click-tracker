@@ -29,6 +29,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { BarraProgresso } from "@/components/BarraProgresso";
 import { SelectLP } from "@/components/SelectLP";
+import { TooltipTracker } from "@/components/TooltipTracker";
 
 const verifyCreateLink = z.object({
   customer: z.string().min(1, ""),
@@ -367,13 +368,25 @@ export function EncurtadorTres() {
 
   return (
     <>
-      <div className="pt-12 px-8 bg-transparent rounded-md border border-input w-[601px] m-auto">
-        <h1 className="text-3xl font-semibold w-max m-auto pb-8">
-          Lorem ipsum dolor
+      <div className="pt-[16px] px-8 bg-transparent rounded-md border border-input w-[601px] m-auto">
+        <h1 className="text-[14px] w-max m-auto pb-6 max-w-[540px]">
+          Utilize o Tracker C para os casos onde você somente possa personalizar
+          um parâmetro específico de uma URL fornecida pelo cliente/parceiro,
+          não sendo possível utilizar nossas ShortURLs. Para isso, você deve
+          definir qual é o parâmetro a ser substituído na "URL destino" e
+          selecionar as opções desejadas para a individualização dos links. A
+          geração de relatórios só poderá ser feita utilizando a consolidação
+          dos dados fornecida pelo cliente/parceiro.
         </h1>
         <form onSubmit={handleSubmit(createLink)}>
-          <div className="grid grid-cols-4 gap-4 max-w-[500px]">
+          <div className="grid grid-cols-4 gap-[12px] max-w-[601px]">
+            <div className="col-span-4">
+              <p className="uppercase font-bold pb-1 pt-4">Dados da ação:</p>
+            </div>
             <div className="col-span-2">
+              <div className="flex">
+                <Label className="font-semibold">Cliente</Label>
+              </div>
               {/* SELECT CUSTOMER */}
               <Controller
                 name="customer"
@@ -409,6 +422,9 @@ export function EncurtadorTres() {
               {/* FINAL SELECT CUSTOMER */}
             </div>
             <div className="col-span-2">
+              <div className="flex">
+                <Label className="font-semibold">Campanha</Label>
+              </div>
               {/* SELECT CAMPAIGN */}
               <Controller
                 name="customer"
@@ -448,9 +464,15 @@ export function EncurtadorTres() {
               {/*FINAL CAMPAIGN*/}
             </div>
             <div className="col-span-2">
+              <div className="flex">
+                <Label className="font-semibold">LP</Label>
+              </div>
               <SelectLP />
             </div>
             <div className="col-span-2">
+              <div className="flex">
+                <Label className="font-semibold">Ação</Label>
+              </div>
               {/* SELECT ACTION */}
               <Controller
                 name="actionId"
@@ -489,8 +511,18 @@ export function EncurtadorTres() {
               )}
               {/* FINAL SELECT ACTION */}
             </div>
-            <div className="col-span-3">
-              <Label className="font-semibold">Conversor</Label>
+            <div className="col-span-4">
+              <p className="uppercase font-bold pb-1 pt-4">Encurtador:</p>
+            </div>
+            <div className="col-span-1">
+              <div className="flex">
+                <Label className="font-semibold">Conversor</Label>
+                <TooltipTracker
+                  side="right"
+                  align="start"
+                  content='Caso queira gerar uma URL encurtada, é necessário selecionar um conversor. Cada protocolo é compatível com um tipo de conversor diferente. Se não quiser usar um conversor, a plataforma vai simplesmente inserir o dado presente na coluna "A" da planilha enviada para gerar os links de tracking.'
+                />
+              </div>
               {/* SELECT CONVERSOR */}
               <Controller
                 name="alphabetId"
@@ -522,9 +554,14 @@ export function EncurtadorTres() {
               {/* FINAL SELECT CONVERSOR */}
             </div>
             <div className="flex flex-col col-span-1">
-              <Label htmlFor="comprimento" className="font-semibold">
-                Comprimento
-              </Label>
+              <div className="flex">
+                <Label className="font-semibold">Comprimento</Label>
+                <TooltipTracker
+                  side="right"
+                  align="start"
+                  content="É o número de caracteres que o conversor vai utilizar. Quanto maior o comprimento, maior o número de links possíveis de serem gerados sem repetição. (por default, deixar inativo. Somente deixar ativo se o cara escolher um conversor. Colocar na lista, em cada opção, o número de links possíveis de serem gerados)"
+                />
+              </div>
               <Input
                 id="comprimento"
                 type="number"
@@ -535,47 +572,19 @@ export function EncurtadorTres() {
                 className="col-span-1"
               />
             </div>
-            <div className="flex flex-col gap-1 col-span-4">
-              <input
-                type="file"
-                {...register("sheet")}
-                className={`cursor-pointer p-1 bg-transparent rounded-md border border-input col-span-4 ${
-                  errors.sheet && "border-rose-400 bg-rose-100"
-                }"col-span-4"`}
-              />
-              {errors.sheet && (
-                <span className="col-span-4 text-nowrap text-xs text-rose-400 font-normal">
-                  {typeof errors.sheet.message === "string"
-                    ? errors.sheet.message
-                    : ""}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col gap-1 col-span-4">
-              <label htmlFor="urlFinal" className="font-semibold">
-                Preencha a URL final
-              </label>
-              <input
-                id="urlFinal"
-                type="url"
-                placeholder="https://"
-                {...register("redirectUrl")}
-                className={`pl-4 bg-transparent rounded-md border border-input min-h-[36px] ${
-                  errors.redirectUrl && "border-rose-400"
-                }`}
-              />
-              {errors.redirectUrl && (
-                <span className="text-xs text-rose-400 font-normal">
-                  {errors.redirectUrl.message}
-                </span>
-              )}
-            </div>
             <div className="flex flex-col gap-1 col-span-2">
-              <label htmlFor="urlFinal" className="font-semibold">
-                Parâmetro a Substituir
-              </label>
+              <div className="flex">
+              <Label htmlFor="parametro" className="font-semibold">
+                Parâmetro a substituir
+              </Label>
+              <TooltipTracker
+                  side="right"
+                  align="start"
+                  content="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rerum soluta inventore cum? Maiores saepe provident aliquid, officiis ad minus, enim veniam neque corporis possimus deleniti, ullam quasi. Eius, dolorem hic?"
+                />
+              </div>
               <input
-                id="urlSubstituida"
+                id="parametro"
                 type="text"
                 placeholder=""
                 {...register("replace")}
@@ -590,9 +599,16 @@ export function EncurtadorTres() {
               )}
             </div>
             <div className="flex flex-col gap-1 col-span-2">
-              <label htmlFor="personalizarUrl" className="font-semibold">
-                Personalizar URL
-              </label>
+              <div className="flex">
+                <Label className="font-semibold" htmlFor="personalizarUrl">
+                  TAGs
+                </Label>
+                <TooltipTracker
+                  side="right"
+                  align="start"
+                  content='Se quiser, você pode inserir uma TAG personalizada nas URLs geradas. Experimente preencher o campo e veja em "URL exemplo" uma simulação de como as URLs ficarão.'
+                />
+              </div>
               <input
                 id="personalizarUrl"
                 type="text"
@@ -602,14 +618,21 @@ export function EncurtadorTres() {
                   errors.replace && "border-rose-400"
                 }`}
               />
-              {errors.customPath && (
+              {errors.replace && (
                 <span className="text-xs text-rose-400 font-normal">
-                  {errors.customPath.message}
+                  {errors.replace.message}
                 </span>
               )}
             </div>
-            <div className="flex flex-col gap-1 col-span-4">
-              <Label className="font-semibold">Pré/Pós Conversão</Label>
+            <div className="flex flex-col gap-1 col-span-2">
+              <div className="flex">
+                <Label className="font-semibold">Posição TAG</Label>
+                <TooltipTracker
+                  side="right"
+                  align="start"
+                  content='As tags podem ser geradas antes ou depois dos dados convertidos. Veja "URL exemplo" para entender melhor.'
+                />
+              </div>
               <Controller
                 name="conversionPosition"
                 control={control}
@@ -634,8 +657,78 @@ export function EncurtadorTres() {
               />
             </div>
             <div className="flex flex-col items-center gap-1 col-span-4">
-              <Label className="font-bold">Link Final</Label>
+              <div className="flex">
+                <Label className="font-bold">URL exemplo</Label>
+                <TooltipTracker
+                  side="right"
+                  align="start"
+                  content="Este é um exemplo de como serão as URLs finais, segundo os parâmetros que você selecionou nos campos acima."
+                />
+              </div>
               <Input type="text" value={finalUrl} disabled />
+            </div>
+            <div className="flex flex-col gap-1 col-span-3">
+              <div className="flex">
+                <Label className="font-semibold" htmlFor="planilha">
+                  Planilha
+                </Label>
+                <TooltipTracker
+                  side="right"
+                  align="start"
+                  content='Carregue a planilha com os dados que você deseja fazer o tracking. É necessário que a planilha siga o arquivo de exemplo. Clique em "download de planilha exemplo" para visualizar.'
+                />
+              </div>
+              <input
+                type="file"
+                {...register("sheet")}
+                className={`cursor-pointer p-1 bg-transparent rounded-md border border-input col-span-4 ${
+                  errors.sheet && "border-rose-400 bg-rose-100"
+                }"col-span-4"`}
+              />
+              {errors.sheet && (
+                <span className="col-span-4 text-nowrap text-xs text-rose-400 font-normal">
+                  {typeof errors.sheet.message === "string"
+                    ? errors.sheet.message
+                    : ""}
+                </span>
+              )}
+            </div>
+            <div className="col-span-1 flex flex-col items-left justify-end">
+              <div className="flex">
+                <Label>Exemplo</Label>
+                <TooltipTracker
+                  side="right"
+                  align="start"
+                  content="Baixe uma planilha exemplo."
+                />
+              </div>
+              <Button variant={"outline"} type="button">Download</Button>
+            </div>
+            <div className="flex flex-col gap-1 col-span-4">
+              <div className="flex">
+                <Label className="font-semibold" htmlFor="urlFinal">
+                  URL de destino
+                </Label>
+                <TooltipTracker
+                  side="right"
+                  align="start"
+                  content="É o endereço (URL) final para onde o click deve ser direcionado."
+                />
+              </div>
+              <input
+                id="urlFinal"
+                type="url"
+                placeholder="https://"
+                {...register("redirectUrl")}
+                className={`pl-4 bg-transparent rounded-md border border-input min-h-[36px] ${
+                  errors.redirectUrl && "border-rose-400"
+                }`}
+              />
+              {errors.redirectUrl && (
+                <span className="text-xs text-rose-400 font-normal">
+                  {errors.redirectUrl.message}
+                </span>
+              )}
             </div>
             <Controller
               name="qrCode"
@@ -659,7 +752,7 @@ export function EncurtadorTres() {
               )}
             />
           </div>
-          <div className="pb-6 text-right mt-8 max-w-[500px]">
+          <div className="pb-6 text-right mt-8 max-w-[601px]">
             <Button className="w-full" variant="secondary" disabled={loading}>
               <div className="flex items-center gap-2">
                 <Send size={18} />

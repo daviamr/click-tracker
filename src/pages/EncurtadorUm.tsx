@@ -383,9 +383,11 @@ export function EncutadorUm() {
           click, - quanto através da totalização de dados, segmentada por
           cliente, campanha, LP/Site/Portal e/ou ação.
         </h1>
-        <p className="uppercase font-bold pb-1">Dados da ação:</p>
         <form onSubmit={handleSubmit(createLink)}>
           <div className="grid grid-cols-4 gap-[12px] max-w-[601px]">
+            <div className="col-span-4">
+              <p className="uppercase font-bold pb-1 pt-4">Dados da ação:</p>
+            </div>
             <div className="col-span-2">
               <div className="flex">
                 <Label className="font-semibold">Cliente</Label>
@@ -514,18 +516,16 @@ export function EncutadorUm() {
               )}
               {/* FINAL SELECT ACTION */}
             </div>
-            {/*test*/}
             <div className="col-span-4">
               <p className="uppercase font-bold pb-1 pt-4">Encurtador:</p>
             </div>
-            {/*test*/}
             <div className="col-span-1">
               <div className="flex">
                 <Label className="font-semibold">ShortURL</Label>
                 <TooltipTracker
                   side="right"
                   align="start"
-                  content='Você pode escolher qualquer uma das SHORTURLs da lista para gerar seus links personalizados. Veja em "URL exemplo" para visualizar o formato que os links serão gerados.'
+                  content='Você pode escolher qualquer uma das shortURLs da lista para gerar seus links personalizados. Veja em "URL exemplo" para visualizar o formato que os links serão gerados.'
                 />
               </div>
               {/* SELECT SHORTENER */}
@@ -602,7 +602,7 @@ export function EncutadorUm() {
                 <TooltipTracker
                   side="right"
                   align="start"
-                  content="é o número de caracteres que o conversor vai utilizar. Qto maior o comprimento, maior o número de links possíveis de serem gerados sem repetição. (por default, deixar inativo. Somente deixar ativo se o cara escolher um conversor. Colocar na lista, em cada opção, o número de links possíveis de serem gerados)"
+                  content="É o número de caracteres que o conversor vai utilizar. Quanto maior o comprimento, maior o número de links possíveis de serem gerados sem repetição. (por default, deixar inativo. Somente deixar ativo se o cara escolher um conversor. Colocar na lista, em cada opção, o número de links possíveis de serem gerados)"
                 />
               </div>
               <Input
@@ -623,7 +623,7 @@ export function EncutadorUm() {
                 <TooltipTracker
                   side="right"
                   align="start"
-                  content='se quiser, você pode inserir uma TAG personalizada nas URLs geradas. Experimente preencher o campo e veja em "URL exemplo" uma simulação de como as URLs ficarão.'
+                  content='Se quiser, você pode inserir uma TAG personalizada nas URLs geradas. Experimente preencher o campo e veja em "URL exemplo" uma simulação de como as URLs ficarão.'
                 />
               </div>
               <input
@@ -647,7 +647,7 @@ export function EncutadorUm() {
                 <TooltipTracker
                   side="right"
                   align="start"
-                  content='as tags podem ser geradas antes ou depois dos dados convertidos. Veja "URL exemplo" para entender melhor.'
+                  content='As tags podem ser geradas antes ou depois dos dados convertidos. Veja "URL exemplo" para entender melhor.'
                 />
               </div>
               <Controller
@@ -675,11 +675,11 @@ export function EncutadorUm() {
             </div>
             <div className="flex flex-col items-center gap-1 col-span-4">
               <div className="flex">
-              <Label className="font-bold">URL exemplo</Label>
-              <TooltipTracker
+                <Label className="font-bold">URL exemplo</Label>
+                <TooltipTracker
                   side="right"
                   align="start"
-                  content='este é um exemplo de como serão as URLs finais, segundo os parâmetros que você selecionou nos campos acima.'
+                  content="Este é um exemplo de como serão as URLs finais, segundo os parâmetros que você selecionou nos campos acima."
                 />
               </div>
               <Input
@@ -718,7 +718,7 @@ export function EncutadorUm() {
                 <TooltipTracker
                   side="right"
                   align="start"
-                  content='carregue a planilha com os dados que você deseja fazer o tracking. É necessário que a planilha siga o arquivo de exemplo. Clique em "download de planilha exemplo" para visualizar.'
+                  content='Carregue a planilha com os dados que você deseja fazer o tracking. É necessário que a planilha siga o arquivo de exemplo. Clique em "download de planilha exemplo" para visualizar.'
                 />
               </div>
               <input
@@ -743,7 +743,7 @@ export function EncutadorUm() {
                 <TooltipTracker
                   side="right"
                   align="start"
-                  content="baixe uma planilha exemplo."
+                  content="Baixe uma planilha exemplo."
                 />
               </div>
               <Button variant={"outline"}>Download</Button>
@@ -756,7 +756,7 @@ export function EncutadorUm() {
                 <TooltipTracker
                   side="right"
                   align="start"
-                  content="é o endereço (URL) final para onde o click deve ser direcionado."
+                  content="É o endereço (URL) final para onde o click deve ser direcionado."
                 />
               </div>
               <input
@@ -797,7 +797,7 @@ export function EncutadorUm() {
                       <TooltipTracker
                         side="right"
                         align="start"
-                        content="se quiser fazer uma campanha MOBILE, você também pode fazer o tracking dos links personalizados através de um QR Code para cada link que gerar. Os endereços das imagens desses códigos serão disponibilizadas na planilha criada pela plataforma, na coluna B."
+                        content="Se quiser fazer uma campanha MOBILE, você também pode fazer o tracking dos links personalizados através de um QR Code para cada link que gerar. Os endereços das imagens desses códigos serão disponibilizadas na planilha criada pela plataforma, na coluna B."
                       />
                     </div>
                   </div>

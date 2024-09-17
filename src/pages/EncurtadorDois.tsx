@@ -37,6 +37,7 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { SelectLP } from "@/components/SelectLP";
+import { TooltipTracker } from "@/components/TooltipTracker";
 
 const verifyCreateLink = z.object({
   customer: z.string().min(1, ""),
@@ -383,13 +384,25 @@ export function EncurtadorDois() {
 
   return (
     <>
-      <div className="pt-12 px-8 bg-transparent rounded-md border border-input w-[601px] m-auto">
-        <h1 className="text-3xl font-semibold w-max m-auto pb-8">
-          Lorem ipsum dolor
+      <div className="pt-[16px] px-8 bg-transparent rounded-md border border-input w-[601px] m-auto">
+        <h1 className="text-[14px] w-max m-auto pb-6 max-w-[540px]">
+          Utilize esta opção quando não houver a possibilidade de realizar o
+          tracking individualizado, como por exemplo em campanhas de tráfego
+          pago no Google ou em redes sociais, disparos de ofertas em grupos de
+          whatsapp, etc. A plataforma irá gerar um link único que será utilizado
+          para contabilizar os clicks redirecionados ao link de destino final. A
+          geração de relatórios será feita somente através da totalização de
+          dados, segmentada por cliente, campanha, LP/Site/Portal e/ou ação.
         </h1>
         <form onSubmit={handleSubmit(createLink)}>
-          <div className="grid grid-cols-4 gap-4 max-w-[500px]">
+          <div className="grid grid-cols-4 gap-[12px] max-w-[601px]">
+            <div className="col-span-4">
+              <p className="uppercase font-bold pb-1 pt-4">Dados da ação:</p>
+            </div>
             <div className="col-span-2">
+              <div className="flex">
+                <Label className="font-semibold">Cliente</Label>
+              </div>
               {/* SELECT CUSTOMER */}
               <Controller
                 name="customer"
@@ -425,6 +438,9 @@ export function EncurtadorDois() {
               {/* FINAL SELECT CUSTOMER */}
             </div>
             <div className="col-span-2">
+              <div className="flex">
+                <Label className="font-semibold">Campanha</Label>
+              </div>
               {/* SELECT CAMPAIGN */}
               <Controller
                 name="customer"
@@ -464,9 +480,15 @@ export function EncurtadorDois() {
               {/*FINAL CAMPAIGN*/}
             </div>
             <div className="col-span-2">
+              <div className="flex">
+                <Label className="font-semibold">LP</Label>
+              </div>
               <SelectLP />
             </div>
             <div className="col-span-2">
+              <div className="flex">
+                <Label className="font-semibold">Ação</Label>
+              </div>
               {/* SELECT ACTION */}
               <Controller
                 name="actionId"
@@ -505,7 +527,18 @@ export function EncurtadorDois() {
               )}
               {/* FINAL SELECT ACTION */}
             </div>
-            <div className="col-span-1 flex items-end">
+            <div className="col-span-4">
+              <p className="uppercase font-bold pb-1 pt-4">Encurtador:</p>
+            </div>
+            <div className="col-span-1">
+              <div className="flex">
+                <Label className="font-semibold">ShortURL</Label>
+                <TooltipTracker
+                  side="right"
+                  align="start"
+                  content='Você pode escolher qualquer uma das shortURLs da lista para gerar seus links personalizados. Veja em "URL exemplo" para visualizar o formato que os links serão gerados.'
+                />
+              </div>
               {/* SELECT SHORTENER */}
               <Controller
                 name="baseUrlId"
@@ -536,7 +569,14 @@ export function EncurtadorDois() {
               {/* FINAL SELECT SHORTENER */}
             </div>
             <div className="col-span-2">
-              <Label className="font-semibold">Conversor</Label>
+              <div className="flex">
+                <Label className="font-semibold">Conversor</Label>
+                <TooltipTracker
+                  side="right"
+                  align="start"
+                  content='Caso queira gerar uma URL encurtada, é necessário selecionar um conversor. Cada protocolo é compatível com um tipo de conversor diferente. Se não quiser usar um conversor, a plataforma vai simplesmente inserir o dado presente na coluna "A" da planilha enviada para gerar os links de tracking.'
+                />
+              </div>
               {/* SELECT CONVERSOR */}
               <Controller
                 name="alphabetId"
@@ -568,9 +608,14 @@ export function EncurtadorDois() {
               {/* FINAL SELECT CONVERSOR */}
             </div>
             <div className="flex flex-col col-span-1">
-              <Label htmlFor="comprimento" className="font-semibold">
-                Comprimento
-              </Label>
+              <div className="flex">
+                <Label className="font-semibold">Comprimento</Label>
+                <TooltipTracker
+                  side="right"
+                  align="start"
+                  content="É o número de caracteres que o conversor vai utilizar. Quanto maior o comprimento, maior o número de links possíveis de serem gerados sem repetição. (por default, deixar inativo. Somente deixar ativo se o cara escolher um conversor. Colocar na lista, em cada opção, o número de links possíveis de serem gerados)"
+                />
+              </div>
               <Input
                 id="comprimento"
                 type="number"
@@ -581,29 +626,17 @@ export function EncurtadorDois() {
                 className="col-span-1"
               />
             </div>
-            <div className="flex flex-col gap-1 col-span-4">
-              <label htmlFor="urlFinal" className="font-semibold">
-                Preencha a URL final
-              </label>
-              <input
-                id="urlFinal"
-                type="text"
-                placeholder="https://"
-                {...register("redirectUrl")}
-                className={`pl-4 bg-transparent rounded-md border border-input min-h-[36px] ${
-                  errors.redirectUrl && "border-rose-400"
-                }`}
-              />
-              {errors.redirectUrl && (
-                <span className="text-xs text-rose-400 font-normal">
-                  {errors.redirectUrl.message}
-                </span>
-              )}
-            </div>
             <div className="flex flex-col gap-1 col-span-2">
-              <label htmlFor="personalizarUrl" className="font-semibold">
-                Personalizar URL
-              </label>
+              <div className="flex">
+                <Label className="font-semibold" htmlFor="personalizarUrl">
+                  TAGs
+                </Label>
+                <TooltipTracker
+                  side="right"
+                  align="start"
+                  content='Se quiser, você pode inserir uma TAG personalizada nas URLs geradas. Experimente preencher o campo e veja em "URL exemplo" uma simulação de como as URLs ficarão.'
+                />
+              </div>
               <input
                 id="personalizarUrl"
                 type="text"
@@ -620,7 +653,14 @@ export function EncurtadorDois() {
               )}
             </div>
             <div className="flex flex-col gap-1 col-span-2">
-              <Label className="font-semibold">Pré/Pós Conversão</Label>
+              <div className="flex">
+                <Label className="font-semibold">Posição TAG</Label>
+                <TooltipTracker
+                  side="right"
+                  align="start"
+                  content='As tags podem ser geradas antes ou depois dos dados convertidos. Veja "URL exemplo" para entender melhor.'
+                />
+              </div>
               <Controller
                 name="conversionPosition"
                 control={control}
@@ -645,7 +685,14 @@ export function EncurtadorDois() {
               />
             </div>
             <div className="flex flex-col items-center gap-1 col-span-4">
-              <Label className="font-bold">Link Final</Label>
+              <div className="flex">
+                <Label className="font-bold">URL exemplo</Label>
+                <TooltipTracker
+                  side="right"
+                  align="start"
+                  content="Este é um exemplo de como serão as URLs finais, segundo os parâmetros que você selecionou nos campos acima."
+                />
+              </div>
               <Input
                 type="text"
                 value={
@@ -674,6 +721,32 @@ export function EncurtadorDois() {
                 disabled
               />
             </div>
+            <div className="flex flex-col gap-1 col-span-4">
+              <div className="flex">
+                <Label className="font-semibold" htmlFor="urlFinal">
+                  URL de destino
+                </Label>
+                <TooltipTracker
+                  side="right"
+                  align="start"
+                  content="É o endereço (URL) final para onde o click deve ser direcionado."
+                />
+              </div>
+              <input
+                id="urlFinal"
+                type="text"
+                placeholder="https://"
+                {...register("redirectUrl")}
+                className={`pl-4 bg-transparent rounded-md border border-input min-h-[36px] ${
+                  errors.redirectUrl && "border-rose-400"
+                }`}
+              />
+              {errors.redirectUrl && (
+                <span className="text-xs text-rose-400 font-normal">
+                  {errors.redirectUrl.message}
+                </span>
+              )}
+            </div>
             <Controller
               name="qrCode"
               control={control}
@@ -686,17 +759,24 @@ export function EncurtadorDois() {
                     checked={field.value}
                     onChange={(e) => field.onChange(e.target.checked)}
                   />
-                  <Label
-                    htmlFor="qrCode"
-                    className="text-nowrap cursor-pointer"
-                  >
-                    Gerar QRCode
-                  </Label>
+                  <div className="flex">
+                    <Label
+                      htmlFor="qrCode"
+                      className="text-nowrap cursor-pointer"
+                    >
+                      Gerar QRCode
+                    </Label>
+                    <TooltipTracker
+                      side="right"
+                      align="start"
+                      content="Se quiser fazer uma campanha MOBILE, você também pode fazer o tracking dos links personalizados através de um QR Code para cada link que gerar. Os endereços das imagens desses códigos serão disponibilizadas na planilha criada pela plataforma, na coluna B."
+                    />
+                  </div>
                 </div>
               )}
             />
           </div>
-          <div className="pb-12 text-right mt-8 max-w-[500px]">
+          <div className="pb-12 text-right mt-8 max-w-[601px]">
             <Button className="w-full" variant="secondary">
               <div className="flex items-center gap-2">
                 <Send size={18} />

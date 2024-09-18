@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import {
   Card,
@@ -13,16 +14,11 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { DatePickerWithRange } from "./DataPicker";
-import { customerData, DataProps } from "@/interface/auth";
-import { api } from "@/services/Api";
-import { useAuth } from "@/hook/Auth";
-import { AxiosError } from "axios";
-import { AlertMessage } from "./alert_message";
-import React, { useEffect, useState } from "react";
 
 export const description = "An interactive bar chart";
+
 const chartData = [
-  { date: "2024-04-02", CC: 233, desktop: 97, mobile: 180, pageview: 268 },
+  { date: "2024-04-02", desktop: 97, mobile: 180, pageview: 268 },
   { date: "2024-04-03", desktop: 167, mobile: 120, pageview: 123 },
   { date: "2024-04-04", desktop: 242, mobile: 260, pageview: 78 },
   { date: "2024-04-05", desktop: 373, mobile: 290, pageview: 462 },
@@ -57,10 +53,6 @@ const chartConfig = {
   views: {
     label: "Cliques",
   },
-  CC: {
-    label: "CC",
-    color: "hsl(var(--chart-1))",
-  },
   desktop: {
     label: "Desktop",
     color: "hsl(var(--chart-1))",
@@ -75,50 +67,18 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-type graphicProps = {
-  cliente: string;
-};
-type dataProps = { data: DataProps };
+export function Grafico() {
+  const [activeChart, setActiveChart] =
+    React.useState<keyof typeof chartConfig>("desktop");
 
-export function Grafico({ cliente }: graphicProps) {
-  const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>(cliente ? (cliente as keyof typeof chartConfig) : "desktop");
-  console.log(activeChart)
   const total = React.useMemo(
     () => ({
-      CC: chartData.reduce((acc, curr) => acc + (curr.CC?? 0), 0),
       desktop: chartData.reduce((acc, curr) => acc + curr.desktop, 0),
       mobile: chartData.reduce((acc, curr) => acc + curr.mobile, 0),
       pageview: chartData.reduce((acc, curr) => acc + curr.pageview, 0),
     }),
     []
   );
-  const [customer, setCustomer] = useState<customerData[]>([]);
-  const { data } = useAuth() as dataProps;
-  console.log(customer)
-
-  const handleGetCustomer = async () => {
-    try {
-      const response = await api.get(`/clients`, {
-        headers: {
-          Authorization: `Bearer ${data.jwtToken}`,
-        },
-      });
-      setCustomer(response.data);
-      console.log(response.data);
-    } catch (error: unknown) {
-      if (error instanceof AxiosError && error.response) {
-        AlertMessage(error.response.data.message, "error");
-      } else {
-        AlertMessage(
-          "Não foi possível carregar os clientes, tente novamente mais tarde.",
-          "error"
-        );
-      }
-    }
-  };
-  useEffect(() => {
-    handleGetCustomer();
-  }, [data.jwtToken]);
 
   return (
     <>
@@ -134,7 +94,7 @@ export function Grafico({ cliente }: graphicProps) {
             </CardDescription>
           </div>
           <div className="flex">
-            {[`${cliente ? cliente : "desktop"}`, "mobile"].map((key) => {
+            {["desktop", "mobile"].map((key) => {
               const chart = key as keyof typeof chartConfig;
               return (
                 <button

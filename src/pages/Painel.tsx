@@ -24,7 +24,6 @@ import { AlertMessage } from "@/components/alert_message";
 import { useAuth } from "@/hook/Auth";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SelectLP } from "@/components/SelectLP";
 import { Button } from "@/components/ui/button";
 
 const verifyFilter = z.object({
@@ -51,6 +50,7 @@ export function PainelPage() {
   const [selectedUrl, setSelectedUrl] = useState<string>("");
   const {
     control,
+    watch,
     formState: {},
   } = useForm<verifyFilterProps>({
     resolver: zodResolver(verifyFilter),
@@ -62,6 +62,12 @@ export function PainelPage() {
       url: "",
     },
   });
+
+  const clienteAssistido = watch("customer");
+  const campanhaAssistida = watch("campaign");
+  const lpAssistida = watch("lps");
+  const acaoAssistida = watch("action");
+  const urlAssistida = watch("url");
 
   const handleGetCustomer = async () => {
     try {
@@ -155,6 +161,10 @@ export function PainelPage() {
     handleGetUrl();
   }, [selectedUrl]);
 
+  const submitCustomer = (customer: string) => {
+    setSelectedCustomer(customer);
+  };
+
   return (
     <>
       <div className="flex gap-4 justify-between mb-8">
@@ -164,10 +174,10 @@ export function PainelPage() {
         </div>
       </div>
       <div className="rounded-xl border bg-card text-card-foreground shadow p-6 mb-3">
-      <p className="font-semibold flex items-center gap-2 mb-3 text-xl">
-        <SlidersHorizontal size={18}/>
-        Filtros
-      </p>
+        <p className="font-semibold flex items-center gap-2 mb-3 text-xl">
+          <SlidersHorizontal size={18} />
+          Filtros
+        </p>
         <form>
           <div className="grid grid-cols-10 gap-2">
             <div className="col-span-2">
@@ -178,7 +188,6 @@ export function PainelPage() {
                   <Select
                     onValueChange={(value) => {
                       field.onChange(value);
-                      setSelectedCustomer(value);
                     }}
                   >
                     <SelectTrigger>
@@ -208,9 +217,11 @@ export function PainelPage() {
                       field.onChange(value);
                       setSelectedCampaign(value);
                     }}
+                    disabled={!clienteAssistido}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Campanhas" />
+                      <SelectValue
+                      placeholder={clienteAssistido? 'Campanhas' : 'Cliente não selecionado'}/>
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
@@ -227,7 +238,30 @@ export function PainelPage() {
               />
             </div>
             <div className="col-span-2">
-              <SelectLP />
+            <Controller
+                name="lps"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                    }}
+                    disabled={!campanhaAssistida}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder={campanhaAssistida? 'Selecione a LP' : 'Campanha não selecionada'} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Clientes</SelectLabel>
+                        <SelectItem value="lp1">LP 1</SelectItem>
+                        <SelectItem value="lp2">LP 2</SelectItem>
+                        <SelectItem value="lp3">LP 3</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
             <div className="col-span-2">
               <Controller
@@ -239,9 +273,10 @@ export function PainelPage() {
                       field.onChange(value);
                       setSelectedAction(value);
                     }}
+                    disabled={!lpAssistida}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Ações" />
+                      <SelectValue placeholder={lpAssistida? 'Ações' : 'LP não selecionada'} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
@@ -267,9 +302,10 @@ export function PainelPage() {
                       field.onChange(value);
                       setSelectedUrl(value);
                     }}
+                    disabled={!acaoAssistida}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="URLs" />
+                      <SelectValue placeholder={acaoAssistida? 'URLs' : 'Ação não selecionada'} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
@@ -287,13 +323,18 @@ export function PainelPage() {
             </div>
           </div>
           <div className="flex justify-end mt-3">
-            <Button variant={"outline"} className="min-w-[140px]" type="button">
+            <Button
+              variant={"outline"}
+              className="min-w-[140px]"
+              type="button"
+              onClick={() => submitCustomer(clienteAssistido)}
+            >
               Filtrar
             </Button>
           </div>
         </form>
       </div>
-      <Grafico cliente={selectedCustomer}/>
+      <Grafico cliente={selectedCustomer} />
     </>
   );
 }

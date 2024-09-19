@@ -22,7 +22,7 @@ import React, { useEffect, useState } from "react";
 
 export const description = "An interactive bar chart";
 const chartData = [
-  { date: "2024-04-02", CC: 233, desktop: 97, mobile: 180, pageview: 268 },
+  { date: "2024-04-02", CC: 233, EspacoLaser: 197, teste4: 987, Avon: 234, desktop: 97, mobile: 180, pageview: 268 },
   { date: "2024-04-03", desktop: 167, mobile: 120, pageview: 123 },
   { date: "2024-04-04", desktop: 242, mobile: 260, pageview: 78 },
   { date: "2024-04-05", desktop: 373, mobile: 290, pageview: 462 },
@@ -61,6 +61,18 @@ const chartConfig = {
     label: "CC",
     color: "hsl(var(--chart-1))",
   },
+  EspacoLaser: {
+    label: "Espaço Laser",
+    color: "hsl(var(--chart-2))",
+  },
+  teste4: {
+    label: "teste4",
+    color: "hsl(var(--chart-3))",
+  },
+  Avon: {
+    label: "Avon",
+    color: "hsl(var(--chart-4))",
+  },
   desktop: {
     label: "Desktop",
     color: "hsl(var(--chart-1))",
@@ -82,7 +94,6 @@ type dataProps = { data: DataProps };
 
 export function Grafico({ cliente }: graphicProps) {
   const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>(cliente ? (cliente as keyof typeof chartConfig) : "desktop");
-  console.log(activeChart)
   const total = React.useMemo(
     () => ({
       CC: chartData.reduce((acc, curr) => acc + (curr.CC?? 0), 0),
@@ -120,6 +131,12 @@ export function Grafico({ cliente }: graphicProps) {
     handleGetCustomer();
   }, [data.jwtToken]);
 
+  useEffect(() => {
+    if (cliente) {
+      setActiveChart(cliente as keyof typeof chartConfig);
+    }
+  }, [cliente])
+
   return (
     <>
       <div className="flex justify-end mb-2">
@@ -134,7 +151,7 @@ export function Grafico({ cliente }: graphicProps) {
             </CardDescription>
           </div>
           <div className="flex">
-            {[`${cliente ? cliente : "desktop"}`, "mobile"].map((key) => {
+            {["desktop", "mobile"].map((key) => {
               const chart = key as keyof typeof chartConfig;
               return (
                 <button
@@ -193,7 +210,7 @@ export function Grafico({ cliente }: graphicProps) {
                 }}
               />
               <Bar dataKey={activeChart} fill={`var(--color-${activeChart})`} />
-              <Bar dataKey="pageview" fill={`var(--color-pageview)`} />
+              {/* <Bar dataKey="pageview" fill={`var(--color-pageview)`} /> */}
             </BarChart>
           </ChartContainer>
         </CardContent>

@@ -67,7 +67,6 @@ export function PainelPage() {
   const campanhaAssistida = watch("campaign");
   const lpAssistida = watch("lps");
   const acaoAssistida = watch("action");
-  const urlAssistida = watch("url");
 
   const handleGetCustomer = async () => {
     try {

@@ -22,7 +22,17 @@ import React, { useEffect, useState } from "react";
 
 export const description = "An interactive bar chart";
 const chartData = [
-  { date: "2024-04-02", CC: 233, EspacoLaser: 197, teste4: 987, Avon: 234, desktop: 97, mobile: 180, pageview: 268 },
+  {
+    date: "2024-04-02",
+    CC: 233,
+    EspacoLaser: 197,
+    teste4: 987,
+    Avon: 234,
+    desktop: 97,
+    mobile: 180,
+    tablet: 17,
+    pageview: 268,
+  },
   { date: "2024-04-03", desktop: 167, mobile: 120, pageview: 123 },
   { date: "2024-04-04", desktop: 242, mobile: 260, pageview: 78 },
   { date: "2024-04-05", desktop: 373, mobile: 290, pageview: 462 },
@@ -81,6 +91,10 @@ const chartConfig = {
     label: "Mobile",
     color: "hsl(var(--chart-2))",
   },
+  tablet: {
+    label: "Tablet",
+    color: "hsl(var(--chart-1))",
+  },
   pageview: {
     label: "PageView",
     color: "hsl(var(--chart-3))",
@@ -93,19 +107,22 @@ type graphicProps = {
 type dataProps = { data: DataProps };
 
 export function Grafico({ cliente }: graphicProps) {
-  const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>(cliente ? (cliente as keyof typeof chartConfig) : "desktop");
+  const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>(
+    cliente ? (cliente as keyof typeof chartConfig) : "desktop"
+  );
   const total = React.useMemo(
     () => ({
-      CC: chartData.reduce((acc, curr) => acc + (curr.CC?? 0), 0),
+      CC: chartData.reduce((acc, curr) => acc + (curr.CC ?? 0), 0),
       desktop: chartData.reduce((acc, curr) => acc + curr.desktop, 0),
       mobile: chartData.reduce((acc, curr) => acc + curr.mobile, 0),
+      tablet: chartData.reduce((acc, curr) => acc + (curr.tablet ?? 0), 0),
       pageview: chartData.reduce((acc, curr) => acc + curr.pageview, 0),
     }),
     []
   );
   const [customer, setCustomer] = useState<customerData[]>([]);
   const { data } = useAuth() as dataProps;
-  console.log(customer)
+  console.log(customer);
 
   const handleGetCustomer = async () => {
     try {
@@ -135,7 +152,7 @@ export function Grafico({ cliente }: graphicProps) {
     if (cliente) {
       setActiveChart(cliente as keyof typeof chartConfig);
     }
-  }, [cliente])
+  }, [cliente]);
 
   return (
     <>
@@ -145,13 +162,13 @@ export function Grafico({ cliente }: graphicProps) {
       <Card>
         <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
           <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-            <CardTitle>Lorem ipsum, dolor sit amet</CardTitle>
-            <CardDescription>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            <CardTitle>Acessos por Dispositivo (Desktop/Mobile/Tablet)</CardTitle>
+            <CardDescription className="max-w-[600px]">
+            Gráfico ilustrando a distribuição de acessos por tipo de dispositivo, categorizando o tráfego entre desktop, mobile e tablet, para uma visão detalhada do comportamento dos usuários em diferentes plataformas.
             </CardDescription>
           </div>
           <div className="flex">
-            {["desktop", "mobile"].map((key) => {
+            {["desktop", "mobile", 'tablet'].map((key) => {
               const chart = key as keyof typeof chartConfig;
               return (
                 <button

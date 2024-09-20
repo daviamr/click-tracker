@@ -16,7 +16,6 @@ import {
   customerData,
   dataAction,
   DataProps,
-  urlData,
 } from "@/interface/auth";
 import { api } from "@/services/Api";
 import { AxiosError } from "axios";
@@ -25,6 +24,10 @@ import { useAuth } from "@/hook/Auth";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { GraficoDonut } from "@/components/GraficoDonut";
+import { GraficoRegiao } from "@/components/GraficoRegiao";
 
 const verifyFilter = z.object({
   customer: z.string(),
@@ -43,11 +46,9 @@ export function PainelPage() {
   const [customer, setCustomer] = useState<customerData[]>([]);
   const [campaign, setCampaign] = useState<campaignData[]>([]);
   const [action, setAction] = useState<dataAction[]>([]);
-  const [url, setUrl] = useState<urlData[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<string>("");
   const [selectedCampaign, setSelectedCampaign] = useState<string>("");
   const [selectedAction, setSelectedAction] = useState<string>("");
-  const [selectedUrl, setSelectedUrl] = useState<string>("");
   const {
     control,
     watch,
@@ -66,7 +67,6 @@ export function PainelPage() {
   const clienteAssistido = watch("customer");
   const campanhaAssistida = watch("campaign");
   const lpAssistida = watch("lps");
-  const acaoAssistida = watch("action");
 
   const handleGetCustomer = async () => {
     try {
@@ -137,29 +137,6 @@ export function PainelPage() {
     handleGetAction();
   }, [selectedAction]);
 
-  const handleGetUrl = async () => {
-    try {
-      const response = await api.get(`/base-url`, {
-        headers: {
-          Authorization: `Bearer ${data.jwtToken}`,
-        },
-      });
-      setUrl(response.data);
-    } catch (error: unknown) {
-      if (error instanceof AxiosError && error.response) {
-        AlertMessage(error.response.data.message, "error");
-      } else {
-        AlertMessage(
-          "Não foi possível carregar as URLs, tente novamente mais tarde.",
-          "error"
-        );
-      }
-    }
-  };
-  useEffect(() => {
-    handleGetUrl();
-  }, [selectedUrl]);
-
   const submitCustomer = (customer: string) => {
     setSelectedCustomer(customer);
   };
@@ -173,12 +150,12 @@ export function PainelPage() {
         </div>
       </div>
       <div className="rounded-xl border bg-card text-card-foreground shadow p-6 mb-3">
-        <p className="font-semibold flex items-center gap-2 mb-3 text-xl">
+        <p className="font-semibold flex items-center gap-2 text-xl">
           <SlidersHorizontal size={18} />
           Filtros
         </p>
         <form>
-          <div className="grid grid-cols-10 gap-2">
+          <div className="grid grid-cols-12 gap-2 items-end">
             <div className="col-span-2">
               <Controller
                 name="customer"
@@ -220,7 +197,12 @@ export function PainelPage() {
                   >
                     <SelectTrigger>
                       <SelectValue
-                      placeholder={clienteAssistido? 'Campanhas' : 'Cliente não selecionado'}/>
+                        placeholder={
+                          clienteAssistido
+                            ? "Campanhas"
+                            : "Cliente não selecionado"
+                        }
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
@@ -237,7 +219,7 @@ export function PainelPage() {
               />
             </div>
             <div className="col-span-2">
-            <Controller
+              <Controller
                 name="lps"
                 control={control}
                 render={({ field }) => (
@@ -248,7 +230,13 @@ export function PainelPage() {
                     disabled={!campanhaAssistida}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder={campanhaAssistida? 'Selecione a LP' : 'Campanha não selecionada'} />
+                      <SelectValue
+                        placeholder={
+                          campanhaAssistida
+                            ? "Selecione a LP"
+                            : "Campanha não selecionada"
+                        }
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
@@ -275,7 +263,11 @@ export function PainelPage() {
                     disabled={!lpAssistida}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder={lpAssistida? 'Ações' : 'LP não selecionada'} />
+                      <SelectValue
+                        placeholder={
+                          lpAssistida ? "Ações" : "LP não selecionada"
+                        }
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
@@ -291,34 +283,13 @@ export function PainelPage() {
                 )}
               />
             </div>
-            <div className="col-span-2">
-              <Controller
-                name="url"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      setSelectedUrl(value);
-                    }}
-                    disabled={!acaoAssistida}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder={acaoAssistida? 'URLs' : 'Ação não selecionada'} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>URLs</SelectLabel>
-                        {url.map((i, index) => (
-                          <SelectItem value={i.url} key={index}>
-                            {i.url}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                )}
-              />
+            <div className="col-span-4">
+              <div>
+                <Label className="font-semibold" htmlFor="urlLink">
+                  URL
+                </Label>
+                <Input type="text" id="urlLink" placeholder="https://" />
+              </div>
             </div>
           </div>
           <div className="flex justify-end mt-3">
@@ -333,7 +304,17 @@ export function PainelPage() {
           </div>
         </form>
       </div>
-      <Grafico cliente={selectedCustomer} />
+      <div className="grid grid-cols-4 gap-4 mb-16">
+        <div className="col-span-4">
+          <Grafico cliente={selectedCustomer} />
+        </div>
+        <div className="col-span-3">
+          <GraficoRegiao />
+        </div>
+        <div className="col-span-1">
+          <GraficoDonut />
+        </div>
+      </div>
     </>
   );
 }

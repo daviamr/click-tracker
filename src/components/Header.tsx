@@ -1,148 +1,293 @@
 import { Button } from "./ui/button";
-import { Building2, CaseLower, Laptop, LayoutDashboard, Link2, LogOut, Megaphone, Radar, UsersRound, Waypoints } from "lucide-react";
+import {
+  ArrowLeftFromLine,
+  ArrowRightFromLine,
+  Building2,
+  CaseLower,
+  Database,
+  History,
+  Laptop,
+  LayoutDashboard,
+  Link2,
+  LogOut,
+  Megaphone,
+  Radar,
+  Users,
+  Waypoints,
+} from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import { useContextState } from "@/hook/state";
+import { useState } from "react";
 
 export function Header() {
   const { isFocus, setIsFocus } = useContextState();
+  const [isOpen, setIsOpen] = useState<Boolean>(true);
+  console.log(isOpen);
 
-  function logOut () {
+  function logOut() {
     try {
-      localStorage.removeItem('@shorturl:user')
-      window.location.reload()
+      localStorage.removeItem("@shorturl:user");
+      window.location.reload();
     } catch {
-      console.log('token não encontrado');
+      console.log("token não encontrado");
     }
   }
 
   return (
-    <div className="flex bg-white shadow-sm dark:bg-[#1e1e21] h-[60px] fixed top-0 left-0 z-1000 w-full">
-      <header className="flex justify-between items-center w-full max-w-7xl mx-auto px-8 py-3 text-[14px]">
-        <p className="text-xl relative z-10">
-          <span className="absolute w-[140%] h-4 bg-[#799b09] z-[-1] left-[-8px] bottom-0"></span>
-          Logo.</p>
-        <nav>
-          <ul className="flex gap-8 cursor-pointer">
-            <li className="hover:opacity-40 duration-300">
-              <button
-                className={`flex items-center gap-1 ${isFocus === "user" ? "font-bold" : ""}`}
-                onClick={() => setIsFocus("user")}
+    <>
+      <header
+        className={`h-screen bg-white shadow-sm dark:bg-[#1e1e21] py-8 overflow-hidden duration-200 ${
+          isOpen ? "w-52" : "w-16"
+        }`}
+      >
+        <div className="flex flex-col mb-8 justify-between h-full">
+          <div>
+            <div className="flex justify-center mb-8">
+              <p
+                className={`text-xl relative z-10 w-max m-auto font-bold ${
+                  isOpen ? "block" : "hidden"
+                }`}
               >
-                <UsersRound size={18}/>
-                Usuários
-              </button>
-            </li>
+                <span className="absolute w-[140px] h-4 bg-[#799b09] z-[-1] left-[-8px] bottom-0"></span>
+                LinkTracker
+              </p>
+              <Button onClick={() => setIsOpen(!isOpen)} variant={"ghost"}>
+                {isOpen ? (
+                  <ArrowLeftFromLine size={16} />
+                ) : (
+                  <ArrowRightFromLine size={16} />
+                )}
+              </Button>
+            </div>
 
-            <li className="hover:opacity-40 duration-300">
-              <button
-                className={`flex items-center gap-1 ${
-                  isFocus === "customers" ? "font-bold" : ""
-                }`}
-                onClick={() => setIsFocus("customers")}
-              >
-                <Building2 size={18}/>
-                Clientes
-              </button>
-            </li>
+            <div className="flex items-center px-4 mb-8 gap-2">
+              <img
+                src="https://i.imgur.com/LDJu8HS.jpeg"
+                alt="usuário"
+                className={`w-12 rounded-sm`}
+              />
+              <div className={`${isOpen ? "block" : "hidden"}`}>
+                <p className="leading-4 text-[14px]">Bem vindo (a),</p>
+                <p className="text-[14px]">Fulano.</p>
+              </div>
+            </div>
 
-            <li className="hover:opacity-40 duration-300">
-              <button
-                className={`flex items-center gap-1 ${
-                  isFocus === "campaign" ? "font-bold" : ""
-                }`}
-                onClick={() => setIsFocus("campaign")}
-              >
-                <Megaphone size={18}/>
-                Campanhas
-              </button>
-            </li>
+            <nav>
+              <ul>
+                <li
+                  className={`border-l-4 text-[16px] cursor-pointer border-col ${
+                    isFocus === "user"
+                      ? "border-[#a2d515] text-[#a2d515] dark:bg-[#232327] font-semibold"
+                      : ""
+                  }`}
+                >
+                  <button
+                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    onClick={() => setIsFocus("user")}
+                  >
+                    <Users size={18} />
+                    <p className={`${isOpen ? "block" : "hidden"}`}>Usuários</p>
+                  </button>
+                </li>
 
-            <li className="hover:opacity-40 duration-300">
-              <button
-                className={`flex items-center gap-1 ${
-                  isFocus === "lps" ? "font-bold" : ""
-                }`}
-                onClick={() => setIsFocus("lps")}
-              >
-                <Laptop size={18}/>
-                LP's
-              </button>
-            </li>
+                <li
+                  className={`border-l-4 text-[16px] cursor-pointer border-col ${
+                    isFocus === "customers"
+                      ? "border-[#a2d515] text-[#a2d515] dark:bg-[#232327] font-semibold"
+                      : ""
+                  }`}
+                >
+                  <button
+                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    onClick={() => setIsFocus("customers")}
+                  >
+                    <Building2 size={18} />
+                    <p className={`${isOpen ? "block" : "hidden"}`}>Clientes</p>
+                  </button>
+                </li>
 
-            <li className="hover:opacity-40 duration-300">
-              <button
-                className={`flex items-center gap-1 ${
-                  isFocus === "action" ? "font-bold" : ""
-                }`}
-                onClick={() => setIsFocus("action")}
-              >
-                <Waypoints size={18}/>
-                Ações
-              </button>
-            </li>
+                <li
+                  className={`border-l-4 text-[16px] cursor-pointer border-col ${
+                    isFocus === "campaign"
+                      ? "border-[#a2d515] text-[#a2d515] dark:bg-[#232327] font-semibold"
+                      : ""
+                  }`}
+                >
+                  <button
+                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    onClick={() => setIsFocus("campaign")}
+                  >
+                    <Megaphone size={18} />
+                    <p className={`${isOpen ? "block" : "hidden"}`}>
+                      Campanhas
+                    </p>
+                  </button>
+                </li>
 
-            <li className="hover:opacity-40 duration-300">
-              <button
-                className={`flex items-center gap-1 ${
-                  isFocus === "shorturl" ? "font-bold" : ""
-                }`}
-                onClick={() => setIsFocus("shorturl")}
-              >
-                <Link2 size={18}/>
-                ShortURLS
-              </button>
-            </li>
+                <li
+                  className={`border-l-4 text-[16px] cursor-pointer border-col ${
+                    isFocus === "lps"
+                      ? "border-[#a2d515] text-[#a2d515] dark:bg-[#232327] font-semibold"
+                      : ""
+                  }`}
+                >
+                  <button
+                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    onClick={() => setIsFocus("lps")}
+                  >
+                    <Laptop size={18} />
+                    <p className={`${isOpen ? "block" : "hidden"}`}>LP's</p>
+                  </button>
+                </li>
 
-            <li className="hover:opacity-40 duration-300">
-              <button
-                className={`flex items-center gap-1 ${
-                  isFocus === "conversor" ? "font-bold" : ""
-                }`}
-                onClick={() => setIsFocus("conversor")}
-              >
-                <CaseLower size={18}/>
-                Conversor
-              </button>
-            </li>
+                <li
+                  className={`border-l-4 text-[16px] cursor-pointer border-col ${
+                    isFocus === "action"
+                      ? "border-[#a2d515] text-[#a2d515] dark:bg-[#232327] font-semibold"
+                      : ""
+                  }`}
+                >
+                  <button
+                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    onClick={() => setIsFocus("action")}
+                  >
+                    <Waypoints size={18} />
+                    <p className={`${isOpen ? "block" : "hidden"}`}>Ações</p>
+                  </button>
+                </li>
 
-            <li className="hover:opacity-40 duration-300">
-              <button
-                className={`flex items-center gap-1 ${
-                  isFocus === "shorter" ? "font-bold" : ""
-                }`}
-                onClick={() => setIsFocus("shorter")}
-              >
-                <Radar size={18}/>
-                Tracker
-              </button>
-            </li>
-            <li className="hover:opacity-40 duration-300">
-              <button
-                className={`flex items-center gap-1 ${
-                  isFocus === "dashboard" ? "font-bold" : ""
-                }`}
-                onClick={() => setIsFocus("dashboard")}
-              >
-                <LayoutDashboard size={18}/>
-                Dashboard
-              </button>
-            </li>
-          </ul>
-        </nav>
-        <div className="text-right">
-          <div className="flex items-center gap-1">
-            <ModeToggle />
-            <Button
-            variant={"secondary"}
-            onClick={() => logOut()}>
-              <LogOut size={18} />
-            </Button>
+                <li
+                  className={`border-l-4 text-[16px] cursor-pointer border-col ${
+                    isFocus === "shorturl"
+                      ? "border-[#a2d515] text-[#a2d515] dark:bg-[#232327] font-semibold"
+                      : ""
+                  }`}
+                >
+                  <button
+                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    onClick={() => setIsFocus("shorturl")}
+                  >
+                    <Link2 size={18} />
+                    <p className={`${isOpen ? "block" : "hidden"}`}>
+                      ShortURLS
+                    </p>
+                  </button>
+                </li>
+
+                <li
+                  className={`border-l-4 text-[16px] cursor-pointer border-col ${
+                    isFocus === "conversor"
+                      ? "border-[#a2d515] text-[#a2d515] dark:bg-[#232327] font-semibold"
+                      : ""
+                  }`}
+                >
+                  <button
+                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    onClick={() => setIsFocus("conversor")}
+                  >
+                    <CaseLower size={18} />
+                    <p className={`${isOpen ? "block" : "hidden"}`}>
+                      Conversores
+                    </p>
+                  </button>
+                </li>
+
+                <li
+                  className={`border-l-4 text-[16px] cursor-pointer border-col ${
+                    isFocus === "history"
+                      ? "border-[#a2d515] text-[#a2d515] dark:bg-[#232327] font-semibold"
+                      : ""
+                  }`}
+                >
+                  <button
+                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    onClick={() => setIsFocus("history")}
+                  >
+                    <History size={18} />
+                    <p className={`${isOpen ? "block" : "hidden"}`}>
+                      Histórico
+                    </p>
+                  </button>
+                </li>
+
+                <li
+                  className={`border-l-4 text-[16px] cursor-pointer border-col ${
+                    isFocus === "originbase"
+                      ? "border-[#a2d515] text-[#a2d515] dark:bg-[#232327] font-semibold"
+                      : ""
+                  }`}
+                >
+                  <button
+                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    onClick={() => setIsFocus("originbase")}
+                  >
+                    <Database size={18} />
+                    <p className={`${isOpen ? "block" : "hidden"}`}>
+                      Base Origem
+                    </p>
+                  </button>
+                </li>
+
+                <li
+                  className={`border-l-4 text-[16px] cursor-pointer border-col ${
+                    isFocus === "shorter"
+                      ? "border-[#a2d515] text-[#a2d515] dark:bg-[#232327] font-semibold"
+                      : ""
+                  }`}
+                >
+                  <button
+                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    onClick={() => setIsFocus("shorter")}
+                  >
+                    <Radar size={18} />
+                    <p className={`${isOpen ? "block" : "hidden"}`}>Tracker</p>
+                  </button>
+                </li>
+
+                <li
+                  className={`border-l-4 text-[16px] cursor-pointer border-col ${
+                    isFocus === "dashboard"
+                      ? "border-[#a2d515] text-[#a2d515] dark:bg-[#232327] font-semibold"
+                      : ""
+                  }`}
+                >
+                  <button
+                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    onClick={() => setIsFocus("dashboard")}
+                  >
+                    <LayoutDashboard size={18} />
+                    <p className={`${isOpen ? "block" : "hidden"}`}>
+                      Dashboard
+                    </p>
+                  </button>
+                </li>
+              </ul>
+            </nav>
           </div>
-          <p className="text-sm mt-2 hidden">
-            Olá, <span className="font-bold">Juvencio</span>!
-          </p>
+
+          <div>
+            <ul>
+            <li
+                className={`border-l-4 text-[16px] cursor-pointer border-col`}
+              >
+                <ModeToggle/>
+              </li>
+
+              <li
+                className={`border-l-4 text-[16px] cursor-pointer border-col`}
+              >
+                <button
+                  className="flex items-center gap-2 py-3 pl-5 w-full"
+                  onClick={() => logOut()}
+                >
+                  <LogOut size={18} />
+                  <p className={`${isOpen ? "block" : "hidden"}`}>Sair</p>
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
       </header>
-    </div>
+    </>
   );
 }

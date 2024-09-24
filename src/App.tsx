@@ -13,7 +13,7 @@ export function App() {
   const { isFocus } = useContextState();
   return (
     <>
-      <div className="pt-[60px] mt-[60px] overflow-y-auto h-[calc(100vh_-60px)]">
+      <div className="pt-[60px] mt-[60px] overflow-y-auto w-full">
         <div className="max-w-7xl mx-auto px-8">
           {isFocus === "user" && <UsuarioPage />}
           {isFocus === "customers" && <ClientesPage />}

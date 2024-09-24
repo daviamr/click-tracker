@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-export function RetornoApiLink() {
+export function senaobugarvouremover() {
   return (
     <Dialog>
       <DialogTrigger asChild>

@@ -39,32 +39,40 @@ const verifyCreateAction = z.object({
   name: z.string().min(4, "*Mínimo de 4 caracteres"),
   campaignId: z.number(),
   customPath: z.string(),
-  selectCliente: z.string().min(1,''),
+  selectCliente: z.string().min(1, ""),
   startAt: z.string().min(1, "*Campo obrigatório"),
-  endAt: z.string().min(1, "*Campo obrigatório")
+  endAt: z.string().min(1, "*Campo obrigatório"),
 });
 
 type actionData = z.infer<typeof verifyCreateAction>;
 type HandleCreateUsersProps = {
-  handleCreateAction: ({ name, campaignId, customPath, startAt, endAt }: createNewAction) => void;
+  handleCreateAction: ({
+    name,
+    campaignId,
+    customPath,
+    startAt,
+    endAt,
+  }: createNewAction) => void;
   data: DataProps;
 };
 
 type createActionProps = {
   onCreateAction: () => void;
-}
+};
 
-export function NovaAcao({onCreateAction}: createActionProps) {
+export function NovaAcao({ onCreateAction }: createActionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { data, handleCreateAction } = useAuth() as HandleCreateUsersProps;
   const [selectedClient, setSelectedClient] = useState<string>("");
   const [customerData, setCustomerData] = useState<customerData[]>([]);
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
   // const [isChecked, setIsChecked] = useState(false);
-  const [clientId, setClientId] = useState<string>('');
+  const [clientId, setClientId] = useState<string>("");
 
   const handleSelectChange = (value: string) => {
-    const selectedCustomer = customerData.find(customer => customer.name === value);
+    const selectedCustomer = customerData.find(
+      (customer) => customer.name === value
+    );
     if (selectedCustomer) {
       setClientId(selectedCustomer.id);
       setSelectedClient(value);
@@ -75,30 +83,30 @@ export function NovaAcao({onCreateAction}: createActionProps) {
   //   setIsChecked(!isChecked)
   // }
 
-     const handleGetClient = async () => {
-      try {
-        const response = await api.get("/clients", {
-          headers: {
-            Authorization: `Bearer ${data.jwtToken}`,
-          },
-        });
-        setCustomerData(response.data);
-        console.log(response.data)
-      } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response) {
-          AlertMessage(error.response.data.message, "error");
-        } else {
-          AlertMessage(
-            "Não foi possível carregar os clientes, tente novamente mais tarde.",
-            "error"
-          );
-        }
+  const handleGetClient = async () => {
+    try {
+      const response = await api.get("/clients", {
+        headers: {
+          Authorization: `Bearer ${data.jwtToken}`,
+        },
+      });
+      setCustomerData(response.data);
+      console.log(response.data);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível carregar os clientes, tente novamente mais tarde.",
+          "error"
+        );
       }
     }
+  };
 
-    useEffect(() => {
-      handleGetClient();
-    }, [data.jwtToken])
+  useEffect(() => {
+    handleGetClient();
+  }, [data.jwtToken]);
 
   useEffect(() => {
     async function handleGetSingleClient() {
@@ -109,7 +117,7 @@ export function NovaAcao({onCreateAction}: createActionProps) {
           },
         });
         setCampanhas(response.data);
-        console.log(response.data)
+        console.log(response.data);
       } catch (error: unknown) {
         if (error instanceof AxiosError && error.response) {
           AlertMessage(error.response.data.message, "error");
@@ -136,17 +144,19 @@ export function NovaAcao({onCreateAction}: createActionProps) {
   } = useForm<actionData>({
     resolver: zodResolver(verifyCreateAction),
     defaultValues: {
-      name: '',
+      name: "",
       campaignId: 0,
-      customPath: '',
-      selectCliente: '',
-      startAt: '',
-      endAt: '',
+      customPath: "",
+      selectCliente: "",
+      startAt: "",
+      endAt: "",
     },
   });
 
   const handleSelectCampaign = (value: string) => {
-    const selectedCampaign = campanhas.find((campanha) => campanha.name === value);
+    const selectedCampaign = campanhas.find(
+      (campanha) => campanha.name === value
+    );
     if (selectedCampaign) {
       setValue("campaignId", selectedCampaign.id);
       console.log(`id da campanha: ${selectedCampaign.id}`);
@@ -161,17 +171,29 @@ export function NovaAcao({onCreateAction}: createActionProps) {
     const fimIso = dataFimFormatado.toISOString();
 
     if (campaignId === 0) {
-      alert('Campanha não encontrada.')
+      alert("Campanha não encontrada.");
     } else {
       try {
-        await handleCreateAction({ name, campaignId, customPath, startAt: inicioIso, endAt: fimIso });
-        console.log({ name, campaignId, customPath, startAt: inicioIso, endAt: fimIso });
+        await handleCreateAction({
+          name,
+          campaignId,
+          customPath,
+          startAt: inicioIso,
+          endAt: fimIso,
+        });
+        console.log({
+          name,
+          campaignId,
+          customPath,
+          startAt: inicioIso,
+          endAt: fimIso,
+        });
         onCreateAction();
+        setIsOpen(false);
+        reset();
       } catch (error) {
         console.error("Erro ao criar ação:", error);
       }
-      setIsOpen(false);
-      reset();
     }
   };
 
@@ -193,36 +215,36 @@ export function NovaAcao({onCreateAction}: createActionProps) {
         </DialogHeader>
         <form onSubmit={handleSubmit(createAction)}>
           <div className="grid grid-cols-4 gap-4 py-4">
-            
             <div className="col-span-4">
               <Label htmlFor="cliente">Cliente</Label>
               {/* SELECT CUSTOMER */}
 
               <Controller
-              name="selectCliente"
-              control={control}
-              render={({field}) => (
-              <Select onValueChange={(value) => {
-                field.onChange(value); // Atualiza o valor no formulário
-                handleSelectChange(value); // Atualiza o estado do cliente selecionado
-              }}
-            >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o cliente" />
-                </SelectTrigger>
-                <SelectContent
-                className={`${errors.selectCliente}`}>
-                  <SelectGroup>
-                    <SelectLabel>Clientes</SelectLabel>
-                    {customerData.map((i, index) => (
-                      <SelectItem value={i.name} key={index}>
-                        {i.name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              )}/>
+                name="selectCliente"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value); // Atualiza o valor no formulário
+                      handleSelectChange(value); // Atualiza o estado do cliente selecionado
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione o cliente" />
+                    </SelectTrigger>
+                    <SelectContent className={`${errors.selectCliente}`}>
+                      <SelectGroup>
+                        <SelectLabel>Clientes</SelectLabel>
+                        {customerData.map((i, index) => (
+                          <SelectItem value={i.name} key={index}>
+                            {i.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
               {errors.selectCliente && (
                 <span className="text-xs text-rose-400 font-normal">
                   *Campo obrigatório
@@ -232,7 +254,10 @@ export function NovaAcao({onCreateAction}: createActionProps) {
             </div>
             <div className="col-span-4">
               <Label htmlFor="campanha">Campanha</Label>
-              <Select disabled={!selectedClient} onValueChange={handleSelectCampaign}>
+              <Select
+                disabled={!selectedClient}
+                onValueChange={handleSelectCampaign}
+              >
                 <SelectTrigger>
                   <SelectValue
                     placeholder={
@@ -245,11 +270,8 @@ export function NovaAcao({onCreateAction}: createActionProps) {
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Campanhas</SelectLabel>
-                    {campanhas.map(i => (
-                      <SelectItem
-                        value={i.name}
-                        key={i.id}
-                      >
+                    {campanhas.map((i) => (
+                      <SelectItem value={i.name} key={i.id}>
                         {i.name}
                       </SelectItem>
                     ))}
@@ -277,7 +299,7 @@ export function NovaAcao({onCreateAction}: createActionProps) {
                 </span>
               )}
             </div>
-          {/* <div className="flex gap-4 col-span-4">
+            {/* <div className="flex gap-4 col-span-4">
             <Input
             type="checkbox"
             className="max-w-[16px]"
@@ -291,34 +313,34 @@ export function NovaAcao({onCreateAction}: createActionProps) {
             {...register("customPath")}
             className="col-span-4"/>
           </div> */}
-          <div className="col-span-2">
-            <Label id="dataInicio">Data/Hora Início</Label>
-            <Input
-            id="dataInicio"
-            type="datetime-local"
-            {...register("startAt")}
+            <div className="col-span-2">
+              <Label id="dataInicio">Data/Hora Início</Label>
+              <Input
+                id="dataInicio"
+                type="datetime-local"
+                {...register("startAt")}
                 className={`${errors.startAt && "border-rose-400 bg-rose-100"}`}
-            />
-            {errors.startAt && (
+              />
+              {errors.startAt && (
                 <span className="text-xs text-rose-400 font-normal">
                   *Campo obrigatório
                 </span>
               )}
-          </div>
-          <div className="col-span-2">
-            <Label id="dataFim">Data/Hora Fim</Label>
-            <Input
-            id="dataFim"
-            type="datetime-local"
-            {...register("endAt")}
+            </div>
+            <div className="col-span-2">
+              <Label id="dataFim">Data/Hora Fim</Label>
+              <Input
+                id="dataFim"
+                type="datetime-local"
+                {...register("endAt")}
                 className={`${errors.endAt && "border-rose-400 bg-rose-100"}`}
-            />
-            {errors.endAt && (
+              />
+              {errors.endAt && (
                 <span className="text-xs text-rose-400 font-normal">
                   *Campo obrigatório
                 </span>
               )}
-          </div>
+            </div>
             <input
               type="hidden"
               {...register("campaignId", { valueAsNumber: true })}

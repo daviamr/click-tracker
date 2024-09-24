@@ -5,8 +5,8 @@ import { App } from "@/App";
 export function AppRoutes() {
   return (
     <>
-      <div className="flex w-full">
-        <div className="h-full">
+      <div className="flex w-full min-h-screen">
+        <div>
           <Header />
         </div>
         <Routes>

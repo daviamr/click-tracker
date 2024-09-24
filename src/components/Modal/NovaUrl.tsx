@@ -53,11 +53,11 @@ export function NovaUrl({ onCreateUrl }: createUrlProps) {
     try {
       await handleCreateURL({ url: newUrl });
       onCreateUrl();
+      setIsOpen(false);
+      reset();
     } catch (error) {
       console.error("Erro ao criar url:", error);
     }
-    setIsOpen(false);
-    reset();
   }
 
   return (

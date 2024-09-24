@@ -8,13 +8,17 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useTheme } from "@/hook/theme-provider"
 
-export function ModeToggle() {
+type themeProps = {
+  className: string;
+}
+
+export function ModeToggle({className}: themeProps) {
   const { setTheme } = useTheme()
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 py-3 pl-5 w-full">
+        <button className={className}>
           <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="sr-only">Toggle theme</span>

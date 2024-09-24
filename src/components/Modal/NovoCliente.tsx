@@ -55,11 +55,11 @@ export function NovoCliente({onCreateClient}: createClientProps) {
     try {
       await handleCreateCustomers({ image: image[0], name });
       onCreateClient();
+      setIsOpen(false);
+      reset();
     } catch (error) {
       console.error("Erro ao criar cliente:", error);
     }
-    setIsOpen(false);
-    reset();
   }
 
   return (

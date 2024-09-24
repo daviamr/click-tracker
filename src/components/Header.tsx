@@ -20,8 +20,8 @@ import { useContextState } from "@/hook/state";
 import { useState } from "react";
 
 export function Header() {
-  const { isFocus, setIsFocus } = useContextState();
   const [isOpen, setIsOpen] = useState<Boolean>(true);
+  const { isFocus, setIsFocus } = useContextState();
   console.log(isOpen);
 
   function logOut() {
@@ -36,7 +36,7 @@ export function Header() {
   return (
     <>
       <header
-        className={`h-screen bg-white shadow-sm dark:bg-[#1e1e21] py-8 overflow-hidden duration-200 ${
+        className={`h-full bg-white shadow-sm dark:bg-[#1e1e21] py-8 overflow-hidden duration-200 ${
           isOpen ? "w-52" : "w-16"
         }`}
       >
@@ -266,18 +266,18 @@ export function Header() {
           </div>
 
           <div>
-            <ul>
+            <ul className={`${isOpen ? 'flex items-center justify-around' : ''}`}>
             <li
-                className={`border-l-4 text-[16px] cursor-pointer border-col`}
+                className={`${isOpen? '' : 'border-l-4 text-[16px] cursor-pointer border-col'}`}
               >
-                <ModeToggle/>
+                <ModeToggle className={`flex items-center gap-2 py-3 w-full ${isOpen ? 'pl-0' : 'pl-5'}`}/>
               </li>
 
               <li
-                className={`border-l-4 text-[16px] cursor-pointer border-col`}
+                className={`${isOpen? '' : 'border-l-4 text-[16px] cursor-pointer border-col'}`}
               >
                 <button
-                  className="flex items-center gap-2 py-3 pl-5 w-full"
+                  className={`flex items-center gap-2 py-3 w-full ${isOpen ? 'pl-0' : 'pl-5'}`}
                   onClick={() => logOut()}
                 >
                   <LogOut size={18} />

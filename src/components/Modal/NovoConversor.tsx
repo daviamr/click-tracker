@@ -20,8 +20,8 @@ import { createNewConversor } from "@/interface/auth";
 import { useState } from "react";
 
 const verifyCreateConversor = z.object({
-  name: z.string().min(4, '*Mínimo de 4 caracteres.'),
-  characters: z.string().min(8, '*Mínimo de 8 caracteres.'),
+  name: z.string().min(4, "*Mínimo de 4 caracteres."),
+  characters: z.string().min(8, "*Mínimo de 8 caracteres."),
 });
 
 type conversorData = z.infer<typeof verifyCreateConversor>;
@@ -31,9 +31,9 @@ type HandleCreateUsersProps = {
 
 type createConversorProps = {
   onCreateConversor: () => void;
-}
+};
 
-export function NovoConversor({onCreateConversor}: createConversorProps) {
+export function NovoConversor({ onCreateConversor }: createConversorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { handleCreateConversor } = useAuth() as HandleCreateUsersProps;
   const {
@@ -46,8 +46,8 @@ export function NovoConversor({onCreateConversor}: createConversorProps) {
   } = useForm<conversorData>({
     resolver: zodResolver(verifyCreateConversor),
     defaultValues: {
-      name: '',
-      characters: '',
+      name: "",
+      characters: "",
     },
   });
 
@@ -57,11 +57,11 @@ export function NovoConversor({onCreateConversor}: createConversorProps) {
     try {
       await handleCreateConversor({ name, characters });
       onCreateConversor();
+      setIsOpen(false);
+      reset();
     } catch (error) {
-      console.log('Erro ao criar conversor', error)
+      console.log("Erro ao criar conversor", error);
     }
-    setIsOpen(false);
-    reset();
   }
 
   const charactersValue = watch("characters");
@@ -91,7 +91,7 @@ export function NovoConversor({onCreateConversor}: createConversorProps) {
                 maxLength={999}
                 value={charactersValue}
                 onChange={(e) => {
-                  setValue('characters', e.target.value);
+                  setValue("characters", e.target.value);
                 }}
               />
               {errors.characters && (

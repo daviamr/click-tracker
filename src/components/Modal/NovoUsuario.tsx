@@ -11,8 +11,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UserRoundCheck, UserRoundPlus } from "lucide-react";
-import { z } from 'zod';
-import { useForm } from 'react-hook-form'
+import { z } from "zod";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/hook/Auth";
 import { CreateNewUser } from "@/interface/auth";
@@ -26,19 +26,15 @@ const createUserSchema = z.object({
 
 type createUserForm = z.infer<typeof createUserSchema>;
 type HandleCreateUsersProps = {
-  handleCreateUsers: ({
-    email,
-    name,
-    password,
-  }: CreateNewUser) => void;
+  handleCreateUsers: ({ email, name, password }: CreateNewUser) => void;
 };
 type createUserProps = {
   onCreateUser: () => void;
-}
+};
 
-export function NovoUsuario({onCreateUser}: createUserProps) {
+export function NovoUsuario({ onCreateUser }: createUserProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const {handleCreateUsers} = useAuth() as HandleCreateUsersProps;
+  const { handleCreateUsers } = useAuth() as HandleCreateUsersProps;
   const {
     register,
     handleSubmit,
@@ -47,28 +43,30 @@ export function NovoUsuario({onCreateUser}: createUserProps) {
   } = useForm<createUserForm>({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
-      email: '',
-      name: '',
-      password: '',
+      email: "",
+      name: "",
+      password: "",
     },
   });
 
-  function createUser(data: createUserForm) {
-    console.log(data)
-    const {name, email, password} = data
-    handleCreateUsers({name, email, password})
-    onCreateUser();
-    setIsOpen(false);
-    reset();
+  async function createUser(data: createUserForm) {
+    try {
+      const { name, email, password } = data;
+      await handleCreateUsers({ name, email, password });
+      onCreateUser();
+      setIsOpen(false);
+      reset();
+    } catch (error) {
+      console.log("Erro ao criar usuário:", error);
+    }
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="flex items-center gap-2"
-        variant={"secondary"}>
-        <UserRoundPlus size={18} />
-        Criar Usuário
+        <Button className="flex items-center gap-2" variant={"secondary"}>
+          <UserRoundPlus size={18} />
+          Criar Usuário
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -81,66 +79,77 @@ export function NovoUsuario({onCreateUser}: createUserProps) {
         </DialogHeader>
 
         <form action="" onSubmit={handleSubmit(createUser)}>
-        <div className="grid grid-cols-4 gap-4 py-4">
-          <div className="col-span-2">
+          <div className="grid grid-cols-4 gap-4 py-4">
+            <div className="col-span-2">
+              <Label htmlFor="username" className="text-right">
+                Nome
+              </Label>
 
-            <Label htmlFor="username" className="text-right">
-              Nome
-            </Label>
+              <Input
+                id="username"
+                type="text"
+                placeholder="Nome do usuário..."
+                {...register("name")}
+                className={`${errors.name && "border-rose-400 bg-rose-100"}`}
+              />
 
-            <Input id="username" type="text" placeholder="Nome do usuário..."
-            {...register("name")}
-            className={`${errors.name && "border-rose-400 bg-rose-100"}`}/>
-
-            {errors.name && (
+              {errors.name && (
                 <span className="text-xs text-rose-400 font-normal">
                   {errors.name.message}
                 </span>
               )}
-          </div>
+            </div>
 
-          <div className="col-span-2">
+            <div className="col-span-2">
+              <Label htmlFor="password" className="text-right">
+                Senha
+              </Label>
 
-            <Label htmlFor="password" className="text-right">
-              Senha
-            </Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Senha do usuário..."
+                {...register("password")}
+                {...register("password")}
+                className={`${
+                  errors.password && "border-rose-400 bg-rose-100"
+                }`}
+              />
 
-            <Input id="password" type="password" placeholder="Senha do usuário..." {...register("password")}
-            {...register("password")}
-            className={`${errors.password && "border-rose-400 bg-rose-100"}`}/>
-
-            {errors.password && (
+              {errors.password && (
                 <span className="text-xs text-rose-400 font-normal">
                   {errors.password.message}
                 </span>
               )}
+            </div>
+            <div className="col-span-4">
+              <Label htmlFor="email">E-mail</Label>
+              <Input
+                type="email"
+                placeholder="usuaro@email.com"
+                {...register("email")}
+                {...register("email")}
+                className={`${errors.email && "border-rose-400 bg-rose-100"}`}
+              />
 
-          </div>
-          <div className="col-span-4">
-
-            <Label htmlFor="email">E-mail</Label>
-            <Input type="email" placeholder="usuaro@email.com" {...register("email")}
-            {...register("email")}
-            className={`${errors.email && "border-rose-400 bg-rose-100"}`}/>
-
-            {errors.email && (
+              {errors.email && (
                 <span className="text-xs text-rose-400 font-normal">
                   {errors.email.message}
                 </span>
               )}
-
+            </div>
           </div>
-        </div>
-        <DialogFooter>
-          <Button
-          className="flex items-center gap-2"
-          type="submit"
-          variant={'secondary'}
-          onClick={() => setIsOpen(true)}>
-          <UserRoundCheck size={18}/>
-            Criar
+          <DialogFooter>
+            <Button
+              className="flex items-center gap-2"
+              type="submit"
+              variant={"secondary"}
+              onClick={() => setIsOpen(true)}
+            >
+              <UserRoundCheck size={18} />
+              Criar
             </Button>
-        </DialogFooter>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>

@@ -136,7 +136,7 @@ export function Header() {
                     onClick={() => setIsFocus("lps")}
                   >
                     <Laptop size={18} />
-                    <p className={`${isOpen ? "block" : "hidden"}`}>LP's</p>
+                    <p className={`${isOpen ? "block" : "hidden"}`}>LPs, Sites e Portais</p>
                   </button>
                 </li>
 
@@ -169,7 +169,7 @@ export function Header() {
                   >
                     <Link2 size={18} />
                     <p className={`${isOpen ? "block" : "hidden"}`}>
-                      ShortURLS
+                      ShortURLs
                     </p>
                   </button>
                 </li>
@@ -240,7 +240,7 @@ export function Header() {
                     onClick={() => setIsFocus("shorter")}
                   >
                     <Radar size={18} />
-                    <p className={`${isOpen ? "block" : "hidden"}`}>Tracker</p>
+                    <p className={`${isOpen ? "block" : "hidden"}`}>Trackers</p>
                   </button>
                 </li>
 

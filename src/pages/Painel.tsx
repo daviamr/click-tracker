@@ -143,20 +143,20 @@ export function PainelPage() {
 
   return (
     <>
-      <div className="flex gap-4 justify-between mb-8">
-        <div className="flex items-center gap-2">
-          <LayoutDashboard size={24} />
-          <h1 className="text-3xl">Dashboard</h1>
-        </div>
+<div>
+        <h1 className="flex items-center gap-2 text-4xl border-solid border-b-[6px] w-max m-auto rounded-sm pt-8 mb-8">
+          <LayoutDashboard size={30} className="animate-pulse"/>
+          Dashboard
+        </h1>
       </div>
-      <div className="rounded-xl border bg-card text-card-foreground shadow p-6 mb-3">
+      <div className="border-solid border-y-[1px] bg-card text-card-foreground shadow p-6 mb-3">
         <p className="font-semibold flex items-center gap-2 text-xl">
           <SlidersHorizontal size={18} />
           Filtros
         </p>
         <form>
           <div className="grid grid-cols-12 gap-2 items-end">
-            <div className="col-span-2">
+            <div className="col-span-3">
               <Controller
                 name="customer"
                 control={control}
@@ -183,7 +183,7 @@ export function PainelPage() {
                 )}
               />
             </div>
-            <div className="col-span-2">
+            <div className="col-span-3">
               <Controller
                 name="campaign"
                 control={control}
@@ -218,7 +218,7 @@ export function PainelPage() {
                 )}
               />
             </div>
-            <div className="col-span-2">
+            <div className="col-span-3">
               <Controller
                 name="lps"
                 control={control}
@@ -250,7 +250,7 @@ export function PainelPage() {
                 )}
               />
             </div>
-            <div className="col-span-2">
+            <div className="col-span-3">
               <Controller
                 name="action"
                 control={control}
@@ -283,7 +283,7 @@ export function PainelPage() {
                 )}
               />
             </div>
-            <div className="col-span-4">
+            <div className="col-span-6">
               <div>
                 <Label className="font-semibold" htmlFor="urlLink">
                   URL

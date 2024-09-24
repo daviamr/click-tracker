@@ -54,27 +54,19 @@ export function ConversorPage() {
   };
   return (
     <>
-      <div className="flex items-center justify-between mb-8">
-      <div className="flex items-center gap-2">
-          <CaseLower size={24}/>
-          <h1 className="text-3xl">Conversores</h1>
-        </div>
-        {/* <Button
-          onClick={() => setIsFocus("shorturl")}
-          variant={"outline"}
-          className="flex gap-2 items-center"
-        >
-          <CircleArrowLeft size={18} />
-          Voltar
-        </Button> */}
+      <div>
+        <h1 className="flex items-center gap-2 text-4xl border-solid border-b-[6px] w-max m-auto rounded-sm pt-8 mb-8">
+          <CaseLower size={30} className="animate-pulse"/>
+          Conversores
+        </h1>
       </div>
-      <div className="flex gap-4 justify-end">
+      <div className="flex justify-end border-solid border-y-[1px] py-2 px-4">
         <NovoConversor onCreateConversor={handleGetConversor} />
       </div>
       <Table>
         <TableHeader>
           <TableRow className="pointer-events-none">
-            <TableHead className="min-w-[100px]">Título</TableHead>
+            <TableHead className="min-w-[100px] pl-4">Título</TableHead>
             <TableHead>Conversor</TableHead>
             <TableHead>Caracteres</TableHead>
             <TableHead></TableHead>
@@ -83,10 +75,10 @@ export function ConversorPage() {
         <TableBody>
           {conversor.map((i) => (
             <TableRow key={i.id}>
-              <TableCell>{i.name}</TableCell>
+              <TableCell className="pl-4">{i.name}</TableCell>
               <TableCell>{i.characters}</TableCell>
               <TableCell></TableCell>
-              <TableCell className="flex items-center justify-end gap-2">
+              <TableCell className="flex items-center justify-end gap-2 pr-4">
                 <EditarConversor
                   id={i.id}
                   name={i.name}

@@ -385,7 +385,7 @@ export function EncurtadorDois() {
   return (
     <>
       <div className="pt-[16px] px-8 bg-transparent rounded-md border border-input w-[601px] m-auto">
-        <h1 className="text-[14px] w-max m-auto pb-6 max-w-[540px]">
+        {/* <h1 className="text-[14px] w-max m-auto pb-6 max-w-[540px]">
           Utilize esta opção quando não houver a possibilidade de realizar o
           tracking individualizado, como por exemplo em campanhas de tráfego
           pago no Google ou em redes sociais, disparos de ofertas em grupos de
@@ -393,7 +393,7 @@ export function EncurtadorDois() {
           para contabilizar os clicks redirecionados ao link de destino final. A
           geração de relatórios será feita somente através da totalização de
           dados, segmentada por cliente, campanha, LP/Site/Portal e/ou ação.
-        </h1>
+        </h1> */}
         <form onSubmit={handleSubmit(createLink)}>
           <div className="grid grid-cols-4 gap-[12px] max-w-[601px]">
             <div className="col-span-4">

@@ -56,21 +56,13 @@ export function ClientesPage() {
 
   return (
     <>
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-2">
-          <Building2 size={24} />
-          <h1 className="text-3xl">Clientes</h1>
-        </div>
-        {/* <Button
-          onClick={() => setIsFocus("user")}
-          variant={"outline"}
-          className="flex gap-2 items-center"
-        >
-          <CircleArrowLeft size={18} />
-          Voltar
-        </Button> */}
+      <div>
+        <h1 className="flex items-center gap-2 text-4xl border-solid border-b-[6px] w-max m-auto rounded-sm pt-8 mb-8">
+          <Building2 size={30} className="animate-pulse"/>
+          Clientes
+        </h1>
       </div>
-      <div className="flex gap-4 justify-end">
+      <div className="flex justify-end border-solid border-y-[1px] py-2 px-4">
         <NovoCliente onCreateClient={handleGetClient} />
       </div>
       <Table>
@@ -88,7 +80,7 @@ export function ClientesPage() {
         <TableBody>
           {customerData.map((i, index) => (
             <TableRow key={index}>
-              <TableCell>
+              <TableCell className="pl-4">
                 <img src={`${aws}${i.logo}`} alt={"Logo" + i.logo} />
               </TableCell>
               <TableCell>{i.name}</TableCell>
@@ -96,7 +88,7 @@ export function ClientesPage() {
               <TableCell>{i.totalActions}</TableCell>
               <TableCell>{i.totalClicks}</TableCell>
               <TableCell>{i.totalLinks}</TableCell>
-              <TableCell className="flex items-center justify-end gap-2">
+              <TableCell className="flex items-center justify-end gap-2 pr-4">
                 <EditarCliente
                   onEditClient={handleGetClient}
                   id={i.id}

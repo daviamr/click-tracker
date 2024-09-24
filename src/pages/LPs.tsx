@@ -55,21 +55,13 @@ export function LPsPage() {
 
   return (
     <>
-      <div className="flex gap-4 justify-between mb-8">
-        <div className="flex items-center gap-2">
-          <Laptop size={24} />
-          <h1 className="text-3xl">LPs</h1>
-        </div>
-        {/* <Button
-          onClick={() => setIsFocus("campaign")}
-          variant={"outline"}
-          className="flex gap-2 items-center"
-        >
-          <CircleArrowLeft size={18} />
-          Voltar
-        </Button> */}
+      <div>
+        <h1 className="flex items-center gap-2 text-4xl border-solid border-b-[6px] w-max m-auto rounded-sm pt-8 mb-8">
+          <Laptop size={30} className="animate-pulse"/>
+          LPs, Sites e Portais
+        </h1>
       </div>
-      <div className="flex gap-4 justify-end">
+      <div className="flex justify-end border-solid border-y-[1px] py-2 px-4">
         <NovaLP onCreateLP={handleGetUsers} />
       </div>
       <Table>
@@ -78,7 +70,7 @@ export function LPsPage() {
             {/* <TableHead>
                 <Checkbox className="pointer-events-auto"/>
             </TableHead> */}
-            <TableHead>LP</TableHead>
+            <TableHead className="pl-4">LP</TableHead>
             <TableHead>Campanha</TableHead>
             <TableHead>Ações</TableHead>
             <TableHead>Leads</TableHead>
@@ -94,7 +86,7 @@ export function LPsPage() {
             <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell></TableCell>
-            <TableCell className="flex items-center justify-end gap-2">
+            <TableCell className="flex items-center justify-end gap-2 pr-4">
               <Button className="p-2" variant={"outline"}>
                 <UserRoundPen size={18} />
               </Button>

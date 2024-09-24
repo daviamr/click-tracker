@@ -76,27 +76,19 @@ export function AcaoPage() {
 
   return (
     <>
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-2">
-          <Waypoints size={24} />
-          <h1 className="text-3xl">Ações</h1>
-        </div>
-        {/* <Button
-          onClick={() => setIsFocus("lps")}
-          variant={"outline"}
-          className="flex gap-2 items-center"
-        >
-          <CircleArrowLeft size={18} />
-          Voltar
-        </Button> */}
+      <div>
+        <h1 className="flex items-center gap-2 text-4xl border-solid border-b-[6px] w-max m-auto rounded-sm pt-8 mb-8">
+          <Waypoints size={30} className="animate-pulse"/>
+          Ações
+        </h1>
       </div>
-      <div className="flex gap-4 justify-end">
+      <div className="flex justify-end border-solid border-y-[1px] py-2 px-4">
         <NovaAcao onCreateAction={handleGetAction} />
       </div>
       <Table>
         <TableHeader>
           <TableRow className="pointer-events-none">
-            <TableHead>Status</TableHead>
+            <TableHead className="pl-4">Status</TableHead>
             <TableHead>Ação</TableHead>
             <TableHead className="min-w-[100px]">Cliente</TableHead>
             <TableHead>Campanha</TableHead>
@@ -122,7 +114,7 @@ export function AcaoPage() {
             };
             return (
               <TableRow key={i.id}>
-                <TableCell>
+                <TableCell className="pl-4">
                   {i.status === "Active" ? (
                     <p className="flex itemns-center gap-2 text-xs">
                       <span className="w-4 h-4 bg-green-600 rounded-full animate-pulse"></span>
@@ -143,7 +135,7 @@ export function AcaoPage() {
                 <TableCell>{i.totalLinks}</TableCell>
                 <TableCell>{dataFormatada(i.startAt)}</TableCell>
                 <TableCell>{dataFormatada(i.endAt)}</TableCell>
-                <TableCell className="flex items-center justify-end gap-2">
+                <TableCell className="flex items-center justify-end gap-2 pr-4">
                   <Switch
                     value={i.id}
                     checked={switchStates[i.id] || false}

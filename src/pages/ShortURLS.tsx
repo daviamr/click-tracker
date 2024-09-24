@@ -57,35 +57,27 @@ export function ShortUrlsPage() {
 
   return (
     <>
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-2">
-          <Link2 size={24} />
-          <h1 className="text-3xl">Short URL's</h1>
-        </div>
-        {/* <Button
-          onClick={() => setIsFocus("action")}
-          variant={"outline"}
-          className="flex gap-2 items-center"
-        >
-          <CircleArrowLeft size={18} />
-          Voltar
-        </Button> */}
+      <div>
+        <h1 className="flex items-center gap-2 text-4xl border-solid border-b-[6px] w-max m-auto rounded-sm pt-8 mb-8">
+          <Link2 size={30} className="animate-pulse"/>
+          ShortURLs
+        </h1>
       </div>
-      <div className="flex gap-4 justify-end">
+      <div className="flex justify-end border-solid border-y-[1px] py-2 px-4">
         <NovaUrl onCreateUrl={handleGetUrl} />
       </div>
       <Table>
         <TableHeader>
           <TableRow className="pointer-events-none">
-            <TableHead>URL</TableHead>
+            <TableHead className="pl-4">URL</TableHead>
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {url.map((i) => (
             <TableRow key={i.id}>
-              <TableCell>{i.url}</TableCell>
-              <TableCell className="flex items-center justify-end gap-2">
+              <TableCell className="pl-4">{i.url}</TableCell>
+              <TableCell className="flex items-center justify-end gap-2 pr-4">
                 <EditarUrl id={i.id} url={i.url} onEditUrl={handleGetUrl} />
                 <Button
                   className="p-2 duration-300 hover:text-red-700"

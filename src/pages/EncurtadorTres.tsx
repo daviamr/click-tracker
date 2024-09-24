@@ -369,7 +369,7 @@ export function EncurtadorTres() {
   return (
     <>
       <div className="pt-[16px] px-8 bg-transparent rounded-md border border-input w-[601px] m-auto">
-        <h1 className="text-[14px] w-max m-auto pb-6 max-w-[540px]">
+        {/* <h1 className="text-[14px] w-max m-auto pb-6 max-w-[540px]">
           Utilize o Tracker C para os casos onde você somente possa personalizar
           um parâmetro específico de uma URL fornecida pelo cliente/parceiro,
           não sendo possível utilizar nossas ShortURLs. Para isso, você deve
@@ -377,7 +377,7 @@ export function EncurtadorTres() {
           selecionar as opções desejadas para a individualização dos links. A
           geração de relatórios só poderá ser feita utilizando a consolidação
           dos dados fornecida pelo cliente/parceiro.
-        </h1>
+        </h1> */}
         <form onSubmit={handleSubmit(createLink)}>
           <div className="grid grid-cols-4 gap-[12px] max-w-[601px]">
             <div className="col-span-4">

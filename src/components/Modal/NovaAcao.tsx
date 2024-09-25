@@ -34,6 +34,9 @@ import {
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SelectLP } from "../SelectLP";
+import { SelectUTM } from "../SelectUTM";
+import { SelectChave } from "../SelectChave";
 
 const verifyCreateAction = z.object({
   name: z.string().min(4, "*Mínimo de 4 caracteres"),
@@ -279,8 +282,23 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                 </SelectContent>
               </Select>
             </div>
-            <div className="col-span-4">
+            <div className="col-span-3">
               <Label htmlFor="lprelacionada">LP Relacionada</Label>
+              <SelectLP/>
+            </div>
+            <div className="col-span-1">
+              <Label htmlFor="custo">Custo</Label>
+              <Input
+              type="text"
+              placeholder="R$ 0,99"/>
+            </div>
+            <div className="col-span-2">
+              <Label htmlFor="utm">UTM</Label>
+              <SelectUTM/>
+            </div>
+            <div className="col-span-2">
+              <Label htmlFor="utm">Chave</Label>
+              <SelectChave/>
             </div>
             <div className="col-span-4">
               <Label htmlFor="nome" className="text-right">

@@ -114,7 +114,7 @@ export function NovaUrlDestino() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Nova base</DialogTitle>
+          <DialogTitle>Cadastrar URL de destino</DialogTitle>
           <DialogDescription>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore
             veritatis ipsa nisi hic at!

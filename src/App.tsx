@@ -1,14 +1,15 @@
 import { useContextState } from "./hook/state";
 import { AcaoPage } from "./pages/Acao";
-import { OriginBasePage } from "./pages/BaseOrigem";
+import { BaseOrigemPage } from "./pages/BaseOrigem";
 import { CampanhaPage } from "./pages/Campanha";
 import { ClientesPage } from "./pages/Clientes";
 import { ConversorPage } from "./pages/Conversor";
 import { EncurtadorPage } from "./pages/Encurtador";
-import { HistoryPage } from "./pages/Historico";
+import { HistoricoPage } from "./pages/Historico";
 import { LPsPage } from "./pages/LPs";
 import { PainelPage } from "./pages/Painel";
 import { ShortUrlsPage } from "./pages/ShortURLS";
+import { UrlDestinoPage } from "./pages/UrlDestino";
 import { UsuarioPage } from "./pages/Usuario";
 
 export function App() {
@@ -24,8 +25,9 @@ export function App() {
           {isFocus === "lps" && <LPsPage />}
           {isFocus === "shorturl" && <ShortUrlsPage />}
           {isFocus === "conversor" && <ConversorPage />}
-          {isFocus === "history" && <HistoryPage />}
-          {isFocus === "originbase" && <OriginBasePage />}
+          {isFocus === "history" && <HistoricoPage />}
+          {isFocus === "originbase" && <BaseOrigemPage />}
+          {isFocus === "destinationurl" && <UrlDestinoPage />}
           {isFocus === "shorter" && <EncurtadorPage />}
           {isFocus === "dashboard" && <PainelPage />}
         </div>

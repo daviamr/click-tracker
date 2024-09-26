@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Database, UserRoundPen, UserRoundX } from "lucide-react";
 import { NovaBase } from "@/components/Modal/NovaBase";
 
-export function OriginBasePage() {
+export function BaseOrigemPage() {
   return (
     <>
       <div>

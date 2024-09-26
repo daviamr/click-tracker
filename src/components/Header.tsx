@@ -2,6 +2,7 @@ import { Button } from "./ui/button";
 import {
   ArrowLeftFromLine,
   ArrowRightFromLine,
+  Braces,
   Building2,
   CaseLower,
   Database,
@@ -223,7 +224,25 @@ export function Header() {
                   >
                     <Database size={18} />
                     <p className={`${isOpen ? "block" : "hidden"}`}>
-                      Base Origem
+                      Origem Base
+                    </p>
+                  </button>
+                </li>
+
+                <li
+                  className={`border-l-4 text-[16px] cursor-pointer border-col ${
+                    isFocus === "destinationurl"
+                      ? "border-[#a2d515] text-[#a2d515] dark:bg-[#232327] font-semibold"
+                      : ""
+                  }`}
+                >
+                  <button
+                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    onClick={() => setIsFocus("destinationurl")}
+                  >
+                    <Braces size={18} />
+                    <p className={`${isOpen ? "block" : "hidden"}`}>
+                      URL de Destino
                     </p>
                   </button>
                 </li>

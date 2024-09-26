@@ -41,6 +41,7 @@ const verifyEditCampaign = z.object({
   clientId: z.string(),
   startAt: z.string(),
   endAt: z.string(),
+  payout: z.string(),
 });
 
 type campaignData = z.infer<typeof verifyEditCampaign>;
@@ -106,6 +107,7 @@ export function EditarCampanha({
       name: name,
       startAt: dataPadraoFormatada(dataInicio),
       endAt: dataPadraoFormatada(dataFim),
+      payout: '',
     },
   });
 
@@ -238,9 +240,19 @@ export function EditarCampanha({
               <Label htmlFor="modelo">Modelo</Label>
               <SelectModelo/>
             </div>
-            <div className="col-span-2">
+            <div className="col-span-1">
               <Label htmlFor="tipo">Tipo</Label>
               <SelectTipo/>
+            </div>
+            <div className="col-span-1">
+              <Label htmlFor="payout">Payout</Label>
+              <Input
+                id="nome"
+                type="text"
+                placeholder=""
+                {...register("payout")}
+                className={`${errors.payout && "border-rose-400 bg-rose-100"}`}
+              />
             </div>
             <div className="col-span-2">
               <Label id="dataInicio">Data/Hora Início</Label>

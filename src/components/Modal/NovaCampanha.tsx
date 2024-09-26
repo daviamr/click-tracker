@@ -40,6 +40,7 @@ const verifyCreateCampaign = z.object({
   clientId: z.string().min(1, ""),
   startAt: z.string(),
   endAt: z.string(),
+  payout: z.string(),
 });
 
 type campaignData = z.infer<typeof verifyCreateCampaign>;
@@ -106,6 +107,7 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
       clientId: "",
       startAt: "",
       endAt: "",
+      payout: "",
     },
   });
 
@@ -211,19 +213,29 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
 
             <div className="col-span-2">
               <Label htmlFor="categoria">Categoria</Label>
-              <SelectCategoria/>
+              <SelectCategoria />
             </div>
             <div className="col-span-2">
               <Label htmlFor="subcategoria">Subcategoria</Label>
-              <SelectSubCategoria/>
+              <SelectSubCategoria />
             </div>
             <div className="col-span-2">
               <Label htmlFor="modelo">Modelo</Label>
-              <SelectModelo/>
+              <SelectModelo />
             </div>
-            <div className="col-span-2">
+            <div className="col-span-1">
               <Label htmlFor="tipo">Tipo</Label>
-              <SelectTipo/>
+              <SelectTipo />
+            </div>
+            <div className="col-span-1">
+              <Label htmlFor="payout">Payout</Label>
+              <Input
+                id="nome"
+                type="text"
+                placeholder=""
+                {...register("payout")}
+                className={`${errors.payout && "border-rose-400 bg-rose-100"}`}
+              />
             </div>
             <div className="col-span-2">
               <Label htmlFor="dataInicio">Data/Hora Início</Label>
@@ -245,7 +257,10 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
             </div>
             <div className="col-span-4">
               <Label htmlFor="observacao">Observação</Label>
-              <Textarea id="observacao" placeholder="Digite uma observação, campo não obrigatório"/>
+              <Textarea
+                id="observacao"
+                placeholder="Digite uma observação, campo não obrigatório"
+              />
             </div>
           </div>
           <DialogFooter>

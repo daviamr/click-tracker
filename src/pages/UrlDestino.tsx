@@ -16,7 +16,7 @@ export function UrlDestinoPage() {
       <div>
         <h1 className="flex items-center gap-2 text-4xl border-solid border-b-[6px] w-max m-auto rounded-sm pt-8 mb-8">
           <Braces size={30} className="animate-pulse" />
-          URL de Destino
+          URLs de Destino
         </h1>
       </div>
       <div className="flex justify-end border-solid border-y-[1px] py-2 px-4">
@@ -29,10 +29,12 @@ export function UrlDestinoPage() {
             <TableHead>URL Destino</TableHead>
             <TableHead>Cliente Relacionado</TableHead>
             <TableHead>Campanha Relacionada</TableHead>
+            <TableHead>Clicks</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           <TableRow>
+            <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell></TableCell>

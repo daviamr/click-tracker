@@ -72,8 +72,9 @@ export function ClientesPage() {
             <TableHead>Cliente</TableHead>
             <TableHead>Campanhas</TableHead>
             <TableHead>Ações</TableHead>
-            <TableHead>Cliques</TableHead>
+            <TableHead>Clicks</TableHead>
             <TableHead>Links</TableHead>
+            <TableHead>LPs</TableHead>
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
@@ -88,6 +89,7 @@ export function ClientesPage() {
               <TableCell>{i.totalActions}</TableCell>
               <TableCell>{i.totalClicks}</TableCell>
               <TableCell>{i.totalLinks}</TableCell>
+              <TableCell>0</TableCell>
               <TableCell className="flex items-center justify-end gap-2 pr-4">
                 <EditarCliente
                   onEditClient={handleGetClient}

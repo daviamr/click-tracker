@@ -16,7 +16,7 @@ export function BaseOrigemPage() {
       <div>
         <h1 className="flex items-center gap-2 text-4xl border-solid border-b-[6px] w-max m-auto rounded-sm pt-8 mb-8">
           <Database size={30} className="animate-pulse" />
-          Base Origem
+          Origem Base
         </h1>
       </div>
       <div className="flex justify-end border-solid border-y-[1px] py-2 px-4">
@@ -27,10 +27,14 @@ export function BaseOrigemPage() {
           <TableRow className="hover:bg-transparent">
             <TableHead className="pl-4">Nome</TableHead>
             <TableHead>Link</TableHead>
+            <TableHead>Campanhas</TableHead>
+            <TableHead>Ações</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           <TableRow>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell className="flex items-center justify-end gap-2 pr-4">

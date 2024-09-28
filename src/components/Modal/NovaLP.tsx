@@ -24,7 +24,7 @@ import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/hook/Auth";
-import { campaignData, createLP, DataProps } from "@/interface/auth";
+import { campaignData, createLP, customerData, DataProps } from "@/interface/auth";
 import { useEffect, useState } from "react";
 import { api } from "@/services/Api";
 import { AxiosError } from "axios";
@@ -32,6 +32,7 @@ import { AlertMessage } from "../alert_message";
 
 const createUserSchema = z.object({
   name: z.string().min(1, "*Campo obrigatório"),
+  customer: z.string(),
   campaignId: z.string().min(1, "*Campo obrigatório"),
   baseUrlId: z.string().min(8, "Campo obrigatório"),
 });
@@ -49,6 +50,8 @@ export function NovaLP({ onCreateLP }: createLPProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { data, handleCreateLP } = useAuth() as HandleCreateLpProps;
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
+  const [customerData, setCustomerData] = useState<customerData[]>([]);
+  const [selectedCustomer, setSelectedCustomer] = useState<string>("");
   const {
     register,
     handleSubmit,
@@ -59,10 +62,36 @@ export function NovaLP({ onCreateLP }: createLPProps) {
     resolver: zodResolver(createUserSchema),
     defaultValues: {
       name: "",
+      customer: "",
       campaignId: "",
       baseUrlId: "",
     },
   });
+
+  const handleGetClient = async () => {
+    try {
+      const response = await api.get("/clients", {
+        headers: {
+          Authorization: `Bearer ${data.jwtToken}`,
+        },
+      });
+      setCustomerData(response.data);
+      console.log(response.data);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível carregar os clientes, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  };
+
+  useEffect(() => {
+    handleGetClient();
+  }, [data.jwtToken]);
 
   const handleGetCampaign = async () => {
     try {
@@ -88,6 +117,11 @@ export function NovaLP({ onCreateLP }: createLPProps) {
   useEffect(() => {
     handleGetCampaign();
   }, [data.jwtToken]);
+
+  useEffect(() => {
+    reset({name: '', customer: '', campaignId: '', baseUrlId: ''});
+    setSelectedCustomer('');
+  }, [isOpen])
 
   function createLP(data: createLPForm) {
     console.log(data);
@@ -139,6 +173,47 @@ export function NovaLP({ onCreateLP }: createLPProps) {
             </div>
 
             <div className="col-span-4">
+              <Label htmlFor="customer" className="text-right">
+                Cliente
+              </Label>
+
+              {/* SELECT CUSTOMER */}
+
+              <Controller
+                name="customer"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setSelectedCustomer(value);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione o cliente" />
+                    </SelectTrigger>
+                    <SelectContent className={`${errors.campaignId}`}>
+                      <SelectGroup>
+                        <SelectLabel>Campanhas</SelectLabel>
+                        {customerData.map((i, index) => (
+                          <SelectItem value={i.name} key={index}>
+                            {i.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.campaignId && (
+                <span className="text-xs text-rose-400 font-normal">
+                  *Campo obrigatório
+                </span>
+              )}
+              {/* FINAL SELECT CAMPAIGN */}
+            </div>
+
+            <div className="col-span-4">
               <Label htmlFor="campanha" className="text-right">
                 Campanha
               </Label>
@@ -153,9 +228,9 @@ export function NovaLP({ onCreateLP }: createLPProps) {
                     onValueChange={(value) => {
                       field.onChange(value);
                     }}
-                  >
+                    disabled={!selectedCustomer}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione a campanha" />
+                      <SelectValue placeholder={selectedCustomer ? 'Selecione a campanha' : 'Cliente não selecionado'} />
                     </SelectTrigger>
                     <SelectContent className={`${errors.campaignId}`}>
                       <SelectGroup>

@@ -385,17 +385,8 @@ export function EncurtadorDois() {
   return (
     <>
       <div className="pt-[16px] px-8 bg-transparent rounded-md border border-input w-[601px] m-auto">
-        {/* <h1 className="text-[14px] w-max m-auto pb-6 max-w-[540px]">
-          Utilize esta opção quando não houver a possibilidade de realizar o
-          tracking individualizado, como por exemplo em campanhas de tráfego
-          pago no Google ou em redes sociais, disparos de ofertas em grupos de
-          whatsapp, etc. A plataforma irá gerar um link único que será utilizado
-          para contabilizar os clicks redirecionados ao link de destino final. A
-          geração de relatórios será feita somente através da totalização de
-          dados, segmentada por cliente, campanha, LP/Site/Portal e/ou ação.
-        </h1> */}
         <form onSubmit={handleSubmit(createLink)}>
-          <div className="grid grid-cols-4 gap-[12px] max-w-[601px]">
+          <div className="grid grid-cols-4 gap-[12px] max-w-[601px] items-end">
             <div className="col-span-4">
               <p className="uppercase font-bold pb-1 pt-4">Dados da ação:</p>
             </div>
@@ -626,10 +617,10 @@ export function EncurtadorDois() {
                 className="col-span-1"
               />
             </div>
-            <div className="flex flex-col gap-1 col-span-2">
+            <div className="flex flex-col col-span-2">
               <div className="flex">
                 <Label className="font-semibold" htmlFor="personalizarUrl">
-                  TAGs
+                  TAG
                 </Label>
                 <TooltipTracker
                   side="right"
@@ -652,7 +643,7 @@ export function EncurtadorDois() {
                 </span>
               )}
             </div>
-            <div className="flex flex-col gap-1 col-span-2">
+            <div className="flex flex-col col-span-2">
               <div className="flex">
                 <Label className="font-semibold">Posição TAG</Label>
                 <TooltipTracker
@@ -671,20 +662,20 @@ export function EncurtadorDois() {
                     onValueChange={handleSelectedPositionValue}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Posição da URL" />
+                      <SelectValue placeholder="Posição da TAG" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Selecione a posição</SelectLabel>
-                        <SelectItem value="pre">Pré Conversão</SelectItem>
-                        <SelectItem value="pos">Pós Conversão</SelectItem>
+                        <SelectItem value="pre">Pré Conversor</SelectItem>
+                        <SelectItem value="pos">Pós Conversor</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
                 )}
               />
             </div>
-            <div className="flex flex-col items-center gap-1 col-span-4">
+            <div className="flex flex-col items-center col-span-4">
               <div className="flex">
                 <Label className="font-bold">URL exemplo</Label>
                 <TooltipTracker
@@ -721,7 +712,49 @@ export function EncurtadorDois() {
                 disabled
               />
             </div>
-            <div className="flex flex-col gap-1 col-span-4">
+            <div className="col-span-4">
+              <div className="flex">
+                <Label className="font-semibold">Origem Base</Label>
+                <TooltipTracker
+                  side="right"
+                  align="start"
+                  content="Lorem ipsum dolor sit amet consectetur adipisicing elit."
+                />
+              </div>
+              {/* SELECT ORIGIN BASE */}
+              <Controller
+                name="customer"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione a Origem Base" />
+                    </SelectTrigger>
+                    <SelectContent className={`${errors.customer}`}>
+                      <SelectGroup>
+                        <SelectLabel>Origem Base</SelectLabel>
+                        {clients.map((i, index) => (
+                          <SelectItem value={i.name} key={index}>
+                            {i.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.customer && (
+                <span className="text-xs text-rose-400 font-normal">
+                  *Selecione um cliente
+                </span>
+              )}
+              {/* FINAL SELECT ORIGIN BASE */}
+            </div>
+            <div className="flex flex-col col-span-4">
               <div className="flex">
                 <Label className="font-semibold" htmlFor="urlFinal">
                   URL de destino

@@ -71,10 +71,12 @@ export function LPsPage() {
                 <Checkbox className="pointer-events-auto"/>
             </TableHead> */}
             <TableHead className="pl-4">LP</TableHead>
+            <TableHead>Cliente</TableHead>
             <TableHead>Campanha</TableHead>
             <TableHead>Ações</TableHead>
             <TableHead>Leads</TableHead>
             <TableHead>URL</TableHead>
+            <TableHead>Clicks</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -82,6 +84,8 @@ export function LPsPage() {
             {/* <TableCell>
                     <Checkbox/>
                 </TableCell> */}
+            <TableCell></TableCell>
+            <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell></TableCell>

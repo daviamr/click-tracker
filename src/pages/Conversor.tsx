@@ -69,6 +69,8 @@ export function ConversorPage() {
             <TableHead className="min-w-[100px] pl-4">Título</TableHead>
             <TableHead>Conversor</TableHead>
             <TableHead>Caracteres</TableHead>
+            <TableHead>Campanhas</TableHead>
+            <TableHead>Ações</TableHead>
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
@@ -77,6 +79,8 @@ export function ConversorPage() {
             <TableRow key={i.id}>
               <TableCell className="pl-4">{i.name}</TableCell>
               <TableCell>{i.characters}</TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
               <TableCell></TableCell>
               <TableCell className="flex items-center justify-end gap-2 pr-4">
                 <EditarConversor

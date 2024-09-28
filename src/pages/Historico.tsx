@@ -27,8 +27,8 @@ export function HistoricoPage() {
             <TableHead>Campanha</TableHead>
             <TableHead>Cliente</TableHead>
             <TableHead>Links</TableHead>
-            <TableHead>Cliques</TableHead>
-            <TableHead>Cliques Únicos</TableHead>
+            <TableHead>Clicks</TableHead>
+            <TableHead>Unique Clicks</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

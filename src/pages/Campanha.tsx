@@ -28,6 +28,7 @@ export function CampanhaPage() {
   const [switchStates, setSwitchStates] = useState<{ [key: string]: boolean }>(
     {}
   );
+  console.log(campanhas);
 
   const handleSwitchChange = async (id: number, checked: boolean) => {
     setSwitchStates((prev) => ({ ...prev, [id]: checked }));
@@ -101,11 +102,25 @@ export function CampanhaPage() {
     <>
       <div>
         <h1 className="flex items-center gap-2 text-4xl border-solid border-b-[6px] w-max m-auto rounded-sm pt-8 mb-8">
-          <Megaphone size={30} className="animate-pulse"/>
+          <Megaphone size={30} className="animate-pulse" />
           Campanhas
         </h1>
       </div>
-      <div className="flex justify-end border-solid border-y-[1px] py-2 px-4">
+      <div className="flex justify-between items-center border-solid border-y-[1px] py-2 px-4">
+        <div className="flex gap-2 dark:bg-slate-900 bg-slate-200 p-2 rounded-lg">
+          <p className="flex itemns-center gap-2 text-xs">
+            <span className="w-4 h-4 bg-green-600 rounded-full animate-pulse"></span>
+            Ativo
+          </p>
+          <p className="flex itemns-center gap-2 text-xs">
+            <span className="w-4 h-4 bg-orange-600 rounded-full animate-pulse"></span>{" "}
+            Agendado
+          </p>
+          <p className="flex itemns-center gap-2 text-xs">
+            <span className="w-4 h-4 bg-red-600 rounded-full animate-pulse"></span>{" "}
+            Desativado
+          </p>
+        </div>
         <NovaCampanha onCreateCampaign={handleGetCampaign} />
       </div>
       <Table>
@@ -114,8 +129,13 @@ export function CampanhaPage() {
             <TableHead className="pl-4">Status</TableHead>
             <TableHead className="w-[200px]">Campanha</TableHead>
             <TableHead>Cliente</TableHead>
+            <TableHead>Categoria</TableHead>
+            <TableHead>Subcategoria</TableHead>
+            <TableHead>Modelo</TableHead>
+            <TableHead>Tipo</TableHead>
+            <TableHead>Payout</TableHead>
             <TableHead>Ações</TableHead>
-            <TableHead>Cliques</TableHead>
+            <TableHead>Clicks</TableHead>
             <TableHead>Links</TableHead>
             <TableHead>Início</TableHead>
             <TableHead>Fim</TableHead>
@@ -143,20 +163,24 @@ export function CampanhaPage() {
             return (
               <TableRow key={index}>
                 <TableCell className="pl-4">
-                  {i.status === "Active" ? (
+                  {i.status === "Active" && (
                     <p className="flex itemns-center gap-2 text-xs">
                       <span className="w-4 h-4 bg-green-600 rounded-full animate-pulse"></span>
-                      {i.status}
                     </p>
-                  ) : (
+                  )}
+                  {i.status === "Inactive" && (
                     <p className="flex itemns-center gap-2 text-xs">
                       <span className="w-4 h-4 bg-red-600 rounded-full animate-pulse"></span>
-                      {i.status}
                     </p>
                   )}
                 </TableCell>
                 <TableCell>{i.name}</TableCell>
                 <TableCell>{customerName}</TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
                 <TableCell>{i._count.actions}</TableCell>
                 <TableCell>{i.totalClicks}</TableCell>
                 <TableCell>{i.totalLinks}</TableCell>

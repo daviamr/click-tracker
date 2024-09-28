@@ -60,7 +60,7 @@ export function ShortUrlsPage() {
       <div>
         <h1 className="flex items-center gap-2 text-4xl border-solid border-b-[6px] w-max m-auto rounded-sm pt-8 mb-8">
           <Link2 size={30} className="animate-pulse"/>
-          ShortURLs
+          SmartURLs
         </h1>
       </div>
       <div className="flex justify-end border-solid border-y-[1px] py-2 px-4">
@@ -70,6 +70,10 @@ export function ShortUrlsPage() {
         <TableHeader>
           <TableRow className="pointer-events-none">
             <TableHead className="pl-4">URL</TableHead>
+            <TableHead>Campanhas</TableHead>
+            <TableHead>Ações</TableHead>
+            <TableHead>Links</TableHead>
+            <TableHead>Clicks</TableHead>
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
@@ -77,6 +81,10 @@ export function ShortUrlsPage() {
           {url.map((i) => (
             <TableRow key={i.id}>
               <TableCell className="pl-4">{i.url}</TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
               <TableCell className="flex items-center justify-end gap-2 pr-4">
                 <EditarUrl id={i.id} url={i.url} onEditUrl={handleGetUrl} />
                 <Button

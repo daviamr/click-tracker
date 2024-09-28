@@ -379,7 +379,7 @@ export function EncurtadorTres() {
           dos dados fornecida pelo cliente/parceiro.
         </h1> */}
         <form onSubmit={handleSubmit(createLink)}>
-          <div className="grid grid-cols-4 gap-[12px] max-w-[601px]">
+          <div className="grid grid-cols-4 gap-[12px] max-w-[601px] items-end">
             <div className="col-span-4">
               <p className="uppercase font-bold pb-1 pt-4">Dados da ação:</p>
             </div>
@@ -511,10 +511,59 @@ export function EncurtadorTres() {
               )}
               {/* FINAL SELECT ACTION */}
             </div>
-            <div className="col-span-4">
-              <p className="uppercase font-bold pb-1 pt-4">Encurtador:</p>
+            <div className="flex flex-col col-span-3">
+              <div className="flex">
+                <Label className="font-semibold" htmlFor="urlFinal">
+                  URL de destino
+                </Label>
+                <TooltipTracker
+                  side="right"
+                  align="start"
+                  content="É o endereço (URL) final para onde o click deve ser direcionado."
+                />
+              </div>
+              <input
+                id="urlFinal"
+                type="url"
+                placeholder="https://"
+                {...register("redirectUrl")}
+                className={`pl-4 bg-transparent rounded-md border border-input min-h-[36px] ${
+                  errors.redirectUrl && "border-rose-400"
+                }`}
+              />
+              {errors.redirectUrl && (
+                <span className="text-xs text-rose-400 font-normal">
+                  {errors.redirectUrl.message}
+                </span>
+              )}
             </div>
-            <div className="col-span-1">
+            <div className="flex flex-col col-span-1">
+              <div className="flex">
+                <Label htmlFor="parametro" className="font-semibold">
+                  Parâmetro
+                </Label>
+                <TooltipTracker
+                  side="right"
+                  align="start"
+                  content="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rerum soluta inventore cum? Maiores saepe provident aliquid, officiis ad minus, enim veniam neque corporis possimus deleniti, ullam quasi. Eius, dolorem hic?"
+                />
+              </div>
+              <input
+                id="parametro"
+                type="text"
+                placeholder=""
+                {...register("replace")}
+                className={`pl-4 bg-transparent rounded-md border border-input min-h-[36px] ${
+                  errors.replace && "border-rose-400"
+                }`}
+              />
+              {errors.replace && (
+                <span className="text-xs text-rose-400 font-normal">
+                  {errors.replace.message}
+                </span>
+              )}
+            </div>
+            <div className="col-span-3">
               <div className="flex">
                 <Label className="font-semibold">Conversor</Label>
                 <TooltipTracker
@@ -572,36 +621,10 @@ export function EncurtadorTres() {
                 className="col-span-1"
               />
             </div>
-            <div className="flex flex-col gap-1 col-span-2">
-              <div className="flex">
-              <Label htmlFor="parametro" className="font-semibold">
-                Parâmetro a substituir
-              </Label>
-              <TooltipTracker
-                  side="right"
-                  align="start"
-                  content="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rerum soluta inventore cum? Maiores saepe provident aliquid, officiis ad minus, enim veniam neque corporis possimus deleniti, ullam quasi. Eius, dolorem hic?"
-                />
-              </div>
-              <input
-                id="parametro"
-                type="text"
-                placeholder=""
-                {...register("replace")}
-                className={`pl-4 bg-transparent rounded-md border border-input min-h-[36px] ${
-                  errors.replace && "border-rose-400"
-                }`}
-              />
-              {errors.replace && (
-                <span className="text-xs text-rose-400 font-normal">
-                  {errors.replace.message}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col gap-1 col-span-2">
+            <div className="flex flex-col col-span-2">
               <div className="flex">
                 <Label className="font-semibold" htmlFor="personalizarUrl">
-                  TAGs
+                  TAG
                 </Label>
                 <TooltipTracker
                   side="right"
@@ -624,7 +647,7 @@ export function EncurtadorTres() {
                 </span>
               )}
             </div>
-            <div className="flex flex-col gap-1 col-span-2">
+            <div className="flex flex-col col-span-2">
               <div className="flex">
                 <Label className="font-semibold">Posição TAG</Label>
                 <TooltipTracker
@@ -643,20 +666,20 @@ export function EncurtadorTres() {
                     onValueChange={handleSelectedPositionValue}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Posição da URL" />
+                      <SelectValue placeholder="Posição da TAG" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Selecione a posição</SelectLabel>
-                        <SelectItem value="pre">Pré Conversão</SelectItem>
-                        <SelectItem value="pos">Pós Conversão</SelectItem>
+                        <SelectItem value="pre">Pré Conversor</SelectItem>
+                        <SelectItem value="pos">Pós Conversor</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
                 )}
               />
             </div>
-            <div className="flex flex-col items-center gap-1 col-span-4">
+            <div className="flex flex-col items-center col-span-4">
               <div className="flex">
                 <Label className="font-bold">URL exemplo</Label>
                 <TooltipTracker
@@ -667,7 +690,7 @@ export function EncurtadorTres() {
               </div>
               <Input type="text" value={finalUrl} disabled />
             </div>
-            <div className="flex flex-col gap-1 col-span-3">
+            <div className="flex flex-col col-span-2">
               <div className="flex">
                 <Label className="font-semibold" htmlFor="planilha">
                   Planilha
@@ -702,33 +725,51 @@ export function EncurtadorTres() {
                   content="Baixe uma planilha exemplo."
                 />
               </div>
-              <Button variant={"outline"} type="button">Download</Button>
+              <Button variant={"outline"} type="button">
+                Download
+              </Button>
             </div>
-            <div className="flex flex-col gap-1 col-span-4">
+            <div className="col-span-1">
               <div className="flex">
-                <Label className="font-semibold" htmlFor="urlFinal">
-                  URL de destino
-                </Label>
+                <Label className="font-semibold">Origem Base</Label>
                 <TooltipTracker
                   side="right"
                   align="start"
-                  content="É o endereço (URL) final para onde o click deve ser direcionado."
+                  content="Lorem ipsum dolor sit amet consectetur adipisicing elit."
                 />
               </div>
-              <input
-                id="urlFinal"
-                type="url"
-                placeholder="https://"
-                {...register("redirectUrl")}
-                className={`pl-4 bg-transparent rounded-md border border-input min-h-[36px] ${
-                  errors.redirectUrl && "border-rose-400"
-                }`}
+              {/* SELECT ORIGIN BASE */}
+              <Controller
+                name="customer"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione a Origem Base" />
+                    </SelectTrigger>
+                    <SelectContent className={`${errors.customer}`}>
+                      <SelectGroup>
+                        <SelectLabel>Origem Base</SelectLabel>
+                        {clients.map((i, index) => (
+                          <SelectItem value={i.name} key={index}>
+                            {i.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
               />
-              {errors.redirectUrl && (
+              {errors.customer && (
                 <span className="text-xs text-rose-400 font-normal">
-                  {errors.redirectUrl.message}
+                  *Selecione um cliente
                 </span>
               )}
+              {/* FINAL SELECT ORIGIN BASE */}
             </div>
             <Controller
               name="qrCode"

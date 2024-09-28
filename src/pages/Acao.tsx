@@ -78,11 +78,25 @@ export function AcaoPage() {
     <>
       <div>
         <h1 className="flex items-center gap-2 text-4xl border-solid border-b-[6px] w-max m-auto rounded-sm pt-8 mb-8">
-          <Waypoints size={30} className="animate-pulse"/>
+          <Waypoints size={30} className="animate-pulse" />
           Ações
         </h1>
       </div>
-      <div className="flex justify-end border-solid border-y-[1px] py-2 px-4">
+      <div className="flex justify-between items-center border-solid border-y-[1px] py-2 px-4">
+        <div className="flex gap-2 dark:bg-slate-900 bg-slate-200 p-2 rounded-lg">
+          <p className="flex itemns-center gap-2 text-xs">
+            <span className="w-4 h-4 bg-green-600 rounded-full animate-pulse"></span>
+            Ativo
+          </p>
+          <p className="flex itemns-center gap-2 text-xs">
+            <span className="w-4 h-4 bg-orange-600 rounded-full animate-pulse"></span>{" "}
+            Agendado
+          </p>
+          <p className="flex itemns-center gap-2 text-xs">
+            <span className="w-4 h-4 bg-red-600 rounded-full animate-pulse"></span>{" "}
+            Desativado
+          </p>
+        </div>
         <NovaAcao onCreateAction={handleGetAction} />
       </div>
       <Table>
@@ -92,8 +106,9 @@ export function AcaoPage() {
             <TableHead>Ação</TableHead>
             <TableHead className="min-w-[100px]">Cliente</TableHead>
             <TableHead>Campanha</TableHead>
-            <TableHead>Personalização URL</TableHead>
-            <TableHead>Cliques</TableHead>
+            <TableHead>LPs</TableHead>
+            <TableHead>Custo</TableHead>
+            <TableHead>Clicks</TableHead>
             <TableHead>Links</TableHead>
             <TableHead>Início</TableHead>
             <TableHead>Fim</TableHead>
@@ -115,22 +130,22 @@ export function AcaoPage() {
             return (
               <TableRow key={i.id}>
                 <TableCell className="pl-4">
-                  {i.status === "Active" ? (
+                {i.status === "Active" && (
                     <p className="flex itemns-center gap-2 text-xs">
                       <span className="w-4 h-4 bg-green-600 rounded-full animate-pulse"></span>
-                      {i.status}
                     </p>
-                  ) : (
+                  )}
+                  {i.status === "Inactive" && (
                     <p className="flex itemns-center gap-2 text-xs">
                       <span className="w-4 h-4 bg-red-600 rounded-full animate-pulse"></span>
-                      {i.status}
                     </p>
                   )}
                 </TableCell>
                 <TableCell>{i.name}</TableCell>
                 <TableCell>{i.campaign.client.name}</TableCell>
                 <TableCell>{i.campaign.name}</TableCell>
-                <TableCell>{i.customPath ? i.customPath : "/"}</TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
                 <TableCell>{i.totalClicks}</TableCell>
                 <TableCell>{i.totalLinks}</TableCell>
                 <TableCell>{dataFormatada(i.startAt)}</TableCell>

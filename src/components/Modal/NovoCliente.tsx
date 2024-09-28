@@ -17,11 +17,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/hook/Auth";
 import { createNewCustomer } from "@/interface/auth";
 import { useState } from "react";
+import { TooltipTracker } from "../TooltipTracker";
 
 const verifyCreateCustomer = z.object({
   image: z
     .any()
-    .refine((files) => files instanceof FileList && files.length > 0, { message: "*Campo obrigatório" }),
+    .refine((files) => files instanceof FileList && files.length > 0, {
+      message: "*Campo obrigatório",
+    }),
   name: z.string().min(2, "O nome deve ter no mínimo 2 caracteres"),
 });
 
@@ -31,9 +34,9 @@ type HandleCreateUsersProps = {
 };
 type createClientProps = {
   onCreateClient: () => void;
-}
+};
 
-export function NovoCliente({onCreateClient}: createClientProps) {
+export function NovoCliente({ onCreateClient }: createClientProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { handleCreateCustomers } = useAuth() as HandleCreateUsersProps;
   const {
@@ -44,8 +47,8 @@ export function NovoCliente({onCreateClient}: createClientProps) {
   } = useForm<customerData>({
     resolver: zodResolver(verifyCreateCustomer),
     defaultValues: {
-      image: '',
-      name: '',
+      image: "",
+      name: "",
     },
   });
 
@@ -67,15 +70,17 @@ export function NovoCliente({onCreateClient}: createClientProps) {
       <DialogTrigger asChild>
         <Button className="flex items-center gap-2" variant={"secondary"}>
           <UserRoundPlus size={18} />
-          Adicionar Cliente
+          Cadastrar Cliente
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Adicionar Cliente</DialogTitle>
-          <DialogDescription>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore
-            veritatis ipsa nisi hic at!
+          <DialogTitle>Cadastrar Cliente</DialogTitle>
+          <DialogDescription className="pb-2 border-solid border-b-[1px]">
+            Preencha o nome do cliente e selecione um logo para fundo branco.
+            Formatos permitidos X,Y, Z. Peso máximo do arquivo 200 kb. Este logo
+            será renderizado na página de transição e redirecionamento após
+            click do usuário final.
           </DialogDescription>
         </DialogHeader>
         <form action="" onSubmit={handleSubmit(createCustomer)}>
@@ -89,9 +94,7 @@ export function NovoCliente({onCreateClient}: createClientProps) {
                 type="text"
                 placeholder="Nome do cliente..."
                 {...register("name")}
-                className={`${
-                  errors.name && "border-rose-400 bg-rose-100"
-                }`}
+                className={`${errors.name && "border-rose-400 bg-rose-100"}`}
               />
               {errors.name && (
                 <span className="text-xs text-rose-400 font-normal">
@@ -99,8 +102,15 @@ export function NovoCliente({onCreateClient}: createClientProps) {
                 </span>
               )}
             </div>
-            <div>
-              <Label htmlFor="logo">Logo</Label>
+            <div className="col-span-4 flex flex-col gap-1">
+              <div className="flex">
+                <Label htmlFor="logo">Logo</Label>
+                <TooltipTracker
+                  side="right"
+                  align="start"
+                  content="Preencha o nome do cliente e selecione um logo para fundo branco. Formatos permitidos X,Y, Z. Peso máximo do arquivo 200 kb. Este logo será renderizado na página de transição e redirecionamento após click do usuário final."
+                />
+              </div>
               <input
                 id="logo"
                 type="file"
@@ -111,7 +121,9 @@ export function NovoCliente({onCreateClient}: createClientProps) {
               />
               {errors.image && (
                 <span className="text-xs text-rose-400 font-normal">
-                  {typeof errors.image.message === "string" ? errors.image.message : "Campo obrigatório"}
+                  {typeof errors.image.message === "string"
+                    ? errors.image.message
+                    : "Campo obrigatório"}
                 </span>
               )}
             </div>

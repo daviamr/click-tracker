@@ -170,7 +170,7 @@ export function Header() {
                   >
                     <Link2 size={18} />
                     <p className={`${isOpen ? "block" : "hidden"}`}>
-                      ShortURLs
+                      SmartURLs
                     </p>
                   </button>
                 </li>
@@ -242,7 +242,7 @@ export function Header() {
                   >
                     <Braces size={18} />
                     <p className={`${isOpen ? "block" : "hidden"}`}>
-                      URL de Destino
+                      URLs de Destino
                     </p>
                   </button>
                 </li>

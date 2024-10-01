@@ -40,6 +40,7 @@ import { AlertMessage } from "@/components/alert_message";
 
 interface AuthContextType {
   handleCreateUsers: (data: CreateNewUser) => Promise<void>;
+  handleEditUser: (data: CreateNewUser) => Promise<void>;
   signIn: (data: Login) => Promise<void>;
   handleCreateCustomers: (data: createNewCustomer) => Promise<void>;
   handleEditCustomer: (data: editCustomer) => Promise<void>;
@@ -151,6 +152,45 @@ function AuthProvider({ children }: ChildrenProps) {
       } else {
         AlertMessage(
           "Não foi possível criar um usuário agora, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  }
+
+  async function handleEditUser({ email, password, name }: CreateNewUser) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      // console.log(token)
+
+      const response = await api.put(
+        "/users",
+        {
+          email,
+          password,
+          name,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token.jwtToken}`,
+          },
+        }
+      );
+      console.log(response.data);
+
+      AlertMessage("Usuário editado com sucesso.", "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível editar o usuário agora, tente novamente mais tarde.",
           "error"
         );
       }
@@ -944,6 +984,7 @@ function AuthProvider({ children }: ChildrenProps) {
       <AuthContext.Provider
         value={{
           handleCreateUsers,
+          handleEditUser,
           signIn,
           handleCreateCustomers,
           handleEditCustomer,

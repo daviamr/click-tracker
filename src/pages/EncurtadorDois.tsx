@@ -523,7 +523,7 @@ export function EncurtadorDois() {
             </div>
             <div className="col-span-1">
               <div className="flex">
-                <Label className="font-semibold">ShortURL</Label>
+                <Label className="font-semibold">SmartURL</Label>
                 <TooltipTracker
                   side="right"
                   align="start"
@@ -537,7 +537,7 @@ export function EncurtadorDois() {
                 render={() => (
                   <Select onValueChange={handleSelectBaseUrl}>
                     <SelectTrigger>
-                      <SelectValue placeholder="ShortURL" />
+                      <SelectValue placeholder="SmartURL" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>

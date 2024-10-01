@@ -56,12 +56,15 @@ export function EditarUsuario({
   });
 
   function createUser(data: createUserForm) {
-    console.log(data);
-    const { name, email, password } = data;
-    handleCreateUsers({ name, email, password });
-    onEditUser();
-    setIsOpen(false);
-    reset();
+    try {
+      const { name, email, password } = data;
+      handleCreateUsers({ name, email, password });
+      onEditUser();
+      setIsOpen(false);
+      reset();
+    } catch(error) {
+      console.log('Erro:', error)
+    }
   }
 
   return (

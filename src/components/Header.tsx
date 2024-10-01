@@ -19,6 +19,7 @@ import {
 import { ModeToggle } from "./mode-toggle";
 import { useContextState } from "@/hook/state";
 import { useState } from "react";
+import { TooltipHeader } from "./TooltipHeader";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState<Boolean>(true);
@@ -83,11 +84,19 @@ export function Header() {
                   }`}
                 >
                   <button
-                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    className="relative flex items-center gap-2 py-3 pl-5 w-full"
                     onClick={() => setIsFocus("user")}
                   >
                     <Users size={18} />
                     <p className={`${isOpen ? "block" : "hidden"}`}>Usuários</p>
+                    <TooltipHeader
+                      align="start"
+                      side="right"
+                      content="Usuários"
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                        isOpen ? "hidden" : "block"
+                      }`}
+                    />
                   </button>
                 </li>
 
@@ -99,11 +108,19 @@ export function Header() {
                   }`}
                 >
                   <button
-                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    className="relative flex items-center gap-2 py-3 pl-5 w-full"
                     onClick={() => setIsFocus("customers")}
                   >
                     <Building2 size={18} />
                     <p className={`${isOpen ? "block" : "hidden"}`}>Clientes</p>
+                    <TooltipHeader
+                      align="start"
+                      side="right"
+                      content="Clientes"
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                        isOpen ? "hidden" : "block"
+                      }`}
+                    />
                   </button>
                 </li>
 
@@ -115,13 +132,21 @@ export function Header() {
                   }`}
                 >
                   <button
-                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    className="relative flex items-center gap-2 py-3 pl-5 w-full"
                     onClick={() => setIsFocus("campaign")}
                   >
                     <Megaphone size={18} />
                     <p className={`${isOpen ? "block" : "hidden"}`}>
                       Campanhas
                     </p>
+                    <TooltipHeader
+                      align="start"
+                      side="right"
+                      content="Campanhas"
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                        isOpen ? "hidden" : "block"
+                      }`}
+                    />
                   </button>
                 </li>
 
@@ -133,11 +158,21 @@ export function Header() {
                   }`}
                 >
                   <button
-                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    className="relative flex items-center gap-2 py-3 pl-5 w-full"
                     onClick={() => setIsFocus("lps")}
                   >
                     <Laptop size={18} />
-                    <p className={`${isOpen ? "block" : "hidden"}`}>LPs, Sites e Portais</p>
+                    <p className={`${isOpen ? "block" : "hidden"}`}>
+                      LPs, Sites e Portais
+                    </p>
+                    <TooltipHeader
+                      align="start"
+                      side="right"
+                      content="LPs, Sites e Portais"
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                        isOpen ? "hidden" : "block"
+                      }`}
+                    />
                   </button>
                 </li>
 
@@ -149,11 +184,19 @@ export function Header() {
                   }`}
                 >
                   <button
-                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    className="relative flex items-center gap-2 py-3 pl-5 w-full"
                     onClick={() => setIsFocus("action")}
                   >
                     <Waypoints size={18} />
                     <p className={`${isOpen ? "block" : "hidden"}`}>Ações</p>
+                    <TooltipHeader
+                      align="start"
+                      side="right"
+                      content="Ações"
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                        isOpen ? "hidden" : "block"
+                      }`}
+                    />
                   </button>
                 </li>
 
@@ -165,13 +208,21 @@ export function Header() {
                   }`}
                 >
                   <button
-                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    className="relative flex items-center gap-2 py-3 pl-5 w-full"
                     onClick={() => setIsFocus("shorturl")}
                   >
                     <Link2 size={18} />
                     <p className={`${isOpen ? "block" : "hidden"}`}>
                       SmartURLs
                     </p>
+                    <TooltipHeader
+                      align="start"
+                      side="right"
+                      content="SmartURLs"
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                        isOpen ? "hidden" : "block"
+                      }`}
+                    />
                   </button>
                 </li>
 
@@ -183,13 +234,21 @@ export function Header() {
                   }`}
                 >
                   <button
-                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    className="relative flex items-center gap-2 py-3 pl-5 w-full"
                     onClick={() => setIsFocus("conversor")}
                   >
                     <CaseLower size={18} />
                     <p className={`${isOpen ? "block" : "hidden"}`}>
                       Conversores
                     </p>
+                    <TooltipHeader
+                      align="start"
+                      side="right"
+                      content="Conversores"
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                        isOpen ? "hidden" : "block"
+                      }`}
+                    />
                   </button>
                 </li>
 
@@ -201,13 +260,21 @@ export function Header() {
                   }`}
                 >
                   <button
-                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    className="relative flex items-center gap-2 py-3 pl-5 w-full"
                     onClick={() => setIsFocus("history")}
                   >
                     <History size={18} />
                     <p className={`${isOpen ? "block" : "hidden"}`}>
                       Histórico
                     </p>
+                    <TooltipHeader
+                      align="start"
+                      side="right"
+                      content="Histórico"
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                        isOpen ? "hidden" : "block"
+                      }`}
+                    />
                   </button>
                 </li>
 
@@ -219,13 +286,21 @@ export function Header() {
                   }`}
                 >
                   <button
-                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    className="relative flex items-center gap-2 py-3 pl-5 w-full"
                     onClick={() => setIsFocus("originbase")}
                   >
                     <Database size={18} />
                     <p className={`${isOpen ? "block" : "hidden"}`}>
                       Origem Base
                     </p>
+                    <TooltipHeader
+                      align="start"
+                      side="right"
+                      content="Origem Base"
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                        isOpen ? "hidden" : "block"
+                      }`}
+                    />
                   </button>
                 </li>
 
@@ -237,13 +312,21 @@ export function Header() {
                   }`}
                 >
                   <button
-                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    className="relative flex items-center gap-2 py-3 pl-5 w-full"
                     onClick={() => setIsFocus("destinationurl")}
                   >
                     <Braces size={18} />
                     <p className={`${isOpen ? "block" : "hidden"}`}>
                       URLs de Destino
                     </p>
+                    <TooltipHeader
+                      align="start"
+                      side="right"
+                      content="URLs de Destino"
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                        isOpen ? "hidden" : "block"
+                      }`}
+                    />
                   </button>
                 </li>
 
@@ -255,11 +338,19 @@ export function Header() {
                   }`}
                 >
                   <button
-                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    className="relative flex items-center gap-2 py-3 pl-5 w-full"
                     onClick={() => setIsFocus("shorter")}
                   >
                     <Radar size={18} />
                     <p className={`${isOpen ? "block" : "hidden"}`}>Trackers</p>
+                    <TooltipHeader
+                      align="start"
+                      side="right"
+                      content="Trackers"
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                        isOpen ? "hidden" : "block"
+                      }`}
+                    />
                   </button>
                 </li>
 
@@ -271,13 +362,21 @@ export function Header() {
                   }`}
                 >
                   <button
-                    className="flex items-center gap-2 py-3 pl-5 w-full"
+                    className="relative flex items-center gap-2 py-3 pl-5 w-full"
                     onClick={() => setIsFocus("dashboard")}
                   >
                     <LayoutDashboard size={18} />
                     <p className={`${isOpen ? "block" : "hidden"}`}>
                       Dashboard
                     </p>
+                    <TooltipHeader
+                      align="start"
+                      side="right"
+                      content="Dashboard"
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                        isOpen ? "hidden" : "block"
+                      }`}
+                    />
                   </button>
                 </li>
               </ul>
@@ -285,22 +384,54 @@ export function Header() {
           </div>
 
           <div>
-            <ul className={`${isOpen ? 'flex items-center justify-around' : ''}`}>
-            <li
-                className={`${isOpen? '' : 'border-l-4 text-[16px] cursor-pointer border-col'}`}
+            <ul
+              className={`${isOpen ? "flex items-center justify-around" : ""}`}
+            >
+              <li
+                className={`relative ${
+                  isOpen
+                    ? ""
+                    : "border-l-4 text-[16px] cursor-pointer border-col"
+                }`}
               >
-                <ModeToggle className={`flex items-center gap-2 py-3 w-full ${isOpen ? 'pl-0' : 'pl-5'}`}/>
+                <ModeToggle
+                  className={`flex items-center gap-2 py-3 w-full ${
+                    isOpen ? "pl-0" : "pl-5"
+                  }`}
+                />
+                <TooltipHeader
+                  align="start"
+                  side="right"
+                  content="Tema"
+                  className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                    isOpen ? "hidden" : "block"
+                  }`}
+                />
               </li>
 
               <li
-                className={`${isOpen? '' : 'border-l-4 text-[16px] cursor-pointer border-col'}`}
+                className={`${
+                  isOpen
+                    ? ""
+                    : "border-l-4 text-[16px] cursor-pointer border-col"
+                }`}
               >
                 <button
-                  className={`flex items-center gap-2 py-3 w-full ${isOpen ? 'pl-0' : 'pl-5'}`}
+                  className={`relative flex items-center gap-2 py-3 w-full ${
+                    isOpen ? "pl-0" : "pl-5"
+                  }`}
                   onClick={() => logOut()}
                 >
                   <LogOut size={18} />
                   <p className={`${isOpen ? "block" : "hidden"}`}>Sair</p>
+                  <TooltipHeader
+                    align="start"
+                    side="right"
+                    content="Sair"
+                    className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                      isOpen ? "hidden" : "block"
+                    }`}
+                  />
                 </button>
               </li>
             </ul>

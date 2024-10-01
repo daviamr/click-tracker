@@ -712,48 +712,6 @@ export function EncurtadorDois() {
                 disabled
               />
             </div>
-            <div className="col-span-4">
-              <div className="flex">
-                <Label className="font-semibold">Origem Base</Label>
-                <TooltipTracker
-                  side="right"
-                  align="start"
-                  content="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-                />
-              </div>
-              {/* SELECT ORIGIN BASE */}
-              <Controller
-                name="customer"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione a Origem Base" />
-                    </SelectTrigger>
-                    <SelectContent className={`${errors.customer}`}>
-                      <SelectGroup>
-                        <SelectLabel>Origem Base</SelectLabel>
-                        {clients.map((i, index) => (
-                          <SelectItem value={i.name} key={index}>
-                            {i.name}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              {errors.customer && (
-                <span className="text-xs text-rose-400 font-normal">
-                  *Selecione um cliente
-                </span>
-              )}
-              {/* FINAL SELECT ORIGIN BASE */}
-            </div>
             <div className="flex flex-col col-span-4">
               <div className="flex">
                 <Label className="font-semibold" htmlFor="urlFinal">

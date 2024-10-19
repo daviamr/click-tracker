@@ -28,7 +28,6 @@ import {
   campaignData,
   customerData,
   DataProps,
-  finalURLProps,
 } from "@/interface/auth";
 import { AxiosError } from "axios";
 import { api } from "@/services/Api";

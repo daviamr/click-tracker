@@ -32,28 +32,32 @@ import {
   editAction,
 } from "@/interface/auth";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SelectLP } from "../SelectLP";
 
 const verifyEditAction = z.object({
   id: z.number(),
   name: z.string().min(4, "*Mínimo de 4 caracteres"),
   campaignId: z.number(),
-  customPath: z.string(),
-  selectCliente: z.string(),
+  selectCliente: z.string().min(1, ""),
   startAt: z.string().min(1, "*Campo obrigatório"),
   endAt: z.string().min(1, "*Campo obrigatório"),
+  utm: z.string().min(1, "*Campo obrigatório"),
+  cost: z.string().min(1, "*Campo obrigatório"),
+  key: z.string().min(1, "*Campo obrigatório"),
 });
 
 type actionData = z.infer<typeof verifyEditAction>;
 type HandleCreateUsersProps = {
   handleEditAction: ({
-    id,
     name,
     campaignId,
-    customPath,
     startAt,
     endAt,
+    utm,
+    cost,
+    key,
   }: editAction) => void;
   data: DataProps;
 };
@@ -81,21 +85,18 @@ export function EditarAcao({
   const { data, handleEditAction } = useAuth() as HandleCreateUsersProps;
   const [customerData, setCustomerData] = useState<customerData[]>([]);
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
-  // const [isChecked, setIsChecked] = useState(false);
+  const [utm, setUtm] = useState<string>("utm_source");
+  const [chave, setChave] = useState<string>('');
 
   const dataPadraoFormatada = (data: string) => {
     return data.slice(0, 16);
-  }
+  };
 
   const clienteId =
     customerData
       .filter((customer) => cliente === customer.name)
       .map((customer) => customer.id)
       .join(", ") || "Cliente não encontrado";
-
-  // const handleChecked = () => {
-  //   setIsChecked(!isChecked);
-  // };
 
   useEffect(() => {
     async function handleGetUsers() {
@@ -148,13 +149,13 @@ export function EditarAcao({
     handleSubmit,
     setValue,
     reset,
+    control,
     formState: { errors },
   } = useForm<actionData>({
     resolver: zodResolver(verifyEditAction),
     defaultValues: {
       id,
       name: acao,
-      customPath: '',
       selectCliente: cliente,
       startAt: dataPadraoFormatada(dataInicio),
       endAt: dataPadraoFormatada(dataFim),
@@ -166,11 +167,13 @@ export function EditarAcao({
       reset({
         id,
         name: acao,
-        customPath: '',
-        campaignId: campanhas.find(camp => camp.name === campanha)?.id || 0,
+        campaignId: campanhas.find((camp) => camp.name === campanha)?.id || 0,
         selectCliente: cliente,
         startAt: dataPadraoFormatada(dataInicio),
         endAt: dataPadraoFormatada(dataFim),
+        utm: '',
+        cost: '',
+        key: '',
       });
     }
   }, [isOpen]);
@@ -183,7 +186,7 @@ export function EditarAcao({
       }
     }
   }, [isOpen, campanha, campanhas]);
-  
+
   const handleSelectCampaign = (value: string) => {
     const selectedCampaign = campanhas.find(
       (campanha) => campanha.name === value
@@ -195,7 +198,8 @@ export function EditarAcao({
   };
 
   const editAction = async (data: editAction) => {
-    const { id, name, campaignId, customPath, startAt, endAt } = data;
+    const { id, name, campaignId, startAt, endAt, utm, cost, key } = data;
+    console.log(name, campaignId, startAt, endAt, utm, cost, key);
     const dataInicioFormatado = new Date(startAt);
     const dataFimFormatado = new Date(endAt);
     const inicioIso = dataInicioFormatado.toISOString();
@@ -209,13 +213,15 @@ export function EditarAcao({
           id,
           name,
           campaignId,
-          customPath,
           startAt: inicioIso,
           endAt: fimIso,
+          utm: utm,
+          cost,
+          key: chave,
         });
         onEditAction();
       } catch (error) {
-        console.log('Não foi possível editar a ação:', error)
+        console.log("Não foi possível editar a ação:", error);
       }
       setIsOpen(false);
       reset();
@@ -268,6 +274,123 @@ export function EditarAcao({
                 </SelectContent>
               </Select>
             </div>
+            <div className="col-span-3">
+              <Label htmlFor="lprelacionada">LP Relacionada</Label>
+              <SelectLP />
+            </div>
+            <div className="col-span-1">
+              <Label htmlFor="cost">Custo</Label>
+              <Input id="cost" type="text"
+              placeholder="0,99"
+              {...register("cost")}
+                className={`${errors.cost && "border-rose-400 bg-rose-100"}`}
+              />
+              {errors.cost && (
+                <span className="text-xs text-rose-400 font-normal">
+                  {errors.cost.message}
+                </span>
+              )}
+            </div>
+            <div className="col-span-2">
+              <Label htmlFor="utm">UTM</Label>
+              {/* SELECT UTM */}
+              <Controller
+                name="utm"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value); // Atualiza o valor no formulário
+                      setUtm(value);
+                    }}
+                    defaultValue="utm_source"
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Chaves</SelectLabel>
+                        <SelectItem value="utm_source">utm_source</SelectItem>
+                        <SelectItem value="utm_medium">utm_medium</SelectItem>
+                        <SelectItem value="utm_campaign">
+                          utm_campaign
+                        </SelectItem>
+                        <SelectItem value="utm_turn">utm_turn</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.utm && (
+                <span className="text-xs text-rose-400 font-normal">
+                  *Campo obrigatório
+                </span>
+              )}
+              {/* FINAL SELECT CUSTOMER */}
+            </div>
+            <div className="col-span-2">
+              <Label htmlFor="key">Chave</Label>
+              {/* SELECT KEY */}
+
+              <Controller
+                name="key"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value); // Atualiza o valor no formulário
+                      setChave(value);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {utm === "utm_source" && (
+                        <SelectGroup>
+                          <SelectLabel>Chaves</SelectLabel>
+                          <SelectItem value="instagram">instagram</SelectItem>
+                          <SelectItem value="inbound">inbound</SelectItem>
+                          <SelectItem value="google">google</SelectItem>
+                          <SelectItem value="emkt">emkt</SelectItem>
+                          <SelectItem value="facebook">facebook</SelectItem>
+                        </SelectGroup>
+                      )}
+                      {utm === "utm_medium" && (
+                        <SelectGroup>
+                          <SelectLabel>Chaves</SelectLabel>
+                          <SelectItem value="shifters">shifters</SelectItem>
+                          <SelectItem value="bd">bd</SelectItem>
+                          <SelectItem value="cpc">cpc</SelectItem>
+                          <SelectItem value="selecoes">selecoes</SelectItem>
+                          <SelectItem value="pinup">pinup</SelectItem>
+                          <SelectItem value="inbox">inbox</SelectItem>
+                        </SelectGroup>
+                      )}
+                      {utm === "utm_campaign" && (
+                        <SelectGroup>
+                          <SelectLabel>Chaves</SelectLabel>
+                          <SelectItem value="form">form</SelectItem>
+                          <SelectItem value="display">display</SelectItem>
+                        </SelectGroup>
+                      )}
+                      {utm === "utm_turn" && (
+                        <SelectGroup>
+                          <SelectLabel>Chaves</SelectLabel>
+                        </SelectGroup>
+                      )}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.key && (
+                <span className="text-xs text-rose-400 font-normal">
+                  *Campo obrigatório
+                </span>
+              )}
+              {/* FINAL SELECT KEY */}
+            </div>
             <div className="col-span-4">
               <Label htmlFor="nome" className="text-right">
                 Ação
@@ -275,7 +398,7 @@ export function EditarAcao({
               <Input
                 id="nome"
                 type="text"
-                defaultValue={acao}
+                placeholder="Digite a ação..."
                 {...register("name")}
                 className={`${errors.name && "border-rose-400 bg-rose-100"}`}
               />
@@ -285,21 +408,6 @@ export function EditarAcao({
                 </span>
               )}
             </div>
-            {/* <div className="flex gap-4 col-span-4">
-              <Input
-                type="checkbox"
-                className="max-w-[16px]"
-                checked={isChecked}
-                onChange={handleChecked}
-              />
-
-              <Input
-                placeholder="Personalizar URL"
-                disabled={!isChecked}
-                {...register("customPath")}
-                className="col-span-4"
-              />
-            </div> */}
             <div className="col-span-2">
               <Label id="dataInicio">Data/Hora Início</Label>
               <Input
@@ -309,7 +417,7 @@ export function EditarAcao({
                 className={`${errors.startAt && "border-rose-400 bg-rose-100"}`}
               />
               {errors.startAt && (
-                <span className="text-xs text-rose-400 font-normal block">
+                <span className="text-xs text-rose-400 font-normal">
                   *Campo obrigatório
                 </span>
               )}
@@ -323,7 +431,7 @@ export function EditarAcao({
                 className={`${errors.endAt && "border-rose-400 bg-rose-100"}`}
               />
               {errors.endAt && (
-                <span className="text-xs text-rose-400 font-normal block">
+                <span className="text-xs text-rose-400 font-normal">
                   *Campo obrigatório
                 </span>
               )}

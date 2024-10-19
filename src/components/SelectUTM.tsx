@@ -15,10 +15,10 @@ import {
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectItem value="utmsource">utm_source</SelectItem>
-            <SelectItem value="utmmedium">utm_medium</SelectItem>
-            <SelectItem value="utmcampaign">utm_campaign</SelectItem>
-            <SelectItem value="utmturn">utm_turn</SelectItem>
+            <SelectItem value="utm_source">utm_source</SelectItem>
+            <SelectItem value="utm_medium">utm_medium</SelectItem>
+            <SelectItem value="utm_campaign">utm_campaign</SelectItem>
+            <SelectItem value="utm_turn">utm_turn</SelectItem>
           </SelectGroup>
         </SelectContent>
       </Select>

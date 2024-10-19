@@ -15,50 +15,56 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/hook/Auth";
-import { CreateNewUser } from "@/interface/auth";
-import { useState } from "react";
+import { EditNewUser } from "@/interface/auth";
+import { useEffect, useState } from "react";
 
 const createUserSchema = z.object({
+  id: z.string(),
   name: z.string().min(1, "*Campo obrigatório"),
   email: z.string().min(1, "*Campo obrigatório").email("E-mail invalido."),
   password: z.string().min(8, "A senha deve ter no mínimo 8 caracteres"),
 });
 
-type createUserForm = z.infer<typeof createUserSchema>;
-type HandleCreateUsersProps = {
-  handleCreateUsers: ({ email, name, password }: CreateNewUser) => void;
+type editUserForm = z.infer<typeof createUserSchema>;
+type HandleEditUserProps = {
+  handleEditUser: ({ id, email, name, password }: EditNewUser) => void;
 };
 
 type editUserProps = {
+  id: string;
   name: string;
   email: string;
   onEditUser: () => void;
 };
 
 export function EditarUsuario({
+  id,
   name,
   email,
   onEditUser,
 }: editUserProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { handleCreateUsers } = useAuth() as HandleCreateUsersProps;
+  const { handleEditUser } = useAuth() as HandleEditUserProps;
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<createUserForm>({
+  } = useForm<editUserForm>({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
+      id: id,
       email: email,
       name: name,
     },
   });
 
-  function createUser(data: createUserForm) {
+  useEffect(() => {reset({id: id, name: name, email: email, password: ''})}, [isOpen]);
+
+  async function createUser(data: editUserForm) {
     try {
-      const { name, email, password } = data;
-      handleCreateUsers({ name, email, password });
+      const {id, name, email, password } = data;
+      await handleEditUser({id, name, email, password });
       onEditUser();
       setIsOpen(false);
       reset();
@@ -84,6 +90,7 @@ export function EditarUsuario({
         </DialogHeader>
 
         <form action="" onSubmit={handleSubmit(createUser)}>
+          <input type="hidden" {...register('id')}/>
           <div className="grid grid-cols-4 gap-4 py-4">
             <div className="col-span-2">
               <Label htmlFor="username" className="text-right">

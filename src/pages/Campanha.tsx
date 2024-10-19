@@ -113,6 +113,10 @@ export function CampanhaPage() {
             Ativo
           </p>
           <p className="flex itemns-center gap-2 text-xs">
+            <span className="w-4 h-4 bg-blue-600 rounded-full animate-pulse"></span>
+            Pausado
+          </p>
+          <p className="flex itemns-center gap-2 text-xs">
             <span className="w-4 h-4 bg-orange-600 rounded-full animate-pulse"></span>{" "}
             Agendado
           </p>
@@ -168,6 +172,16 @@ export function CampanhaPage() {
                       <span className="w-4 h-4 bg-green-600 rounded-full animate-pulse"></span>
                     </p>
                   )}
+                  {i.status === "Paused" && (
+                    <p className="flex itemns-center gap-2 text-xs">
+                      <span className="w-4 h-4 bg-blue-600 rounded-full animate-pulse"></span>
+                    </p>
+                  )}
+                  {i.status === "Scheduled" && (
+                    <p className="flex itemns-center gap-2 text-xs">
+                      <span className="w-4 h-4 bg-orange-600 rounded-full animate-pulse"></span>
+                    </p>
+                  )}
                   {i.status === "Inactive" && (
                     <p className="flex itemns-center gap-2 text-xs">
                       <span className="w-4 h-4 bg-red-600 rounded-full animate-pulse"></span>
@@ -175,15 +189,15 @@ export function CampanhaPage() {
                   )}
                 </TableCell>
                 <TableCell>{i.name}</TableCell>
-                <TableCell>{customerName}</TableCell>
+                <TableCell className="text-nowrap">{customerName}</TableCell>
+                <TableCell>{i.category}</TableCell>
+                <TableCell>{i.subCategory}</TableCell>
+                <TableCell>{i.model}</TableCell>
+                <TableCell>{i.type}</TableCell>
+                <TableCell>{i.payout}</TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell>{i._count.actions}</TableCell>
-                <TableCell>{i.totalClicks}</TableCell>
-                <TableCell>{i.totalLinks}</TableCell>
                 <TableCell>{dataFormatada(i.startAt)}</TableCell>
                 <TableCell>{dataFormatada(i.endAt)}</TableCell>
                 <TableCell className="flex items-center justify-end gap-2 pr-4">

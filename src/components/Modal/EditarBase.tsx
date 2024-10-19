@@ -10,46 +10,53 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus } from "lucide-react";
+import { Plus, UserRoundPen } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hook/Auth";
 
-const createBaseShema = z.object({
+const editBaseShema = z.object({
+  id: z.number(),
   name: z.string().min(2, "*Mínimo de 2 caracteres"),
   url: z.string().url("*Digite uma url válida"),
 });
 
-type createBaseProps = z.infer<typeof createBaseShema>;
-
-type baseProps = {
+type editBaseDate = {
+  id: number;
+  name: string;
+  url: string;
   handleGetBase: () => void;
-} 
+};
 
-export function NovaBase({handleGetBase}: baseProps) {
+type editBaseProps = z.infer<typeof editBaseShema>;
+
+export function EditarBase({ id, name, url, handleGetBase }: editBaseDate) {
   const [isOpen, setIsOpen] = useState(false);
-  const {handleCreateBase} = useAuth();
+  const { handleEditBase } = useAuth();
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<createBaseProps>({
-    resolver: zodResolver(createBaseShema),
+  } = useForm<editBaseProps>({
+    resolver: zodResolver(editBaseShema),
     defaultValues: {
-      name: "",
-      url: "",
+      id: id,
+      name: name,
+      url: url,
     },
   });
 
-  useEffect(() => {!isOpen && reset({name: '', url: ''})}, [isOpen])
+  useEffect(() => {
+    reset({ id: id, name: name, url: url });
+  }, [isOpen]);
 
-  async function createBase(data: createBaseProps) {
+  async function createBase(data: editBaseProps) {
     try {
       const { name, url } = data;
-      await handleCreateBase({name, url});
+      await handleEditBase({ id, name, url});
       handleGetBase();
       setIsOpen(false);
       reset();
@@ -61,14 +68,13 @@ export function NovaBase({handleGetBase}: baseProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="flex items-center gap-2" variant={"secondary"}>
-          <Plus size={18} />
-          Cadastrar base
+        <Button className="p-2" variant={"outline"}>
+          <UserRoundPen size={18} />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Nova base</DialogTitle>
+          <DialogTitle>Editar base</DialogTitle>
           <DialogDescription>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore
             veritatis ipsa nisi hic at!
@@ -76,6 +82,7 @@ export function NovaBase({handleGetBase}: baseProps) {
         </DialogHeader>
 
         <form onSubmit={handleSubmit(createBase)}>
+          <input type="hidden" {...register('id')}/>
           <div className="grid grid-cols-4 gap-4 py-4">
             <div className="col-span-4">
               <Label htmlFor="name" className="text-right">
@@ -121,7 +128,7 @@ export function NovaBase({handleGetBase}: baseProps) {
               onClick={() => setIsOpen(true)}
             >
               <Plus size={18} />
-              Criar
+              Editar
             </Button>
           </DialogFooter>
         </form>

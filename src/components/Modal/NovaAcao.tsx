@@ -35,16 +35,16 @@ import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectLP } from "../SelectLP";
-import { SelectUTM } from "../SelectUTM";
-import { SelectChave } from "../SelectChave";
 
 const verifyCreateAction = z.object({
   name: z.string().min(4, "*Mínimo de 4 caracteres"),
   campaignId: z.number(),
-  customPath: z.string(),
   selectCliente: z.string().min(1, ""),
   startAt: z.string().min(1, "*Campo obrigatório"),
   endAt: z.string().min(1, "*Campo obrigatório"),
+  utm: z.string().min(1, '*Campo obrigatório'),
+  cost: z.string().min(1, '*Campo obrigatório'),
+  key: z.string().min(1, '*Campo obrigatório'),
 });
 
 type actionData = z.infer<typeof verifyCreateAction>;
@@ -52,9 +52,11 @@ type HandleCreateUsersProps = {
   handleCreateAction: ({
     name,
     campaignId,
-    customPath,
     startAt,
     endAt,
+    utm,
+    cost,
+    key
   }: createNewAction) => void;
   data: DataProps;
 };
@@ -71,6 +73,8 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
   // const [isChecked, setIsChecked] = useState(false);
   const [clientId, setClientId] = useState<string>("");
+  const [utm, setUtm] = useState<string>("utm_source");
+  const [chave, setChave] = useState<string>('');
 
   const handleSelectChange = (value: string) => {
     const selectedCustomer = customerData.find(
@@ -81,10 +85,6 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
       setSelectedClient(value);
     }
   };
-
-  // const handleChecked = () => {
-  //   setIsChecked(!isChecked)
-  // }
 
   const handleGetClient = async () => {
     try {
@@ -137,6 +137,9 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
     }
   }, [clientId]);
 
+  useEffect(() => {
+    reset({name: '', campaignId: 0, startAt: '', endAt: '', utm: utm, cost: '', key: ''})}, [isOpen])
+
   const {
     register,
     handleSubmit,
@@ -149,10 +152,12 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
     defaultValues: {
       name: "",
       campaignId: 0,
-      customPath: "",
       selectCliente: "",
       startAt: "",
       endAt: "",
+      utm: utm,
+      cost: '',
+      key: '',
     },
   });
 
@@ -167,7 +172,8 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
   };
 
   const createAction = async (data: actionData) => {
-    const { name, campaignId, customPath, startAt, endAt } = data;
+    const { name, campaignId, startAt, endAt, utm, cost, key } = data;
+    console.log(name, campaignId, startAt, endAt, utm, cost, key);
     const dataInicioFormatado = new Date(startAt);
     const dataFimFormatado = new Date(endAt);
     const inicioIso = dataInicioFormatado.toISOString();
@@ -180,16 +186,20 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
         await handleCreateAction({
           name,
           campaignId,
-          customPath,
           startAt: inicioIso,
           endAt: fimIso,
+          utm: utm,
+          cost,
+          key: chave,
         });
         console.log({
           name,
           campaignId,
-          customPath,
           startAt: inicioIso,
           endAt: fimIso,
+          utm: utm,
+          cost,
+          key: chave,
         });
         onCreateAction();
         setIsOpen(false);
@@ -199,6 +209,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
       }
     }
   };
+  console.log(errors)
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -219,7 +230,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
         <form onSubmit={handleSubmit(createAction)}>
           <div className="grid grid-cols-4 gap-4 py-4">
             <div className="col-span-4">
-              <Label htmlFor="cliente">Cliente</Label>
+              <Label htmlFor="selectCliente">Cliente</Label>
               {/* SELECT CUSTOMER */}
 
               <Controller
@@ -284,21 +295,120 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
             </div>
             <div className="col-span-3">
               <Label htmlFor="lprelacionada">LP Relacionada</Label>
-              <SelectLP/>
+              <SelectLP />
             </div>
             <div className="col-span-1">
-              <Label htmlFor="custo">Custo</Label>
-              <Input
-              type="text"
-              placeholder="R$ 0,99"/>
+              <Label htmlFor="cost">Custo</Label>
+              <Input id="cost" type="text"
+              placeholder="0,99"
+              {...register("cost")}
+                className={`${errors.cost && "border-rose-400 bg-rose-100"}`}
+              />
+              {errors.cost && (
+                <span className="text-xs text-rose-400 font-normal">
+                  {errors.cost.message}
+                </span>
+              )}
             </div>
             <div className="col-span-2">
               <Label htmlFor="utm">UTM</Label>
-              <SelectUTM/>
+              {/* SELECT UTM */}
+              <Controller
+                name="utm"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value); // Atualiza o valor no formulário
+                      setUtm(value);
+                    }}
+                    defaultValue="utm_source"
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Chaves</SelectLabel>
+                        <SelectItem value="utm_source">utm_source</SelectItem>
+                        <SelectItem value="utm_medium">utm_medium</SelectItem>
+                        <SelectItem value="utm_campaign">
+                          utm_campaign
+                        </SelectItem>
+                        <SelectItem value="utm_turn">utm_turn</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.utm && (
+                <span className="text-xs text-rose-400 font-normal">
+                  *Campo obrigatório
+                </span>
+              )}
+              {/* FINAL SELECT CUSTOMER */}
             </div>
             <div className="col-span-2">
-              <Label htmlFor="utm">Chave</Label>
-              <SelectChave/>
+              <Label htmlFor="key">Chave</Label>
+              {/* SELECT KEY */}
+
+              <Controller
+                name="key"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value); // Atualiza o valor no formulário
+                      setChave(value);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {utm === "utm_source" && (
+                        <SelectGroup>
+                          <SelectLabel>Chaves</SelectLabel>
+                          <SelectItem value="instagram">instagram</SelectItem>
+                          <SelectItem value="inbound">inbound</SelectItem>
+                          <SelectItem value="google">google</SelectItem>
+                          <SelectItem value="emkt">emkt</SelectItem>
+                          <SelectItem value="facebook">facebook</SelectItem>
+                        </SelectGroup>
+                      )}
+                      {utm === "utm_medium" && (
+                        <SelectGroup>
+                          <SelectLabel>Chaves</SelectLabel>
+                          <SelectItem value="shifters">shifters</SelectItem>
+                          <SelectItem value="bd">bd</SelectItem>
+                          <SelectItem value="cpc">cpc</SelectItem>
+                          <SelectItem value="selecoes">selecoes</SelectItem>
+                          <SelectItem value="pinup">pinup</SelectItem>
+                          <SelectItem value="inbox">inbox</SelectItem>
+                        </SelectGroup>
+                      )}
+                      {utm === "utm_campaign" && (
+                        <SelectGroup>
+                          <SelectLabel>Chaves</SelectLabel>
+                          <SelectItem value="form">form</SelectItem>
+                          <SelectItem value="display">display</SelectItem>
+                        </SelectGroup>
+                      )}
+                      {utm === "utm_turn" && (
+                        <SelectGroup>
+                          <SelectLabel>Chaves</SelectLabel>
+                        </SelectGroup>
+                      )}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.key && (
+                <span className="text-xs text-rose-400 font-normal">
+                  *Campo obrigatório
+                </span>
+              )}
+              {/* FINAL SELECT KEY */}
             </div>
             <div className="col-span-4">
               <Label htmlFor="nome" className="text-right">
@@ -317,20 +427,6 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                 </span>
               )}
             </div>
-            {/* <div className="flex gap-4 col-span-4">
-            <Input
-            type="checkbox"
-            className="max-w-[16px]"
-            checked={isChecked}
-            onChange={handleChecked}
-            />
-
-            <Input
-            placeholder="Personalizar URL"
-            disabled={!isChecked}
-            {...register("customPath")}
-            className="col-span-4"/>
-          </div> */}
             <div className="col-span-2">
               <Label id="dataInicio">Data/Hora Início</Label>
               <Input

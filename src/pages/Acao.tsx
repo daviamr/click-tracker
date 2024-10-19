@@ -27,6 +27,7 @@ export function AcaoPage() {
   const [switchStates, setSwitchStates] = useState<{ [key: string]: boolean }>(
     {}
   );
+  console.log(dataAction)
 
   const handleSwitchChange = async (id: number, checked: boolean) => {
     setSwitchStates((prev) => ({ ...prev, [id]: checked }));
@@ -89,6 +90,10 @@ export function AcaoPage() {
             Ativo
           </p>
           <p className="flex itemns-center gap-2 text-xs">
+            <span className="w-4 h-4 bg-blue-600 rounded-full animate-pulse"></span>
+            Pausado
+          </p>
+          <p className="flex itemns-center gap-2 text-xs">
             <span className="w-4 h-4 bg-orange-600 rounded-full animate-pulse"></span>{" "}
             Agendado
           </p>
@@ -135,6 +140,16 @@ export function AcaoPage() {
                       <span className="w-4 h-4 bg-green-600 rounded-full animate-pulse"></span>
                     </p>
                   )}
+                  {i.status === "Paused" && (
+                    <p className="flex itemns-center gap-2 text-xs">
+                      <span className="w-4 h-4 bg-blue-600 rounded-full animate-pulse"></span>
+                    </p>
+                  )}
+                  {i.status === "Scheduled" && (
+                    <p className="flex itemns-center gap-2 text-xs">
+                      <span className="w-4 h-4 bg-orange-600 rounded-full animate-pulse"></span>
+                    </p>
+                  )}
                   {i.status === "Inactive" && (
                     <p className="flex itemns-center gap-2 text-xs">
                       <span className="w-4 h-4 bg-red-600 rounded-full animate-pulse"></span>
@@ -145,7 +160,7 @@ export function AcaoPage() {
                 <TableCell>{i.campaign.client.name}</TableCell>
                 <TableCell>{i.campaign.name}</TableCell>
                 <TableCell></TableCell>
-                <TableCell></TableCell>
+                <TableCell>{i.cost}</TableCell>
                 <TableCell>{i.totalClicks}</TableCell>
                 <TableCell>{i.totalLinks}</TableCell>
                 <TableCell>{dataFormatada(i.startAt)}</TableCell>

@@ -8,8 +8,43 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { FileDown, History, UserRoundPen, UserRoundX } from "lucide-react";
+import { useEffect, useState } from "react";
+import { AlertMessage } from "@/components/alert_message";
+import { AxiosError } from "axios";
+import { dataAction, DataProps } from "@/interface/auth";
+import { api } from "@/services/Api";
+import { useAuth } from "@/hook/Auth";
+
+type dataHistoryProps = { data: DataProps };
 
 export function HistoricoPage() {
+  const { data } = useAuth() as dataHistoryProps;
+  const [dataAction, setAction] = useState<dataAction[]>([]);
+  console.log(dataAction)
+
+  const handleGetAction = async () => {
+    try {
+      const response = await api.get("/actions", {
+        headers: {
+          Authorization: `Bearer ${data.jwtToken}`,
+        },
+      });
+      setAction(response.data);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível carregar as ações, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  };
+  useEffect(() => {
+    handleGetAction();
+  }, [data.jwtToken]);
+
   return (
     <>
       <div>
@@ -18,8 +53,7 @@ export function HistoricoPage() {
           Histórico
         </h1>
       </div>
-      <div className="flex justify-end border-solid border-b-[1px] py-2 px-4">
-      </div>
+      <div className="flex justify-end border-solid border-b-[1px] py-2 px-4"></div>
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
@@ -32,30 +66,32 @@ export function HistoricoPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow>
-            <TableCell className="pl-4">acao1</TableCell>
-            <TableCell>campanha1</TableCell>
-            <TableCell>cliente1</TableCell>
-            <TableCell>77</TableCell>
-            <TableCell>88</TableCell>
-            <TableCell>99</TableCell>
-            <TableCell className="flex items-center justify-end gap-2 pr-4">
-              <Button variant={"outline"} className="flex gap-2 items-center">
-                <FileDown size={16} />
-                Exportar
-              </Button>
-              <Button className="p-2" variant={"outline"}>
-                <UserRoundPen size={18} />
-              </Button>
-              <Button
-                className="p-2 duration-300 hover:text-red-700"
-                variant={"outline"}
-                // onClick={() => handleDeleteCustomer(i.id)}
-              >
-                <UserRoundX size={18} />
-              </Button>
-            </TableCell>
-          </TableRow>
+          {dataAction.map((i) => (
+            <TableRow>
+              <TableCell className="pl-4">{i.name}</TableCell>
+              <TableCell>{i.campaign.name}</TableCell>
+              <TableCell>{i.campaign.client.name}</TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell className="flex items-center justify-end gap-2 pr-4">
+                <Button variant={"outline"} className="flex gap-2 items-center">
+                  <FileDown size={16} />
+                  Exportar
+                </Button>
+                <Button className="p-2" variant={"outline"}>
+                  <UserRoundPen size={18} />
+                </Button>
+                <Button
+                  className="p-2 duration-300 hover:text-red-700"
+                  variant={"outline"}
+                  // onClick={() => handleDeleteCustomer(i.id)}
+                >
+                  <UserRoundX size={18} />
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </>

@@ -79,7 +79,7 @@ export function ConversorPage() {
             <TableRow key={i.id}>
               <TableCell className="pl-4">{i.name}</TableCell>
               <TableCell>{i.characters}</TableCell>
-              <TableCell></TableCell>
+              <TableCell>{i.characters.length}</TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
               <TableCell className="flex items-center justify-end gap-2 pr-4">

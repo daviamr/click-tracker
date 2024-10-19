@@ -24,7 +24,12 @@ import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { customerData, DataProps } from "@/interface/auth";
+import {
+  campaignData,
+  customerData,
+  DataProps,
+  finalURLProps,
+} from "@/interface/auth";
 import { AxiosError } from "axios";
 import { api } from "@/services/Api";
 import { AlertMessage } from "../alert_message";
@@ -32,32 +37,41 @@ import { useAuth } from "@/hook/Auth";
 
 const createBaseShema = z.object({
   name: z.string().min(2, "*Mínimo de 2 caracteres"),
-  destinationUrl: z.string().url("*Digite uma url válida"),
+  url: z.string().url("*Digite uma url válida"),
   customer: z.string().min(2, "*Mínimo de 2 caracteres"),
   campaign: z.string().min(2, "*Mínimo de 2 caracteres"),
+  campaignId: z.number(),
 });
 
 type createBaseProps = z.infer<typeof createBaseShema>;
 
+type createNewBaseProps = {
+  handleGetFinalURL: () => void;
+};
 type HandleCreateUrl = {
-    data: DataProps;
-  };
+  data: DataProps;
+};
 
-export function NovaUrlDestino() {
+export function NovaUrlDestino({ handleGetFinalURL }: createNewBaseProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { data } = useAuth() as HandleCreateUrl;
+  const { handleCreateFinalURL } = useAuth();
   const [customerData, setCustomerData] = useState<customerData[]>([]);
+  const [campanhas, setCampanhas] = useState<campaignData[]>([]);
+  const [selectedCustomer, setSelectedCustomer] = useState<string>("");
+  const [clientId, setClientId] = useState<string>("");
   const {
     register,
     handleSubmit,
     reset,
     control,
+    setValue,
     formState: { errors },
   } = useForm<createBaseProps>({
     resolver: zodResolver(createBaseShema),
     defaultValues: {
       name: "",
-      destinationUrl: "",
+      url: "",
       customer: "",
       campaign: "",
     },
@@ -83,22 +97,73 @@ export function NovaUrlDestino() {
     }
   };
 
-  useEffect(() => {handleGetCustomer()}, [data.jwtToken])
+  const handleGetSingleClient = async () => {
+    try {
+      const response = await api.get(`/campaigns?clientId=${clientId}`, {
+        headers: {
+          Authorization: `Bearer ${data.jwtToken}`,
+        },
+      });
+      setCampanhas(response.data);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível carregar o cliente, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  };
+  useEffect(() => {
+    handleGetCustomer();
+  }, [data.jwtToken]);
 
   useEffect(() => {
-    !isOpen &&
-      reset({ name: "", destinationUrl: "", customer: "", campaign: "" });
+    console.log(selectedCustomer);
+    if (selectedCustomer) {
+      handleGetSingleClient();
+    }
+  }, [selectedCustomer]);
+
+  useEffect(() => {
+    reset({ name: "", url: "", customer: "", campaign: "" });
   }, [isOpen]);
+
+  const handleSelectCampaign = (value: string) => {
+    const selectedCampaign = campanhas.find(
+      (campanha) => campanha.name === value
+    );
+    if (selectedCampaign) {
+      setValue("campaignId", selectedCampaign.id);
+      console.log(`id da campanha: ${selectedCampaign.id}`);
+    }
+  };
+
+  const handleSelectCustomerChange = (value: string) => {
+    const selectedCustomer = customerData.find(
+      (customer) => customer.name === value
+    );
+    if (selectedCustomer) {
+      setClientId(selectedCustomer.id);
+    }
+  };
 
   async function createBase(data: createBaseProps) {
     try {
-      const { name, destinationUrl, customer, campaign } = data;
-      console.log(name && name);
-      console.log(destinationUrl && destinationUrl);
-      console.log(customer && customer);
-      console.log(campaign && campaign);
-      setIsOpen(false);
-      reset();
+      const { name, url, campaign } = data;
+      const campanhaEncontrada = campanhas.find((c) => c.name === campaign);
+
+      if (campanhaEncontrada) {
+        const idCampanha = campanhaEncontrada.id;
+        await handleCreateFinalURL({ name, url, campaignId: idCampanha });
+        handleGetFinalURL();
+        setIsOpen(false);
+        reset();
+      } else {
+        console.log("Campanha não encontrada.");
+      }
     } catch (error) {
       console.log("Erro ao criar base:", error);
     }
@@ -149,14 +214,12 @@ export function NovaUrlDestino() {
                 id="destinationUrl"
                 type="url"
                 placeholder="https://"
-                {...register("destinationUrl")}
-                className={`${
-                  errors.destinationUrl && "border-rose-400 bg-rose-100"
-                }`}
+                {...register("url")}
+                className={`${errors.url && "border-rose-400 bg-rose-100"}`}
               />
-              {errors.destinationUrl && (
+              {errors.url && (
                 <span className="text-xs text-rose-400 font-normal">
-                  {errors.destinationUrl.message}
+                  {errors.url.message}
                 </span>
               )}
             </div>
@@ -168,7 +231,13 @@ export function NovaUrlDestino() {
                 name="customer"
                 control={control}
                 render={({ field }) => (
-                  <Select onValueChange={field.onChange}>
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setSelectedCustomer(value);
+                      handleSelectCustomerChange(value);
+                    }}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Selecione o cliente" />
                     </SelectTrigger>
@@ -190,24 +259,36 @@ export function NovaUrlDestino() {
                   *Campo obrigatório
                 </span>
               )}
-              {/* FINAL SELECT CUSTOMER */}
+              {/* FINAL SELECT CAMPAIGN */}
             </div>
             <div className="col-span-4">
               <Label htmlFor="campanhas">Campanha</Label>
-              {/* SELECT CUSTOMER */}
+              {/* SELECT CAMPAIGN */}
 
               <Controller
-                name="customer"
+                name="campaign"
                 control={control}
                 render={({ field }) => (
-                  <Select onValueChange={field.onChange}>
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      handleSelectCampaign(value);
+                    }}
+                    disabled={!selectedCustomer}
+                  >
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione o cliente" />
+                      <SelectValue
+                        placeholder={
+                          selectedCustomer
+                            ? "Selecione a campanha"
+                            : "Cliente não selecionado"
+                        }
+                      />
                     </SelectTrigger>
-                    <SelectContent className={`${errors.customer}`}>
+                    <SelectContent className={`${errors.campaignId}`}>
                       <SelectGroup>
-                        <SelectLabel>Clientes</SelectLabel>
-                        {customerData.map((i, index) => (
+                        <SelectLabel>Campanhas</SelectLabel>
+                        {campanhas.map((i, index) => (
                           <SelectItem value={i.name} key={index}>
                             {i.name}
                           </SelectItem>
@@ -217,12 +298,12 @@ export function NovaUrlDestino() {
                   </Select>
                 )}
               />
-              {errors.customer && (
+              {errors.campaign && (
                 <span className="text-xs text-rose-400 font-normal">
                   *Campo obrigatório
                 </span>
               )}
-              {/* FINAL SELECT CUSTOMER */}
+              {/* FINAL SELECT CAMPAIGN */}
             </div>
           </div>
           <DialogFooter>

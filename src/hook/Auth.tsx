@@ -35,12 +35,20 @@ import {
   ApiResponse,
   statusCampaign,
   createLP,
+  deleteLp,
+  createBase,
+  EditNewUser,
+  deleteUser,
+  editBase,
+  deleteBase,
+  createFinalURL,
 } from "@/interface/auth";
 import { AlertMessage } from "@/components/alert_message";
 
 interface AuthContextType {
   handleCreateUsers: (data: CreateNewUser) => Promise<void>;
-  handleEditUser: (data: CreateNewUser) => Promise<void>;
+  handleEditUser: (data: EditNewUser) => Promise<void>;
+  deleteUser: (data: deleteUser) => Promise<void>;
   signIn: (data: Login) => Promise<void>;
   handleCreateCustomers: (data: createNewCustomer) => Promise<void>;
   handleEditCustomer: (data: editCustomer) => Promise<void>;
@@ -62,6 +70,11 @@ interface AuthContextType {
   handleCreateLink: (data: createNewLink) => Promise<void>;
   handleCreateSingleLink: (data: createNewSingleLink) => Promise<ApiResponse>;
   handleCreateLP: (data: createLP) => Promise<void>;
+  deleteLp: (data: deleteLp) => Promise<void>;
+  handleCreateBase: (data: createBase) => Promise<void>;
+  handleEditBase: (data: editBase) => Promise<void>;
+  deleteBase: (data: deleteBase) => Promise<void>;
+  handleCreateFinalURL: (data: createFinalURL) => Promise<void>;
   data: DataProps | null;
 }
 
@@ -158,7 +171,7 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
-  async function handleEditUser({ email, password, name }: CreateNewUser) {
+  async function handleEditUser({id, email, password, name }: EditNewUser) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -169,9 +182,12 @@ function AuthProvider({ children }: ChildrenProps) {
 
       // console.log(token)
 
+      console.log(id, email, password, name)
+
       const response = await api.put(
-        "/users",
+        `/users/${id}`,
         {
+          id,
           email,
           password,
           name,
@@ -187,10 +203,40 @@ function AuthProvider({ children }: ChildrenProps) {
       AlertMessage("Usuário editado com sucesso.", "success");
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
-        AlertMessage(error.response.data.message, "error");
+        AlertMessage(error.message, "error");
       } else {
         AlertMessage(
           "Não foi possível editar o usuário agora, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  }
+
+  async function deleteUser({ id }: deleteUser) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      const response = await api.delete(`/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token.jwtToken}`,
+        },
+      });
+
+      console.log(response.data);
+
+      AlertMessage("Usuário deletado com sucesso.", "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível deletar o usuário, tente novamente.",
           "error"
         );
       }
@@ -451,9 +497,11 @@ function AuthProvider({ children }: ChildrenProps) {
   async function handleCreateAction({
     name,
     campaignId,
-    customPath,
     startAt,
     endAt,
+    utm,
+    cost,
+    key
   }: createNewAction) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
@@ -466,13 +514,15 @@ function AuthProvider({ children }: ChildrenProps) {
       // console.log(token)
 
       const response = await api.post(
-        "/actions",
+        "/actions/",
         {
           name,
           campaignId,
-          customPath,
           startAt,
           endAt,
+          utm,
+          cost,
+          key
         },
         {
           headers: {
@@ -485,7 +535,7 @@ function AuthProvider({ children }: ChildrenProps) {
       AlertMessage("Ação criada com sucesso.", "success");
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
-        AlertMessage(error.response.data.message, "error");
+        AlertMessage(error.message, "error");
       } else {
         AlertMessage(
           "Não foi possível criar uma ação agora, tente novamente mais tarde.",
@@ -501,7 +551,9 @@ function AuthProvider({ children }: ChildrenProps) {
     campaignId,
     startAt,
     endAt,
-    customPath,
+    utm,
+    cost,
+    key
   }: editAction) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
@@ -518,7 +570,9 @@ function AuthProvider({ children }: ChildrenProps) {
           campaignId,
           startAt,
           endAt,
-          customPath,
+          utm,
+          cost,
+          key
         },
         {
           headers: {
@@ -531,7 +585,7 @@ function AuthProvider({ children }: ChildrenProps) {
       AlertMessage("Campanha editada com sucesso.", "success");
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
-        AlertMessage(error.response.data.message, "error");
+        AlertMessage(error.message, "error");
       } else {
         AlertMessage(
           "Não foi possível editar a campanha agora, tente novamente mais tarde.",
@@ -940,7 +994,7 @@ function AuthProvider({ children }: ChildrenProps) {
   }
 
   //LP
-  async function handleCreateLP({ name, campaignId, baseUrlId }: createLP) {
+  async function handleCreateLP({ name, campaignId, url }: createLP) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -952,11 +1006,11 @@ function AuthProvider({ children }: ChildrenProps) {
       // console.log(token)
 
       const response = await api.post(
-        "/users",
+        "/lps/",
         {
           name,
           campaignId,
-          baseUrlId,
+          url,
         },
         {
           headers: {
@@ -969,10 +1023,187 @@ function AuthProvider({ children }: ChildrenProps) {
       AlertMessage("LP criada com sucesso.", "success");
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
-        AlertMessage(error.response.data.message, "error");
+        AlertMessage(error.message, "error");
       } else {
         AlertMessage(
           "Não foi possível criar uma LP agora, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  }
+
+  async function deleteLp({ id }: deleteLp) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      const response = await api.delete(`/lps/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token.jwtToken}`,
+        },
+      });
+
+      console.log(response.data);
+
+      AlertMessage(response.data.message, "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível deletar o cliente, tente novamente.",
+          "error"
+        );
+      }
+    }
+  }
+
+  //Origem Base
+  async function handleCreateBase({ name, url }: createBase) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      // console.log(token)
+
+      const response = await api.post(
+        "/data-sources",
+        {
+          name,
+          url,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token.jwtToken}`,
+          },
+        }
+      );
+      console.log(response.data);
+
+      AlertMessage("Base criada com sucesso.", "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível criar uma Base agora, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  }
+
+  async function handleEditBase({ id, name, url }: editBase) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      // console.log(token)
+
+      const response = await api.put(
+        `/data-sources/${id}`,
+        {
+          name,
+          url
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token.jwtToken}`,
+          },
+        }
+      );
+      console.log(response.data);
+
+      AlertMessage('Origem Base editada com sucesso.', "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível editar a Base agora, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  }
+
+  async function deleteBase({ id }: deleteBase) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      const response = await api.delete(`/data-sources/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token.jwtToken}`,
+        },
+      });
+
+      console.log(response.data);
+
+      AlertMessage(response.data.message, "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível deletar a base, tente novamente.",
+          "error"
+        );
+      }
+    }
+  }
+
+  //URL destino
+  async function handleCreateFinalURL({ name, url, campaignId }: createFinalURL) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      // console.log(token)
+
+      const response = await api.post(
+        "/final-urls",
+        {
+          name,
+          url,
+          campaignId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token.jwtToken}`,
+          },
+        }
+      );
+      console.log(response.data);
+
+      AlertMessage(response.data.message, "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível criar uma URL de Destino agora, tente novamente mais tarde.",
           "error"
         );
       }
@@ -985,6 +1216,7 @@ function AuthProvider({ children }: ChildrenProps) {
         value={{
           handleCreateUsers,
           handleEditUser,
+          deleteUser,
           signIn,
           handleCreateCustomers,
           handleEditCustomer,
@@ -1006,6 +1238,11 @@ function AuthProvider({ children }: ChildrenProps) {
           handleCreateLink,
           handleCreateSingleLink,
           handleCreateLP,
+          deleteLp,
+          handleCreateBase,
+          handleEditBase,
+          deleteBase,
+          handleCreateFinalURL,
           data,
         }}
       >

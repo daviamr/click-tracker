@@ -4,6 +4,17 @@ export type CreateNewUser = {
     email: string;
   };
 
+  export type EditNewUser = {
+    id: string;
+    name: string;
+    password: string;
+    email: string;
+  };
+
+  export type deleteUser = {
+    id: string;
+  }
+
   export type Login = {
     email: string;
     password: string;
@@ -14,6 +25,7 @@ export type CreateNewUser = {
   }
 
   export type userDataProps = {
+    id: string;
     email: string; 
     name: string; 
     createdAt: string
@@ -69,14 +81,16 @@ export type CreateNewUser = {
   export type campaignData = {
     id: number,
     name: string;
-    clientId: string;
-    Client: {name: string};
+    obs: string;
+    status: string;
     startAt: string;
     endAt: string;
-    totalClicks: number;
-    totalLinks: number;
-    status: string;
-    _count: {actions: number};
+    category: string;
+    subCategory: string;
+    model: string;
+    type: string;
+    payout: number;
+    clientId: string;
   }
 
   export type statusCampaign = {
@@ -86,9 +100,11 @@ export type CreateNewUser = {
   export type createNewAction = {
     name: string;
     campaignId: number;
-    customPath: string;
     startAt: string;
     endAt: string;
+    utm: string;
+    cost: string;
+    key: string;
   }
 
   export type editAction = {
@@ -97,7 +113,9 @@ export type CreateNewUser = {
     campaignId: number;
     startAt: string;
     endAt: string;
-    customPath: string;
+    utm: string;
+    cost: string;
+    key: string;
   }
 
   export type dataAction = {
@@ -109,7 +127,10 @@ export type CreateNewUser = {
       }
       name: string;
     }
-    customPath: string;
+    cost: number;
+    key: string;
+    lpId: number;
+    utm: string;
     startAt: string;
     endAt: string;
     status: string;
@@ -201,7 +222,52 @@ export type CreateNewUser = {
   export type createLP = {
     name: string;
     campaignId: number;
-    baseUrlId: number;
+    url: string;
+  }
+
+  export type lpsData = {
+    campaingId: number;
+    id: number;
+    name: string;
+    url: string;
+  }
+
+  export type deleteLp = {
+    id: number;
+  }
+
+  export type createBase = {
+    name: string;
+    url: string;
+  }
+
+  export type editBase = {
+    id: number;
+    name: string;
+    url: string;
+  }
+
+  export type baseProps = {
+    id: number;
+    name: string;
+    url: string;
+  }
+
+  export type deleteBase = {
+    id: number;
+  }
+
+  export type finalURLProps = {
+    id: number;
+    name: string;
+    url: string;
+    campaignId: number;
+  }
+
+  export type createFinalURL = {
+    name: string;
+    url: string;
+    campaignId: number;
   }
 
   export interface ApiResponse {

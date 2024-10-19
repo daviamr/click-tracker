@@ -16,12 +16,12 @@ import { DataProps, userDataProps } from "@/interface/auth";
 import { Button } from "@/components/ui/button";
 import { UserRoundX, Users } from "lucide-react";
 import { EditarUsuario } from "@/components/Modal/EditarUsuario";
-import { Skeleton } from "@/components/ui/skeleton";
 
 type dataUserProps = { data: DataProps };
 
 export function UsuarioPage() {
   const { data } = useAuth() as dataUserProps;
+  const {deleteUser} = useAuth();
 
   const [userData, setUserData] = useState<userDataProps[]>([]);
 
@@ -50,11 +50,17 @@ export function UsuarioPage() {
     handleGetUsers();
   }, [data.jwtToken]);
 
+    /* deletar usuário */
+    const handleDeleteUser = async (id: string) => {
+      await deleteUser({ id });
+      handleGetUsers();
+    };
+
   return (
     <>
       <div>
         <h1 className="flex items-center gap-2 text-4xl border-solid border-b-[6px] w-max m-auto rounded-sm pt-8 mb-8">
-          <Users size={30} className="animate-pulse"/>
+          <Users size={30} className="animate-pulse" />
           Usuários
         </h1>
       </div>
@@ -84,15 +90,12 @@ export function UsuarioPage() {
             };
             return (
               <TableRow key={index}>
-                <TableCell className="pl-4">
-                  {i.name ? i.name : <Skeleton className="h-4 w-full" />}
-                </TableCell>
-                <TableCell>
-                  {i.email ? i.email : <Skeleton className="h-4 w-full" />}
-                </TableCell>
+                <TableCell className="pl-4">{i.name}</TableCell>
+                <TableCell>{i.email}</TableCell>
                 <TableCell>{dataFormatada(i.createdAt)}</TableCell>
                 <TableCell className="flex items-center justify-end gap-2 pr-4">
                   <EditarUsuario
+                    id={i.id}
                     onEditUser={handleGetUsers}
                     name={i.name}
                     email={i.email}
@@ -100,7 +103,7 @@ export function UsuarioPage() {
                   <Button
                     className="p-2 duration-300 hover:text-red-700"
                     variant={"outline"}
-                    // onClick={() => handleDeleteCustomer(i.id)}
+                    onClick={() => handleDeleteUser(i.id)}
                   >
                     <UserRoundX size={18} />
                   </Button>

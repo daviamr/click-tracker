@@ -29,18 +29,19 @@ import { api } from "@/services/Api";
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import { AlertMessage } from "../alert_message";
-import { SelectCategoria } from "../SelectCategoria";
-import { SelectSubCategoria } from "../SelectSubCategoria";
 import { Textarea } from "../ui/textarea";
-import { SelectTipo } from "../SelectTipo";
-import { SelectModelo } from "../SelectModelo";
 
 const verifyCreateCampaign = z.object({
   name: z.string().min(4, "*Mínimo de 4 caracteres"),
   clientId: z.string().min(1, ""),
   startAt: z.string(),
-  endAt: z.string(),
-  payout: z.string(),
+  endAt: z.string().min(1, '*Campo obrigatório'),
+  category: z.string().min(1, '*Campo obrigatório'),
+  subcategory: z.string().min(1, '*Campo obrigatório'),
+  model: z.string().min(1, '*Campo obrigatório'),
+  type: z.string().min(1, '*Campo obrigatório'),
+  obs: z.string(),
+  payout: z.number().min(1, '*Campo obrigatório'),
 });
 
 type campaignData = z.infer<typeof verifyCreateCampaign>;
@@ -48,8 +49,13 @@ type HandleCreateUsersProps = {
   handleCreateCampaign: ({
     name,
     clientId,
+    category,
+    subcategory,
+    model,
+    type,
     startAt,
     endAt,
+    obs,
   }: createNewCampaign) => void;
   data: DataProps;
 };
@@ -86,6 +92,10 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
     handleGetUsers();
   }, []);
 
+  useEffect(() => {
+    reset();
+  }, [isOpen]);
+
   //data atual
   const getCurrentDateTime = () => {
     const now = new Date();
@@ -105,32 +115,68 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
     defaultValues: {
       name: "",
       clientId: "",
+      category: "",
+      subcategory: "",
+      model: "",
+      type: "",
       startAt: "",
       endAt: "",
-      payout: "",
+      payout: 0,
+      obs: "",
     },
   });
 
   useEffect(() => {
     setValue("startAt", getCurrentDateTime());
-  }, [setValue]);
+  }, [isOpen]);
 
   async function createCampaign(data: campaignData) {
-    const { name, clientId, startAt, endAt } = data;
+    const {
+      name,
+      clientId,
+      category,
+      subcategory,
+      model,
+      type,
+      payout,
+      startAt,
+      endAt,
+      obs,
+    } = data;
     const idClient = customerData.find((i) => i.name === clientId)?.id;
     const dataInicioFormatado = new Date(startAt);
     const dataFimFormatado = new Date(endAt);
     const inicioIso = dataInicioFormatado.toISOString();
     const fimIso = dataFimFormatado.toISOString();
+    
+    console.log([
+      {
+        name: name,
+        clientId: idClient,
+        category: category,
+        subcategory: subcategory,
+        model: model,
+        type: type,
+        payout: payout,
+        startAt: inicioIso,
+        endAt: fimIso,
+        obs: obs,
+      },
+    ]);
 
-    console.log(data);
     if (idClient) {
       try {
         await handleCreateCampaign({
           name,
           clientId: idClient,
+          category,
+          subcategory,
+          model,
+          type,
+          payout,
           startAt: inicioIso,
           endAt: fimIso,
+          obs,
         });
         onCreateCampaign();
       } catch (error) {
@@ -141,7 +187,7 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
     } else {
       console.error("Id do cliente não encontrado.");
     }
-  }
+}
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -170,7 +216,7 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
                 type="text"
                 placeholder="Nome da campanha..."
                 {...register("name")}
-                className={`${errors.name && "border-rose-400 bg-rose-100"}`}
+                className={`${errors.name && "border-rose-400"}`}
               />
               {errors.name && (
                 <span className="text-xs text-rose-400 font-normal">
@@ -181,16 +227,15 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
             <div className="col-span-4">
               <Label htmlFor="campanhas">Cliente</Label>
               {/* SELECT CUSTOMER */}
-
               <Controller
                 name="clientId"
                 control={control}
                 render={({ field }) => (
                   <Select onValueChange={field.onChange}>
-                    <SelectTrigger>
+                    <SelectTrigger  className={`${errors.clientId && "border-rose-400"}`}>
                       <SelectValue placeholder="Selecione o cliente" />
                     </SelectTrigger>
-                    <SelectContent className={`${errors.clientId}`}>
+                    <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Clientes</SelectLabel>
                         {customerData.map((i, index) => (
@@ -203,38 +248,158 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
                   </Select>
                 )}
               />
-              {errors.clientId && (
-                <span className="text-xs text-rose-400 font-normal">
-                  *Campo obrigatório
-                </span>
-              )}
               {/* FINAL SELECT CUSTOMER */}
             </div>
 
             <div className="col-span-2">
               <Label htmlFor="categoria">Categoria</Label>
-              <SelectCategoria />
+              {/* SELECT CATEGORY */}
+              <Controller
+                name="category"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange}>
+                    <SelectTrigger className={`${errors.category && "border-rose-400"}`}>
+                      <SelectValue placeholder="Selecione a categoria" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Categorias</SelectLabel>
+                        <SelectItem value="Financeiro">Financeiro</SelectItem>
+                        <SelectItem value="Benefícios">Benefícios</SelectItem>
+                        <SelectItem value="Saúde">Saúde</SelectItem>
+                        <SelectItem value="Publicidade">Publicidade</SelectItem>
+                        <SelectItem value="Telecom">Telecom</SelectItem>
+                        <SelectItem value="Facilities">Facilities</SelectItem>
+                        <SelectItem value="Hardware">Hardware</SelectItem>
+                        <SelectItem value="Escritório">Escritório</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {/* FINAL SELECT CATEGORY */}
             </div>
             <div className="col-span-2">
               <Label htmlFor="subcategoria">Subcategoria</Label>
-              <SelectSubCategoria />
+              {/* SELECT SUBCATEGORY */}
+              <Controller
+                name="subcategory"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange}>
+                    <SelectTrigger className={`${errors.subcategory && "border-rose-400"}`}>
+                      <SelectValue placeholder="Selecione a subcategoria" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Subcategorias</SelectLabel>
+                        <SelectItem value="Maquininha">Maquininha</SelectItem>
+                        <SelectItem value="Abertura de Contas">
+                          Abertura de Contas
+                        </SelectItem>
+                        <SelectItem value="Empréstimos">Empréstimos</SelectItem>
+                        <SelectItem value="Cartão de Crédito">
+                          Cartão de Crédito
+                        </SelectItem>
+                        <SelectItem value="Software">Software</SelectItem>
+                        <SelectItem value="Cartão Alimentação">
+                          Cartão Alimentação
+                        </SelectItem>
+                        <SelectItem value="Cartão Refeição">
+                          Cartão Refeição
+                        </SelectItem>
+                        <SelectItem value="Clano de Saúde">
+                          Plano de Saúde
+                        </SelectItem>
+                        <SelectItem value="Plano Odontológico">
+                          Plano Odontológico
+                        </SelectItem>
+                        <SelectItem value="E-mail Marketing">
+                          E-mail Marketing
+                        </SelectItem>
+                        <SelectItem value="Geração de Leads">
+                          Geração de Leads
+                        </SelectItem>
+                        <SelectItem value="Internet">Internet</SelectItem>
+                        <SelectItem value="Plano Móvel">Plano Móvel</SelectItem>
+                        <SelectItem value="Máquina de Café">
+                          Máquina de Café
+                        </SelectItem>
+                        <SelectItem value="Material de Escritório">
+                          Material de Escritório
+                        </SelectItem>
+                        <SelectItem value="Antivírus">Antivírus</SelectItem>
+                        <SelectItem value="PCs e Notebooks">
+                          PCs e Notebooks
+                        </SelectItem>
+                        <SelectItem value="Mobiliários">Mobiliários</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {/* FINAL SELECT SUBCATEGORY */}
             </div>
             <div className="col-span-2">
               <Label htmlFor="modelo">Modelo</Label>
-              <SelectModelo />
+              {/* SELECT MODEL */}
+              <Controller
+                name="model"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange}>
+                    <SelectTrigger className={`${errors.model && "border-rose-400"}`}>
+                      <SelectValue placeholder="Selecione o modelo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Modelos</SelectLabel>
+                        <SelectItem value="CPL">CPL</SelectItem>
+                        <SelectItem value="CPI">CPI</SelectItem>
+                        <SelectItem value="CPA">CPA</SelectItem>
+                        <SelectItem value="CPC">CPC</SelectItem>
+                        <SelectItem value="LeadHunting">
+                          Lead Hunting
+                        </SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {/* FINAL SELECT MODEL */}
             </div>
             <div className="col-span-1">
               <Label htmlFor="tipo">Tipo</Label>
-              <SelectTipo />
+              {/* SELECT TYPE */}
+              <Controller
+                name="type"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange}>
+                    <SelectTrigger className={`${errors.type && "border-rose-400"}`}>
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Tipos</SelectLabel>
+                        <SelectItem value="B2B">B2B</SelectItem>
+                        <SelectItem value="B2C">B2C</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {/* FINAL SELECT TYPE */}
             </div>
             <div className="col-span-1">
-              <Label htmlFor="payout">Payout</Label>
+              <Label>Payout</Label>
               <Input
-                id="nome"
-                type="text"
-                placeholder=""
-                {...register("payout")}
-                className={`${errors.payout && "border-rose-400 bg-rose-100"}`}
+                id="payout"
+                type="number"
+                {...register("payout", { valueAsNumber: true })}
+                className={`${errors.payout && "border-rose-400"}`}
               />
             </div>
             <div className="col-span-2">
@@ -243,7 +408,7 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
                 id="dataInicio"
                 type="datetime-local"
                 {...register("startAt")}
-                className={`${errors.startAt && "border-rose-400 bg-rose-100"}`}
+                className={`${errors.startAt && "border-rose-400"}`}
               />
             </div>
             <div className="col-span-2">
@@ -252,7 +417,7 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
                 id="dataFim"
                 type="datetime-local"
                 {...register("endAt")}
-                className={`${errors.endAt && "border-rose-400 bg-rose-100"}`}
+                className={`${errors.endAt && "border-rose-400"}`}
               />
             </div>
             <div className="col-span-4">
@@ -260,6 +425,7 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
               <Textarea
                 id="observacao"
                 placeholder="Digite uma observação, campo não obrigatório"
+                {...register('obs')}
               />
             </div>
           </div>

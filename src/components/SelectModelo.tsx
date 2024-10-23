@@ -7,10 +7,14 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
+
+  type modelProps = {
+    defaultValue?: string;
+  }
   
-  export function SelectModelo() {
+  export function SelectModelo({defaultValue}: modelProps) {
     return (
-      <Select>
+      <Select defaultValue={defaultValue}>
         <SelectTrigger>
           <SelectValue placeholder="Selecione o modelo" />
         </SelectTrigger>
@@ -21,7 +25,7 @@ import {
             <SelectItem value="cpi">CPI</SelectItem>
             <SelectItem value="cpa">CPA</SelectItem>
             <SelectItem value="cpc">CPC</SelectItem>
-            <SelectItem value="leadhunting">Lead Hunting</SelectItem>
+            <SelectItem value="lead hunting">Lead Hunting</SelectItem>
             <SelectItem value="other">Other</SelectItem>
           </SelectGroup>
         </SelectContent>

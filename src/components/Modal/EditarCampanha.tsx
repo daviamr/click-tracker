@@ -29,32 +29,50 @@ import { AlertMessage } from "../alert_message";
 import { api } from "@/services/Api";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SelectCategoria } from "../SelectCategoria";
-import { SelectSubCategoria } from "../SelectSubCategoria";
 import { Textarea } from "../ui/textarea";
-import { SelectModelo } from "../SelectModelo";
-import { SelectTipo } from "../SelectTipo";
 
 const verifyEditCampaign = z.object({
   id: z.number(),
   name: z.string().min(4, "*Mínimo de 4 caracteres"),
-  clientId: z.string(),
+  clientId: z.string().min(1, ""),
   startAt: z.string(),
   endAt: z.string(),
-  payout: z.string(),
+  category: z.string(),
+  subcategory: z.string(),
+  model: z.string(),
+  type: z.string(),
+  obs: z.string(),
+  payout: z.number(),
 });
 
 type campaignData = z.infer<typeof verifyEditCampaign>;
 type HandleCreateUsersProps = {
-  handleEditCampaign: ({ id, name, clientId }: editCampaign) => void;
+  handleEditCampaign: ({
+    id,
+    name,
+    clientId,
+    category,
+    subcategory,
+    model,
+    type,
+    startAt,
+    endAt,
+    obs,
+  }: editCampaign) => void;
   data: DataProps;
 };
 type editCampaignProps = {
   name: string;
   id: number;
   nameClient: string;
+  category: string;
+  subcategory: string;
+  model: string;
+  type: string;
+  payout: number;
   dataInicio: string;
   dataFim: string;
+  obs: string;
   onEditCampaign: () => void;
 };
 
@@ -62,8 +80,14 @@ export function EditarCampanha({
   name,
   id,
   nameClient,
+  category,
+  subcategory,
+  model,
+  type,
+  payout,
   dataInicio,
   dataFim,
+  obs,
   onEditCampaign,
 }: editCampaignProps) {
   const { data, handleEditCampaign } = useAuth() as HandleCreateUsersProps;
@@ -105,9 +129,14 @@ export function EditarCampanha({
     defaultValues: {
       id,
       name: name,
+      category: category,
+      subcategory: subcategory,
+      model: model,
+      type: type,
+      payout: payout,
       startAt: dataPadraoFormatada(dataInicio),
       endAt: dataPadraoFormatada(dataFim),
-      payout: '',
+      obs: obs,
     },
   });
 
@@ -116,8 +145,13 @@ export function EditarCampanha({
       reset({
         id,
         name: name,
+        category: category,
+        subcategory: subcategory,
+        model: model,
+        type: type,
         startAt: dataPadraoFormatada(dataInicio),
         endAt: dataPadraoFormatada(dataFim),
+        obs: obs,
       });
     }
   }, [isOpen]);
@@ -132,24 +166,55 @@ export function EditarCampanha({
   }, [isOpen, nameClient, customerData, setValue]);
 
   async function editCampaign(data: campaignData) {
-    console.log("enviado");
-    const { id, name, clientId, startAt, endAt } = data;
+    const {
+      id,
+      name,
+      category,
+      subcategory,
+      model,
+      type,
+      payout,
+      clientId,
+      startAt,
+      endAt,
+      obs,
+    } = data;
     const idClient = customerData.find((i) => i.name === clientId)?.id;
     const dataInicioFormatado = new Date(startAt);
     const dataFimFormatado = new Date(endAt);
     const inicioIso = dataInicioFormatado.toISOString();
     const fimIso = dataFimFormatado.toISOString();
 
-    console.log(id, name, idClient);
+    console.log([
+      {
+        id: id,
+        name: name,
+        clientId: idClient,
+        category: category,
+        subcategory: subcategory,
+        model: model,
+        type: type,
+        payout: payout,
+        startAt: inicioIso,
+        endAt: fimIso,
+        obs: obs,
+      },
+    ]);
 
     if (idClient) {
       try {
         await handleEditCampaign({
           id,
           name,
+          category,
+          subcategory,
+          model,
+          type,
+          payout,
           clientId: idClient,
           startAt: inicioIso,
           endAt: fimIso,
+          obs,
         });
         onEditCampaign();
       } catch (error) {
@@ -230,28 +295,168 @@ export function EditarCampanha({
             </div>
             <div className="col-span-2">
               <Label htmlFor="categoria">Categoria</Label>
-              <SelectCategoria />
+              {/* SELECT CATEGORY */}
+              <Controller
+                name="category"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={category}
+                  >
+                    <SelectTrigger
+                      className={`${errors.category && "border-rose-400"}`}
+                    >
+                      <SelectValue placeholder={category} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Categorias</SelectLabel>
+                        <SelectItem value="Financeiro">Financeiro</SelectItem>
+                        <SelectItem value="Benefícios">Benefícios</SelectItem>
+                        <SelectItem value="Saúde">Saúde</SelectItem>
+                        <SelectItem value="Publicidade">Publicidade</SelectItem>
+                        <SelectItem value="Telecom">Telecom</SelectItem>
+                        <SelectItem value="Facilities">Facilities</SelectItem>
+                        <SelectItem value="Hardware">Hardware</SelectItem>
+                        <SelectItem value="Escritório">Escritório</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {/* FINAL SELECT CATEGORY */}
             </div>
             <div className="col-span-2">
               <Label htmlFor="subcategoria">Subcategoria</Label>
-              <SelectSubCategoria />
+              {/* SELECT SUBCATEGORY */}
+              <Controller
+                name="subcategory"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={subcategory}
+                  >
+                    <SelectTrigger
+                      className={`${errors.subcategory && "border-rose-400"}`}
+                    >
+                      <SelectValue placeholder="Selecione a subcategoria" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Subcategorias</SelectLabel>
+                        <SelectItem value="Maquininha">Maquininha</SelectItem>
+                        <SelectItem value="Abertura de Contas">
+                          Abertura de Contas
+                        </SelectItem>
+                        <SelectItem value="Empréstimos">Empréstimos</SelectItem>
+                        <SelectItem value="Cartão de Crédito">
+                          Cartão de Crédito
+                        </SelectItem>
+                        <SelectItem value="Software">Software</SelectItem>
+                        <SelectItem value="Cartão Alimentação">
+                          Cartão Alimentação
+                        </SelectItem>
+                        <SelectItem value="Cartão Refeição">
+                          Cartão Refeição
+                        </SelectItem>
+                        <SelectItem value="Clano de Saúde">
+                          Plano de Saúde
+                        </SelectItem>
+                        <SelectItem value="Plano Odontológico">
+                          Plano Odontológico
+                        </SelectItem>
+                        <SelectItem value="E-mail Marketing">
+                          E-mail Marketing
+                        </SelectItem>
+                        <SelectItem value="Geração de Leads">
+                          Geração de Leads
+                        </SelectItem>
+                        <SelectItem value="Internet">Internet</SelectItem>
+                        <SelectItem value="Plano Móvel">Plano Móvel</SelectItem>
+                        <SelectItem value="Máquina de Café">
+                          Máquina de Café
+                        </SelectItem>
+                        <SelectItem value="Material de Escritório">
+                          Material de Escritório
+                        </SelectItem>
+                        <SelectItem value="Antivírus">Antivírus</SelectItem>
+                        <SelectItem value="PCs e Notebooks">
+                          PCs e Notebooks
+                        </SelectItem>
+                        <SelectItem value="Mobiliários">Mobiliários</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {/* FINAL SELECT SUBCATEGORY */}
             </div>
             <div className="col-span-2">
               <Label htmlFor="modelo">Modelo</Label>
-              <SelectModelo/>
+              {/* SELECT MODEL */}
+              <Controller
+                name="model"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} defaultValue={model}>
+                    <SelectTrigger
+                      className={`${errors.model && "border-rose-400"}`}
+                    >
+                      <SelectValue placeholder="Selecione o modelo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Modelos</SelectLabel>
+                        <SelectItem value="CPL">CPL</SelectItem>
+                        <SelectItem value="CPI">CPI</SelectItem>
+                        <SelectItem value="CPA">CPA</SelectItem>
+                        <SelectItem value="CPC">CPC</SelectItem>
+                        <SelectItem value="Lead Hunting">
+                          Lead Hunting
+                        </SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {/* FINAL SELECT MODEL */}
             </div>
             <div className="col-span-1">
               <Label htmlFor="tipo">Tipo</Label>
-              <SelectTipo/>
+              {/* SELECT TYPE */}
+              <Controller
+                name="type"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} defaultValue={type}>
+                    <SelectTrigger
+                      className={`${errors.type && "border-rose-400"}`}
+                    >
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Tipos</SelectLabel>
+                        <SelectItem value="B2B">B2B</SelectItem>
+                        <SelectItem value="B2C">B2C</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {/* FINAL SELECT TYPE */}
             </div>
             <div className="col-span-1">
-              <Label htmlFor="payout">Payout</Label>
+              <Label>Payout</Label>
               <Input
-                id="nome"
-                type="text"
-                placeholder=""
-                {...register("payout")}
-                className={`${errors.payout && "border-rose-400 bg-rose-100"}`}
+                id="payout"
+                type="number"
+                defaultValue={payout}
+                {...register("payout", { valueAsNumber: true })}
+                className={`${errors.payout && "border-rose-400"}`}
               />
             </div>
             <div className="col-span-2">
@@ -277,6 +482,8 @@ export function EditarCampanha({
               <Textarea
                 id="observacao"
                 placeholder="Digite uma observação, campo não obrigatório"
+                defaultValue={obs}
+                {...register("obs")}
               />
             </div>
           </div>

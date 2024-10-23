@@ -28,7 +28,6 @@ export function CampanhaPage() {
   const [switchStates, setSwitchStates] = useState<{ [key: string]: boolean }>(
     {}
   );
-  console.log(campanhas);
 
   const handleSwitchChange = async (id: number, checked: boolean) => {
     setSwitchStates((prev) => ({ ...prev, [id]: checked }));
@@ -76,7 +75,6 @@ export function CampanhaPage() {
         },
       });
       setCustomerData(response.data);
-      console.log(response.data);
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
@@ -97,6 +95,8 @@ export function CampanhaPage() {
     await deleteCampaign({ id });
     handleGetCampaign();
   };
+
+  console.log(campanhas)
 
   return (
     <>
@@ -192,7 +192,7 @@ export function CampanhaPage() {
                 <TableCell className="text-nowrap">{customerName}</TableCell>
                 <TableCell>{i.category}</TableCell>
                 <TableCell>{i.subCategory}</TableCell>
-                <TableCell>{i.model}</TableCell>
+                <TableCell>{i.model === 'LeadHunting' ? 'Lead Hunting' : i.model}</TableCell>
                 <TableCell>{i.type}</TableCell>
                 <TableCell>{i.payout}</TableCell>
                 <TableCell></TableCell>
@@ -212,8 +212,14 @@ export function CampanhaPage() {
                     name={i.name}
                     id={i.id}
                     nameClient={customerName}
+                    category={i.category}
+                    subcategory={i.subCategory}
+                    model={i.model}
+                    type={i.type}
+                    payout={i.payout}
                     dataInicio={i.startAt}
                     dataFim={i.endAt}
+                    obs={i.obs}
                     onEditCampaign={handleGetCampaign}
                   />
                   <Button

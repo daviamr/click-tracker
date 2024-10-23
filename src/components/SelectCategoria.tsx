@@ -7,10 +7,14 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
+
+  type categoryProps = {
+    defaultValue?: string;
+  }
   
-  export function SelectCategoria() {
+  export function SelectCategoria({defaultValue}: categoryProps) {
     return (
-      <Select>
+      <Select defaultValue={defaultValue}>
         <SelectTrigger>
           <SelectValue placeholder="Selecione a categoria" />
         </SelectTrigger>

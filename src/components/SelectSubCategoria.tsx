@@ -7,34 +7,38 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
+
+  type subCategoryProps = {
+    defaultValue?: string;
+  }
   
-  export function SelectSubCategoria() {
+  export function SelectSubCategoria({defaultValue}: subCategoryProps) {
     return (
-      <Select>
+      <Select defaultValue={defaultValue}>
         <SelectTrigger>
           <SelectValue placeholder="Selecione a subcategoria" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Subcategorias</SelectLabel>
-            <SelectItem value="1">Maquininha</SelectItem>
-            <SelectItem value="2">Abertura de Contas</SelectItem>
-            <SelectItem value="3">Empréstimos</SelectItem>
-            <SelectItem value="4">Cartão de Crédito</SelectItem>
-            <SelectItem value="5">Software</SelectItem>
-            <SelectItem value="6">Cartão Alimentação</SelectItem>
-            <SelectItem value="7">Cartão Refeição</SelectItem>
-            <SelectItem value="8">Plano de Saúde</SelectItem>
-            <SelectItem value="9">Plano Odontológico</SelectItem>
-            <SelectItem value="10">E-mail Marketing</SelectItem>
-            <SelectItem value="11">Geração de Leads</SelectItem>
-            <SelectItem value="12">Internet</SelectItem>
-            <SelectItem value="13">Plano Móvel</SelectItem>
-            <SelectItem value="14">Máquina de Café</SelectItem>
-            <SelectItem value="15">Materal de Escritório</SelectItem>
-            <SelectItem value="16">Antivírus</SelectItem>
-            <SelectItem value="17">PCs e Notebooks</SelectItem>
-            <SelectItem value="18">Mobiliários</SelectItem>
+            <SelectItem value="maquininha">Maquininha</SelectItem>
+            <SelectItem value="abertura de contas">Abertura de Contas</SelectItem>
+            <SelectItem value="empréstimos">Empréstimos</SelectItem>
+            <SelectItem value="cartão de crédito">Cartão de Crédito</SelectItem>
+            <SelectItem value="software">Software</SelectItem>
+            <SelectItem value="cartão alimentação">Cartão Alimentação</SelectItem>
+            <SelectItem value="cartão refeição">Cartão Refeição</SelectItem>
+            <SelectItem value="plano de saúde">Plano de Saúde</SelectItem>
+            <SelectItem value="plano odontológico">Plano Odontológico</SelectItem>
+            <SelectItem value="e-mail marketing">E-mail Marketing</SelectItem>
+            <SelectItem value="geração de leads">Geração de Leads</SelectItem>
+            <SelectItem value="internet">Internet</SelectItem>
+            <SelectItem value="plano móvel">Plano Móvel</SelectItem>
+            <SelectItem value="máquina de café">Máquina de Café</SelectItem>
+            <SelectItem value="material de escritório">Material de Escritório</SelectItem>
+            <SelectItem value="antivírus">Antivírus</SelectItem>
+            <SelectItem value="pcs e notebooks">PCs e Notebooks</SelectItem>
+            <SelectItem value="mobiliários">Mobiliários</SelectItem>
           </SelectGroup>
         </SelectContent>
       </Select>

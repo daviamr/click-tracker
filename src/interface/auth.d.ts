@@ -62,16 +62,28 @@ export type CreateNewUser = {
   export type createNewCampaign = {
     name: string;
     clientId: string;
+    category: string;
+    subcategory: string;
+    payout: number;
+    model: string;
+    type: string;
     startAt?: string;
     endAt?: string;
+    obs: string;
   }
 
   export type editCampaign = {
     id: number;
     name: string;
     clientId: string;
-    startAt: string;
-    endAt: string;
+    category: string;
+    subcategory: string;
+    payout: number;
+    model: string;
+    type: string;
+    startAt?: string;
+    endAt?: string;
+    obs: string;
   }
 
   export type deleteCampaign = {
@@ -225,8 +237,15 @@ export type CreateNewUser = {
     url: string;
   }
 
+  export type editLP = {
+    id: number,
+    name: string,
+    campaignId: number;
+    url: string;
+  }
+
   export type lpsData = {
-    campaingId: number;
+    campaignId: number;
     id: number;
     name: string;
     url: string;
@@ -262,6 +281,7 @@ export type CreateNewUser = {
     name: string;
     url: string;
     campaignId: number;
+    campaign: {client: {name: string}}
   }
 
   export type createFinalURL = {

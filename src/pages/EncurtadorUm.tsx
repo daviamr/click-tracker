@@ -18,6 +18,7 @@ import {
   customerData,
   dataAction,
   DataProps,
+  finalURLProps,
   urlData,
 } from "@/interface/auth";
 import { api } from "@/services/Api";
@@ -75,6 +76,7 @@ export function EncutadorUm() {
   const [acoes, setAcoes] = useState<dataAction[]>([]);
   const [baseUrl, setBaseUrl] = useState<urlData[]>([]);
   const [conversor, setConversor] = useState<conversorData[]>([]);
+  const [finalURL, setFinalURL] = useState<finalURLProps[]>([]);
   const [selectedValue, setSelectedValue] = useState<number>(6);
   const linkLength = [
     "a",
@@ -302,6 +304,28 @@ export function EncutadorUm() {
     }
     handleGetUsers();
   }, [clienteSelecionado]);
+
+  const handleGetFinalURL = async () => {
+    try {
+      const response = await api.get("/final-urls", {
+        headers: {
+          Authorization: `Bearer ${data.jwtToken}`,
+        },
+      });
+      setFinalURL(response.data);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível carregar os usuários, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  };
+
+  useEffect(() => {handleGetFinalURL()}, [data.jwtToken])
 
   //Form
   const {
@@ -795,18 +819,34 @@ export function EncutadorUm() {
                   content="É o endereço (URL) final para onde o click deve ser direcionado."
                 />
               </div>
-              <input
-                id="urlFinal"
-                type="text"
-                placeholder="https://"
-                {...register("redirectUrl")}
-                className={`pl-4 bg-transparent rounded-md border border-input min-h-[36px] ${
-                  errors.redirectUrl && "border-rose-400"
-                }`}
+              <Controller
+                name="redirectUrl"
+                control={control}
+                render={() => (
+                  <Select
+                    onValueChange={handleSelectCampaign}
+                  >
+                    <SelectTrigger>
+                      <SelectValue
+                        placeholder="Selecione a URL de destino"
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>URL's</SelectLabel>
+                        {finalURL.map((i, index) => (
+                          <SelectItem value={i.name} key={index}>
+                            {i.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
               />
               {errors.redirectUrl && (
                 <span className="text-xs text-rose-400 font-normal">
-                  {errors.redirectUrl.message}
+                  *Campo obrigatório
                 </span>
               )}
             </div>

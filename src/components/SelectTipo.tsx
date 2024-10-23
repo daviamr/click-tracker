@@ -7,10 +7,14 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
+
+  type typeProps = {
+    defaultValue?: string;
+  }
   
-  export function SelectTipo() {
+  export function SelectTipo({defaultValue}: typeProps) {
     return (
-      <Select>
+      <Select defaultValue={defaultValue}>
         <SelectTrigger>
           <SelectValue placeholder="Selecione o tipo" />
         </SelectTrigger>

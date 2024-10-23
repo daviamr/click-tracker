@@ -42,6 +42,7 @@ import {
   editBase,
   deleteBase,
   createFinalURL,
+  editLP,
 } from "@/interface/auth";
 import { AlertMessage } from "@/components/alert_message";
 
@@ -70,6 +71,7 @@ interface AuthContextType {
   handleCreateLink: (data: createNewLink) => Promise<void>;
   handleCreateSingleLink: (data: createNewSingleLink) => Promise<ApiResponse>;
   handleCreateLP: (data: createLP) => Promise<void>;
+  handleEditLP: (data: editLP) => Promise<void>;
   deleteLp: (data: deleteLp) => Promise<void>;
   handleCreateBase: (data: createBase) => Promise<void>;
   handleEditBase: (data: editBase) => Promise<void>;
@@ -351,7 +353,7 @@ function AuthProvider({ children }: ChildrenProps) {
   }
 
   //CAMPAIGNS
-  async function handleCreateCampaign({ name, clientId, startAt, endAt }: createNewCampaign) {
+  async function handleCreateCampaign({ name, clientId, category, subcategory, payout, model, type, startAt, endAt, obs }: createNewCampaign) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -359,14 +361,19 @@ function AuthProvider({ children }: ChildrenProps) {
         throw new Error("Token não encontrado.");
       }
       const token = JSON.parse(dataUser);
-      console.log(name, clientId, startAt, endAt)
       const response = await api.post(
         "/campaigns",
         {
           name,
           clientId,
+          category,
+          subcategory,
+          payout,
+          model,
+          type,
           startAt,
           endAt,
+          obs,
         },
         {
           headers: {
@@ -389,7 +396,7 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
-  async function handleEditCampaign({ id, name, clientId, startAt, endAt }: editCampaign) {
+  async function handleEditCampaign({ id, name, clientId, category, subcategory, payout, model, type, startAt, endAt, obs }: editCampaign) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -398,15 +405,19 @@ function AuthProvider({ children }: ChildrenProps) {
       }
       const token = JSON.parse(dataUser);
 
-      console.log(id, name, clientId);
-
       const response = await api.put(
         `/campaigns/${id}`,
         {
           name,
           clientId,
+          category,
+          subcategory,
+          payout,
+          model,
+          type,
           startAt,
           endAt,
+          obs,
         },
         {
           headers: {
@@ -1033,6 +1044,45 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
+  async function handleEditLP({ id, name, campaignId, url }: editLP) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      // console.log(token)
+
+      const response = await api.post(
+        `/lps/${id}`,
+        {
+          name,
+          campaignId,
+          url,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token.jwtToken}`,
+          },
+        }
+      );
+      console.log(response.data);
+
+      AlertMessage("LP criada com sucesso.", "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível criar uma LP agora, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  }
+
   async function deleteLp({ id }: deleteLp) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
@@ -1238,6 +1288,7 @@ function AuthProvider({ children }: ChildrenProps) {
           handleCreateLink,
           handleCreateSingleLink,
           handleCreateLP,
+          handleEditLP,
           deleteLp,
           handleCreateBase,
           handleEditBase,

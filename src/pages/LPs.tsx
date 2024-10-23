@@ -13,8 +13,9 @@ import { api } from "@/services/Api";
 import { useAuth } from "@/hook/Auth";
 import { campaignData, DataProps, lpsData } from "@/interface/auth";
 import { Button } from "@/components/ui/button";
-import { Laptop, UserRoundPen, UserRoundX } from "lucide-react";
+import { Laptop, UserRoundX } from "lucide-react";
 import { NovaLP } from "@/components/Modal/NovaLP";
+import { EditarLP } from "@/components/Modal/EditarLP";
 
 type dataUserProps = { data: DataProps };
 
@@ -75,6 +76,8 @@ export function LPsPage() {
     handleGetLP();
   };
 
+  console.log(lps)
+
   return (
     <>
       <div>
@@ -110,16 +113,14 @@ export function LPsPage() {
               <TableCell>{i.name}</TableCell>
               <TableCell></TableCell>
               <TableCell>
-              {campanhas.find((c) => i.campaingId === c.id)?.name || "0"}
+              {campanhas.find((c) => i.campaignId === c.id)?.name || "N/A"}
               </TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
               <TableCell>{i.url}</TableCell>
               <TableCell></TableCell>
               <TableCell className="flex items-center justify-end gap-2 pr-4">
-                <Button className="p-2" variant={"outline"}>
-                  <UserRoundPen size={18} />
-                </Button>
+                <EditarLP id={i.id} name={i.name} url={i.url} onEditLP={handleGetLP}/>
                 <Button
                   className="p-2 duration-300 hover:text-red-700"
                   variant={"outline"}

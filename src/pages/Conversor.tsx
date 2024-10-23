@@ -52,6 +52,8 @@ export function ConversorPage() {
     await deleteConversor({ id });
     handleGetConversor();
   };
+
+  console.log(conversor)
   return (
     <>
       <div>

@@ -21,7 +21,7 @@ import { useState } from "react";
 const createUserSchema = z.object({
   name: z.string().min(1, "*Campo obrigatório"),
   email: z.string().min(1, "*Campo obrigatório").email("E-mail invalido."),
-  password: z.string().min(8, "A senha deve ter no mínimo 8 caracteres"),
+  password: z.string().min(4, "*Mínimo de 4 caracteres"),
 });
 
 type createUserForm = z.infer<typeof createUserSchema>;

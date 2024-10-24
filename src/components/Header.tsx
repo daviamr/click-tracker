@@ -24,7 +24,6 @@ import { TooltipHeader } from "./TooltipHeader";
 export function Header() {
   const [isOpen, setIsOpen] = useState<Boolean>(true);
   const { isFocus, setIsFocus } = useContextState();
-  console.log(isOpen);
 
   function logOut() {
     try {

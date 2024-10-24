@@ -43,19 +43,28 @@ const createUserSchema = z.object({
   url: z.string().min(8, "Campo obrigatório"),
 });
 
-type createLPForm = z.infer<typeof createUserSchema>;
+type editLPForm = z.infer<typeof createUserSchema>;
 type HandleCreateLpProps = {
-  handleEditLP: ({id, name, campaignId, url }: editLP) => void;
+  handleEditLP: ({ id, name, campaignId, url }: editLP) => void;
   data: DataProps;
 };
 type editLPProps = {
   id: number;
+  clientName: string;
+  campaignName: string;
   name: string;
   url: string;
   onEditLP: () => void;
 };
 
-export function EditarLP({id, name, url, onEditLP }: editLPProps) {
+export function EditarLP({
+  id,
+  clientName,
+  campaignName,
+  name,
+  url,
+  onEditLP,
+}: editLPProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { data, handleEditLP } = useAuth() as HandleCreateLpProps;
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
@@ -69,12 +78,12 @@ export function EditarLP({id, name, url, onEditLP }: editLPProps) {
     control,
     setValue,
     formState: { errors },
-  } = useForm<createLPForm>({
+  } = useForm<editLPForm>({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
       id,
       name: name,
-      customer: "",
+      customer: clientName,
       url: url,
     },
   });
@@ -94,7 +103,6 @@ export function EditarLP({id, name, url, onEditLP }: editLPProps) {
     );
     if (selectedCampaign) {
       setValue("campaignId", selectedCampaign.id);
-      console.log(`id da campanha: ${selectedCampaign.id}`);
     }
   };
 
@@ -139,12 +147,13 @@ export function EditarLP({id, name, url, onEditLP }: editLPProps) {
   };
 
   useEffect(() => {
-    reset({id, name: name, url: url})
+    reset({ id, name: name, customer: clientName, url: url });
+    handleSelectCustomerChange(clientName);
+    handleSelectCampaign(campaignName);
     handleGetClient();
   }, [isOpen]);
 
   useEffect(() => {
-    console.log(selectedCustomer);
     if (selectedCustomer) {
       handleGetSingleClient();
     }
@@ -174,11 +183,17 @@ export function EditarLP({id, name, url, onEditLP }: editLPProps) {
     handleGetCampaign();
   }, [data.jwtToken]);
 
-  async function createLP(data: createLPForm) {
+  async function editLP(data: editLPForm) {
     try {
-      console.log(data);
-      const {id, name, campaignId, url } = data;
-      await handleEditLP({id, name, campaignId, url });
+      const { id, name, campaignId, url } = data;
+      console.log([{
+        id: id,
+        name: name,
+        clientId: clientId,
+        campaingId: campaignId,
+        url: url,
+      }])
+      await handleEditLP({ id, name, campaignId, url });
       onEditLP();
       setIsOpen(false);
       reset();
@@ -203,8 +218,8 @@ export function EditarLP({id, name, url, onEditLP }: editLPProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <form action="" onSubmit={handleSubmit(createLP)}>
-          <input type="hidden" {...register('id')} />
+        <form action="" onSubmit={handleSubmit(editLP)}>
+          <input type="hidden" {...register("id")} />
           <div className="grid grid-cols-4 gap-4 py-4">
             <div className="col-span-4">
               <Label htmlFor="username" className="text-right">
@@ -243,9 +258,10 @@ export function EditarLP({id, name, url, onEditLP }: editLPProps) {
                       setSelectedCustomer(value);
                       handleSelectCustomerChange(value);
                     }}
+                    defaultValue={clientName}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione o cliente" />
+                      <SelectValue />
                     </SelectTrigger>
                     <SelectContent className={`${errors.campaignId}`}>
                       <SelectGroup>
@@ -281,16 +297,10 @@ export function EditarLP({id, name, url, onEditLP }: editLPProps) {
                 render={() => (
                   <Select
                     onValueChange={handleSelectCampaign}
-                    disabled={!selectedCustomer}
+                    defaultValue={campaignName}
                   >
                     <SelectTrigger>
-                      <SelectValue
-                        placeholder={
-                          selectedCustomer
-                            ? "Selecione a campanha"
-                            : "Cliente não selecionado"
-                        }
-                      />
+                      <SelectValue />
                     </SelectTrigger>
                     <SelectContent className={`${errors.campaignId}`}>
                       <SelectGroup>

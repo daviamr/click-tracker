@@ -512,6 +512,7 @@ function AuthProvider({ children }: ChildrenProps) {
     endAt,
     utm,
     cost,
+    landingPageId,
     key
   }: createNewAction) {
     try {
@@ -533,6 +534,7 @@ function AuthProvider({ children }: ChildrenProps) {
           endAt,
           utm,
           cost,
+          landingPageId,
           key
         },
         {
@@ -564,6 +566,7 @@ function AuthProvider({ children }: ChildrenProps) {
     endAt,
     utm,
     cost,
+    landingPageId,
     key
   }: editAction) {
     try {
@@ -583,6 +586,7 @@ function AuthProvider({ children }: ChildrenProps) {
           endAt,
           utm,
           cost,
+          landingPageId,
           key
         },
         {
@@ -591,9 +595,8 @@ function AuthProvider({ children }: ChildrenProps) {
           },
         }
       );
-      console.log(response.data);
-
-      AlertMessage("Campanha editada com sucesso.", "success");
+      console.log('response:', response);
+      AlertMessage("Ação editada com sucesso.", "success");
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.message, "error");

@@ -88,7 +88,6 @@ export function NovaLP({ onCreateLP }: createLPProps) {
     );
     if (selectedCampaign) {
       setValue("campaignId", selectedCampaign.id);
-      console.log(`id da campanha: ${selectedCampaign.id}`);
     }
   };
 
@@ -100,7 +99,6 @@ export function NovaLP({ onCreateLP }: createLPProps) {
         },
       });
       setCustomerData(response.data);
-      console.log(response.data);
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
@@ -141,7 +139,6 @@ export function NovaLP({ onCreateLP }: createLPProps) {
   }, [isOpen]);
 
   useEffect(() => {
-    console.log(selectedCustomer)
     if (selectedCustomer) {
       handleGetSingleClient();
     }
@@ -155,7 +152,6 @@ export function NovaLP({ onCreateLP }: createLPProps) {
         },
       });
       setCampanhas(response.data);
-      console.log(response.data);
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
@@ -173,7 +169,7 @@ export function NovaLP({ onCreateLP }: createLPProps) {
   }, [data.jwtToken]);
 
   useEffect(() => {
-    reset({ name: "", customer: "", url: "" });
+    reset();
     setSelectedCustomer("");
   }, [isOpen]);
 

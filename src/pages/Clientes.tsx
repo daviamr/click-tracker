@@ -32,7 +32,6 @@ export function ClientesPage() {
         },
       });
       setCustomerData(response.data);
-      console.log(response.data);
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
@@ -85,11 +84,11 @@ export function ClientesPage() {
                 <img src={`${aws}${i.logo}`} alt={"Logo" + i.logo} />
               </TableCell>
               <TableCell>{i.name}</TableCell>
-              <TableCell>{i._count.campaigns}</TableCell>
+              <TableCell>{i.totalCampaigns}</TableCell>
               <TableCell>{i.totalActions}</TableCell>
               <TableCell>{i.totalClicks}</TableCell>
               <TableCell>{i.totalLinks}</TableCell>
-              <TableCell>0</TableCell>
+              <TableCell>{i.totalLps}</TableCell>
               <TableCell className="flex items-center justify-end gap-2 pr-4">
                 <EditarCliente
                   onEditClient={handleGetClient}

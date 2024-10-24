@@ -185,22 +185,6 @@ export function EditarCampanha({
     const inicioIso = dataInicioFormatado.toISOString();
     const fimIso = dataFimFormatado.toISOString();
 
-    console.log([
-      {
-        id: id,
-        name: name,
-        clientId: idClient,
-        category: category,
-        subcategory: subcategory,
-        model: model,
-        type: type,
-        payout: payout,
-        startAt: inicioIso,
-        endAt: fimIso,
-        obs: obs,
-      },
-    ]);
-
     if (idClient) {
       try {
         await handleEditCampaign({
@@ -400,7 +384,7 @@ export function EditarCampanha({
                 name="model"
                 control={control}
                 render={({ field }) => (
-                  <Select onValueChange={field.onChange} defaultValue={model}>
+                  <Select onValueChange={field.onChange} defaultValue={model === 'LeadHunting' ? 'Lead Hunting' : model}>
                     <SelectTrigger
                       className={`${errors.model && "border-rose-400"}`}
                     >

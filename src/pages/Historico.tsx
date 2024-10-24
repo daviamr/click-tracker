@@ -69,10 +69,10 @@ export function HistoricoPage() {
           {dataAction.map((i) => (
             <TableRow>
               <TableCell className="pl-4">{i.name}</TableCell>
-              <TableCell>{i.campaign.name}</TableCell>
-              <TableCell>{i.campaign.client.name}</TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
+              <TableCell>{i.campaignName}</TableCell>
+              <TableCell>{i.clientName}</TableCell>
+              <TableCell>{i.totalLinks}</TableCell>
+              <TableCell>{i.totalClicks}</TableCell>
               <TableCell></TableCell>
               <TableCell className="flex items-center justify-end gap-2 pr-4">
                 <Button variant={"outline"} className="flex gap-2 items-center">

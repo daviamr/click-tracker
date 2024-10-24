@@ -27,7 +27,6 @@ export function AcaoPage() {
   const [switchStates, setSwitchStates] = useState<{ [key: string]: boolean }>(
     {}
   );
-  console.log(dataAction)
 
   const handleSwitchChange = async (id: number, checked: boolean) => {
     setSwitchStates((prev) => ({ ...prev, [id]: checked }));
@@ -111,7 +110,7 @@ export function AcaoPage() {
             <TableHead>Ação</TableHead>
             <TableHead className="min-w-[100px]">Cliente</TableHead>
             <TableHead>Campanha</TableHead>
-            <TableHead>LPs</TableHead>
+            <TableHead>LP</TableHead>
             <TableHead>Custo</TableHead>
             <TableHead>Clicks</TableHead>
             <TableHead>Links</TableHead>
@@ -157,9 +156,9 @@ export function AcaoPage() {
                   )}
                 </TableCell>
                 <TableCell>{i.name}</TableCell>
-                <TableCell>{i.campaign.client.name}</TableCell>
-                <TableCell>{i.campaign.name}</TableCell>
-                <TableCell></TableCell>
+                <TableCell>{i.clientName}</TableCell>
+                <TableCell>{i.campaignName}</TableCell>
+                <TableCell>{i.landingPageName}</TableCell>
                 <TableCell>{i.cost}</TableCell>
                 <TableCell>{i.totalClicks}</TableCell>
                 <TableCell>{i.totalLinks}</TableCell>
@@ -175,9 +174,11 @@ export function AcaoPage() {
                   />
                   <EditarAcao
                     id={i.id}
-                    cliente={i.campaign.client.name}
-                    campanha={i.campaign.name}
-                    acao={i.name}
+                    client={i.clientName}
+                    action={i.name}
+                    campaign={i.campaignName}
+                    cost={i.cost}
+                    lp={i.landingPageName}
                     dataInicio={i.startAt}
                     dataFim={i.endAt}
                     onEditAction={handleGetAction}

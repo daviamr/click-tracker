@@ -47,12 +47,11 @@ export type CreateNewUser = {
     image: File;
     name: string;
     logo?: string;
-    _count: {
-      campaigns: number;
-    }
+    totalCampaigns: number;
     totalActions: number;
     totalClicks: number;
     totalLinks: number;
+    totalLps: number;
   }
 
   export type deleteCustomer = {
@@ -103,6 +102,9 @@ export type CreateNewUser = {
     type: string;
     payout: number;
     clientId: string;
+    totalActions: number;
+    totalClicks: number;
+    totalLinks: number;
   }
 
   export type statusCampaign = {
@@ -117,6 +119,7 @@ export type CreateNewUser = {
     utm: string;
     cost: string;
     key: string;
+    landingPageId: number;
   }
 
   export type editAction = {
@@ -127,22 +130,17 @@ export type CreateNewUser = {
     endAt: string;
     utm: string;
     cost: string;
+    landingPageId: number;
     key: string;
   }
 
   export type dataAction = {
     id: number;
     name: string;
-    campaign: {
-      client: {
-        name: string;
-      }
-      name: string;
-    }
+    clientName: string;
+    campaignName: string;
+    landingPageName: string;
     cost: number;
-    key: string;
-    lpId: number;
-    utm: string;
     startAt: string;
     endAt: string;
     status: string;
@@ -169,6 +167,10 @@ export type CreateNewUser = {
 
   export type urlData = {
     id: number;
+    actions: number;
+    campaigns: number;
+    totalClicks: number;
+    totalLinks: number;
     url: string;
   }
 
@@ -245,10 +247,14 @@ export type CreateNewUser = {
   }
 
   export type lpsData = {
-    campaignId: number;
     id: number;
     name: string;
+    campaignName: string;
+    clientName: string;
     url: string;
+    totalActions: number;
+    totalClicks: number;
+    totalLinks: number;
   }
 
   export type deleteLp = {

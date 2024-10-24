@@ -53,7 +53,6 @@ export function ConversorPage() {
     handleGetConversor();
   };
 
-  console.log(conversor)
   return (
     <>
       <div>
@@ -71,8 +70,6 @@ export function ConversorPage() {
             <TableHead className="min-w-[100px] pl-4">Título</TableHead>
             <TableHead>Conversor</TableHead>
             <TableHead>Caracteres</TableHead>
-            <TableHead>Campanhas</TableHead>
-            <TableHead>Ações</TableHead>
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
@@ -82,8 +79,6 @@ export function ConversorPage() {
               <TableCell className="pl-4">{i.name}</TableCell>
               <TableCell>{i.characters}</TableCell>
               <TableCell>{i.characters.length}</TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
               <TableCell className="flex items-center justify-end gap-2 pr-4">
                 <EditarConversor
                   id={i.id}

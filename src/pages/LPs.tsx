@@ -11,7 +11,7 @@ import { AlertMessage } from "@/components/alert_message";
 import { AxiosError } from "axios";
 import { api } from "@/services/Api";
 import { useAuth } from "@/hook/Auth";
-import { campaignData, DataProps, lpsData } from "@/interface/auth";
+import { DataProps, lpsData } from "@/interface/auth";
 import { Button } from "@/components/ui/button";
 import { Laptop, UserRoundX } from "lucide-react";
 import { NovaLP } from "@/components/Modal/NovaLP";
@@ -23,7 +23,6 @@ export function LPsPage() {
   const { data } = useAuth() as dataUserProps;
   const { deleteLp } = useAuth();
   const [lps, setLPs] = useState<lpsData[]>([]);
-  const [campanhas, setCampanhas] = useState<campaignData[]>([]);
 
   const handleGetLP = async () => {
     try {
@@ -45,38 +44,15 @@ export function LPsPage() {
     }
   };
 
-  const handleGetCampaign = async () => {
-    try {
-      const response = await api.get("/campaigns", {
-        headers: {
-          Authorization: `Bearer ${data.jwtToken}`,
-        },
-      });
-      setCampanhas(response.data);
-    } catch (error: unknown) {
-      if (error instanceof AxiosError && error.response) {
-        AlertMessage(error.response.data.message, "error");
-      } else {
-        AlertMessage(
-          "Não foi possível carregar as campanhas, tente novamente mais tarde.",
-          "error"
-        );
-      }
-    }
-  };
-
   useEffect(() => {
     handleGetLP();
-    handleGetCampaign();
   }, [data.jwtToken]);
 
-  /* deletar cliente */
+  /* deletar lp */
   const handleDeleteLp = async (id: number) => {
     await deleteLp({ id });
     handleGetLP();
   };
-
-  console.log(lps)
 
   return (
     <>
@@ -111,16 +87,14 @@ export function LPsPage() {
                     <Checkbox/>
                 </TableCell> */}
               <TableCell>{i.name}</TableCell>
-              <TableCell></TableCell>
-              <TableCell>
-              {campanhas.find((c) => i.campaignId === c.id)?.name || "N/A"}
-              </TableCell>
-              <TableCell></TableCell>
+              <TableCell>{i.clientName}</TableCell>
+              <TableCell>{i.campaignName}</TableCell>
+              <TableCell>{i.totalActions}</TableCell>
               <TableCell></TableCell>
               <TableCell>{i.url}</TableCell>
-              <TableCell></TableCell>
+              <TableCell>{i.totalClicks}</TableCell>
               <TableCell className="flex items-center justify-end gap-2 pr-4">
-                <EditarLP id={i.id} name={i.name} url={i.url} onEditLP={handleGetLP}/>
+                <EditarLP id={i.id} clientName={i.clientName} campaignName={i.campaignName} name={i.name} url={i.url} onEditLP={handleGetLP}/>
                 <Button
                   className="p-2 duration-300 hover:text-red-700"
                   variant={"outline"}

@@ -30,11 +30,11 @@ import {
   createNewAction,
   customerData,
   DataProps,
+  lpsData,
 } from "@/interface/auth";
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SelectLP } from "../SelectLP";
 
 const verifyCreateAction = z.object({
   name: z.string().min(4, "*Mínimo de 4 caracteres"),
@@ -42,9 +42,11 @@ const verifyCreateAction = z.object({
   selectCliente: z.string().min(1, ""),
   startAt: z.string().min(1, "*Campo obrigatório"),
   endAt: z.string().min(1, "*Campo obrigatório"),
-  utm: z.string().min(1, '*Campo obrigatório'),
-  cost: z.string().min(1, '*Campo obrigatório'),
-  key: z.string().min(1, '*Campo obrigatório'),
+  utm: z.string().min(1, "*Campo obrigatório"),
+  cost: z.string().min(1, "*Campo obrigatório"),
+  key: z.string().min(1, "*Campo obrigatório"),
+  landingPage: z.string(),
+  landingPageId: z.number().min(1, "*Campo obrigatório"),
 });
 
 type actionData = z.infer<typeof verifyCreateAction>;
@@ -56,7 +58,8 @@ type HandleCreateUsersProps = {
     endAt,
     utm,
     cost,
-    key
+    landingPageId,
+    key,
   }: createNewAction) => void;
   data: DataProps;
 };
@@ -71,10 +74,31 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
   const [selectedClient, setSelectedClient] = useState<string>("");
   const [customerData, setCustomerData] = useState<customerData[]>([]);
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
+  const [lps, setLPs] = useState<lpsData[]>([]);
   // const [isChecked, setIsChecked] = useState(false);
   const [clientId, setClientId] = useState<string>("");
   const [utm, setUtm] = useState<string>("utm_source");
-  const [chave, setChave] = useState<string>('');
+  const [chave, setChave] = useState<string>("");
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<actionData>({
+    resolver: zodResolver(verifyCreateAction),
+    defaultValues: {
+      name: "",
+      campaignId: 0,
+      selectCliente: "",
+      startAt: "",
+      endAt: "",
+      utm: utm,
+      cost: "",
+      key: "",
+    },
+  });
 
   const handleSelectChange = (value: string) => {
     const selectedCustomer = customerData.find(
@@ -86,6 +110,22 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
     }
   };
 
+  const handleSelectCampaign = (value: string) => {
+    const selectedCampaign = campanhas.find(
+      (campanha) => campanha.name === value
+    );
+    if (selectedCampaign) {
+      setValue("campaignId", selectedCampaign.id);
+    }
+  };
+
+  const handleSelectLP = (value: string) => {
+    const selectedLP = lps.find((lp) => lp.name === value);
+    if (selectedLP) {
+      setValue("landingPageId", selectedLP.id);
+    }
+  };
+
   const handleGetClient = async () => {
     try {
       const response = await api.get("/clients", {
@@ -94,7 +134,6 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
         },
       });
       setCustomerData(response.data);
-      console.log(response.data);
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
@@ -107,8 +146,29 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
     }
   };
 
+  const handleGetLP = async () => {
+    try {
+      const response = await api.get("/lps", {
+        headers: {
+          Authorization: `Bearer ${data.jwtToken}`,
+        },
+      });
+      setLPs(response.data);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível carregar os usuários, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  };
+
   useEffect(() => {
     handleGetClient();
+    handleGetLP();
   }, [data.jwtToken]);
 
   useEffect(() => {
@@ -120,7 +180,6 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
           },
         });
         setCampanhas(response.data);
-        console.log(response.data);
       } catch (error: unknown) {
         if (error instanceof AxiosError && error.response) {
           AlertMessage(error.response.data.message, "error");
@@ -138,42 +197,12 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
   }, [clientId]);
 
   useEffect(() => {
-    reset({name: '', campaignId: 0, startAt: '', endAt: '', utm: utm, cost: '', key: ''})}, [isOpen])
-
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    control,
-    reset,
-    formState: { errors },
-  } = useForm<actionData>({
-    resolver: zodResolver(verifyCreateAction),
-    defaultValues: {
-      name: "",
-      campaignId: 0,
-      selectCliente: "",
-      startAt: "",
-      endAt: "",
-      utm: utm,
-      cost: '',
-      key: '',
-    },
-  });
-
-  const handleSelectCampaign = (value: string) => {
-    const selectedCampaign = campanhas.find(
-      (campanha) => campanha.name === value
-    );
-    if (selectedCampaign) {
-      setValue("campaignId", selectedCampaign.id);
-      console.log(`id da campanha: ${selectedCampaign.id}`);
-    }
-  };
+    reset();
+    setSelectedClient('');
+  }, [isOpen]);
 
   const createAction = async (data: actionData) => {
-    const { name, campaignId, startAt, endAt, utm, cost, key } = data;
-    console.log(name, campaignId, startAt, endAt, utm, cost, key);
+    const { name, campaignId, startAt, endAt, utm, cost, landingPageId } = data;
     const dataInicioFormatado = new Date(startAt);
     const dataFimFormatado = new Date(endAt);
     const inicioIso = dataInicioFormatado.toISOString();
@@ -190,6 +219,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
           endAt: fimIso,
           utm: utm,
           cost,
+          landingPageId,
           key: chave,
         });
         console.log({
@@ -199,6 +229,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
           endAt: fimIso,
           utm: utm,
           cost,
+          landingPageId,
           key: chave,
         });
         onCreateAction();
@@ -209,7 +240,6 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
       }
     }
   };
-  console.log(errors)
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -239,14 +269,16 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                 render={({ field }) => (
                   <Select
                     onValueChange={(value) => {
-                      field.onChange(value); // Atualiza o valor no formulário
-                      handleSelectChange(value); // Atualiza o estado do cliente selecionado
+                      field.onChange(value);
+                      handleSelectChange(value);
                     }}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger
+                      className={`${errors.selectCliente && "border-rose-400"}`}
+                    >
                       <SelectValue placeholder="Selecione o cliente" />
                     </SelectTrigger>
-                    <SelectContent className={`${errors.selectCliente}`}>
+                    <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Clientes</SelectLabel>
                         {customerData.map((i, index) => (
@@ -259,11 +291,6 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                   </Select>
                 )}
               />
-              {errors.selectCliente && (
-                <span className="text-xs text-rose-400 font-normal">
-                  *Campo obrigatório
-                </span>
-              )}
               {/* FINAL SELECT CUSTOMER */}
             </div>
             <div className="col-span-4">
@@ -272,7 +299,9 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                 disabled={!selectedClient}
                 onValueChange={handleSelectCampaign}
               >
-                <SelectTrigger>
+                <SelectTrigger
+                  className={`${errors.campaignId && "border-rose-400"}`}
+                >
                   <SelectValue
                     placeholder={
                       !selectedClient
@@ -295,20 +324,42 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
             </div>
             <div className="col-span-3">
               <Label htmlFor="lprelacionada">LP Relacionada</Label>
-              <SelectLP />
+              <Controller
+                name="landingPage"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={(value) => {
+                      handleSelectLP(value);
+                      field.onChange(value);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione a LP" />
+                    </SelectTrigger>
+                    <SelectContent className={`${errors.landingPageId}`}>
+                      <SelectGroup>
+                        <SelectLabel>LP's</SelectLabel>
+                        {lps.map((i, index) => (
+                          <SelectItem value={i.name} key={index}>
+                            {i.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
             <div className="col-span-1">
               <Label htmlFor="cost">Custo</Label>
-              <Input id="cost" type="text"
-              placeholder="0,99"
-              {...register("cost")}
-                className={`${errors.cost && "border-rose-400 bg-rose-100"}`}
+              <Input
+                id="cost"
+                type="text"
+                placeholder="0,99"
+                {...register("cost")}
+                className={`${errors.cost && "border-rose-400"}`}
               />
-              {errors.cost && (
-                <span className="text-xs text-rose-400 font-normal">
-                  {errors.cost.message}
-                </span>
-              )}
             </div>
             <div className="col-span-2">
               <Label htmlFor="utm">UTM</Label>
@@ -324,7 +375,9 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                     }}
                     defaultValue="utm_source"
                   >
-                    <SelectTrigger>
+                    <SelectTrigger
+                      className={`${errors.utm && "border-rose-400"}`}
+                    >
                       <SelectValue placeholder="Selecione" />
                     </SelectTrigger>
                     <SelectContent>
@@ -341,12 +394,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                   </Select>
                 )}
               />
-              {errors.utm && (
-                <span className="text-xs text-rose-400 font-normal">
-                  *Campo obrigatório
-                </span>
-              )}
-              {/* FINAL SELECT CUSTOMER */}
+              {/* FINAL SELECT UTM */}
             </div>
             <div className="col-span-2">
               <Label htmlFor="key">Chave</Label>
@@ -362,7 +410,9 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                       setChave(value);
                     }}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger
+                      className={`${errors.key && "border-rose-400"}`}
+                    >
                       <SelectValue placeholder="Selecione" />
                     </SelectTrigger>
                     <SelectContent>
@@ -403,11 +453,6 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                   </Select>
                 )}
               />
-              {errors.key && (
-                <span className="text-xs text-rose-400 font-normal">
-                  *Campo obrigatório
-                </span>
-              )}
               {/* FINAL SELECT KEY */}
             </div>
             <div className="col-span-4">
@@ -419,13 +464,8 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                 type="text"
                 placeholder="Digite a ação..."
                 {...register("name")}
-                className={`${errors.name && "border-rose-400 bg-rose-100"}`}
+                className={`${errors.name && "border-rose-400"}`}
               />
-              {errors.name && (
-                <span className="text-xs text-rose-400 font-normal">
-                  {errors.name.message}
-                </span>
-              )}
             </div>
             <div className="col-span-2">
               <Label id="dataInicio">Data/Hora Início</Label>
@@ -433,13 +473,8 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                 id="dataInicio"
                 type="datetime-local"
                 {...register("startAt")}
-                className={`${errors.startAt && "border-rose-400 bg-rose-100"}`}
+                className={`${errors.startAt && "border-rose-400"}`}
               />
-              {errors.startAt && (
-                <span className="text-xs text-rose-400 font-normal">
-                  *Campo obrigatório
-                </span>
-              )}
             </div>
             <div className="col-span-2">
               <Label id="dataFim">Data/Hora Fim</Label>
@@ -447,13 +482,8 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                 id="dataFim"
                 type="datetime-local"
                 {...register("endAt")}
-                className={`${errors.endAt && "border-rose-400 bg-rose-100"}`}
+                className={`${errors.endAt && "border-rose-400"}`}
               />
-              {errors.endAt && (
-                <span className="text-xs text-rose-400 font-normal">
-                  *Campo obrigatório
-                </span>
-              )}
             </div>
             <input
               type="hidden"

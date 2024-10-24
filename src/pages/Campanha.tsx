@@ -96,8 +96,6 @@ export function CampanhaPage() {
     handleGetCampaign();
   };
 
-  console.log(campanhas)
-
   return (
     <>
       <div>
@@ -195,9 +193,9 @@ export function CampanhaPage() {
                 <TableCell>{i.model === 'LeadHunting' ? 'Lead Hunting' : i.model}</TableCell>
                 <TableCell>{i.type}</TableCell>
                 <TableCell>{i.payout}</TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
+                <TableCell>{i.totalActions}</TableCell>
+                <TableCell>{i.totalClicks}</TableCell>
+                <TableCell>{i.totalLinks}</TableCell>
                 <TableCell>{dataFormatada(i.startAt)}</TableCell>
                 <TableCell>{dataFormatada(i.endAt)}</TableCell>
                 <TableCell className="flex items-center justify-end gap-2 pr-4">

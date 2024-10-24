@@ -32,7 +32,6 @@ export function ShortUrlsPage() {
         },
       });
       setUrl(response.data);
-      console.log(response.data);
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
@@ -81,10 +80,10 @@ export function ShortUrlsPage() {
           {url.map((i) => (
             <TableRow key={i.id}>
               <TableCell className="pl-4">{i.url}</TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
+              <TableCell>{i.campaigns}</TableCell>
+              <TableCell>{i.actions}</TableCell>
+              <TableCell>{i.totalLinks}</TableCell>
+              <TableCell>{i.totalClicks}</TableCell>
               <TableCell className="flex items-center justify-end gap-2 pr-4">
                 <EditarUrl id={i.id} url={i.url} onEditUrl={handleGetUrl} />
                 <Button

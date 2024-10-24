@@ -30,33 +30,37 @@ import {
   customerData,
   DataProps,
   editAction,
+  lpsData,
 } from "@/interface/auth";
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SelectLP } from "../SelectLP";
 
-const verifyEditAction = z.object({
+const verifyCreateAction = z.object({
   id: z.number(),
   name: z.string().min(4, "*Mínimo de 4 caracteres"),
   campaignId: z.number(),
-  selectCliente: z.string().min(1, ""),
+  selectCliente: z.string(),
   startAt: z.string().min(1, "*Campo obrigatório"),
   endAt: z.string().min(1, "*Campo obrigatório"),
   utm: z.string().min(1, "*Campo obrigatório"),
   cost: z.string().min(1, "*Campo obrigatório"),
   key: z.string().min(1, "*Campo obrigatório"),
+  landingPage: z.string(),
+  landingPageId: z.number().min(1, "*Campo obrigatório"),
 });
 
-type actionData = z.infer<typeof verifyEditAction>;
-type HandleCreateUsersProps = {
+type actionData = z.infer<typeof verifyCreateAction>;
+type hnadleEditActionProps = {
   handleEditAction: ({
+    id,
     name,
     campaignId,
     startAt,
     endAt,
     utm,
     cost,
+    landingPageId,
     key,
   }: editAction) => void;
   data: DataProps;
@@ -64,9 +68,11 @@ type HandleCreateUsersProps = {
 
 type editActionProps = {
   id: number;
-  cliente: string;
-  campanha: string;
-  acao: string;
+  client: string;
+  campaign: string;
+  lp: string;
+  cost: number;
+  action: string;
   dataInicio: string;
   dataFim: string;
   onEditAction: () => void;
@@ -74,57 +80,118 @@ type editActionProps = {
 
 export function EditarAcao({
   id,
-  cliente,
-  campanha,
-  acao,
+  client,
+  campaign,
+  lp,
+  // cost,
+  action,
   dataInicio,
   dataFim,
   onEditAction,
 }: editActionProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { data, handleEditAction } = useAuth() as HandleCreateUsersProps;
+  const { data, handleEditAction } = useAuth() as hnadleEditActionProps;
   const [customerData, setCustomerData] = useState<customerData[]>([]);
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
+  const [lps, setLPs] = useState<lpsData[]>([]);
+  // const [isChecked, setIsChecked] = useState(false);
+  const [clientId, setClientId] = useState<string>("");
   const [utm, setUtm] = useState<string>("utm_source");
-  const [chave, setChave] = useState<string>('');
-
+  const [chave, setChave] = useState<string>("");
+  // const [idCampaign, setIdCampaign] = useState<number>(0);
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<actionData>({
+    resolver: zodResolver(verifyCreateAction),
+    defaultValues: {
+      id,
+      landingPage: lp,
+      utm: utm,
+    },
+  });
   const dataPadraoFormatada = (data: string) => {
     return data.slice(0, 16);
   };
 
-  const clienteId =
-    customerData
-      .filter((customer) => cliente === customer.name)
-      .map((customer) => customer.id)
-      .join(", ") || "Cliente não encontrado";
+  const handleSelectChange = (value: string) => {
+    const selectedCustomer = customerData.find(
+      (customer) => customer.name === value
+    );
+    if (selectedCustomer) {
+      setClientId(selectedCustomer.id);
+    }
+  };
 
-  useEffect(() => {
-    async function handleGetUsers() {
-      try {
-        const response = await api.get("/clients", {
-          headers: {
-            Authorization: `Bearer ${data.jwtToken}`,
-          },
-        });
-        setCustomerData(response.data);
-      } catch (error: unknown) {
-        if (error instanceof AxiosError && error.response) {
-          AlertMessage(error.response.data.message, "error");
-        } else {
-          AlertMessage(
-            "Não foi possível carregar os clientes, tente novamente mais tarde.",
-            "error"
-          );
-        }
+  const handleSelectCampaign = (value: string) => {
+    const selectedCampaign = campanhas.find(
+      (campanha) => campanha.name === value
+    );
+    if (selectedCampaign) {
+      setValue("campaignId", selectedCampaign.id);
+    }
+  };
+
+  const handleSelectLP = (value: string) => {
+    const selectedLP = lps.find((lp) => lp.name === value);
+    if (selectedLP) {
+      setValue("landingPageId", selectedLP.id);
+    }
+  };
+
+  const handleGetClient = async () => {
+    try {
+      const response = await api.get("/clients", {
+        headers: {
+          Authorization: `Bearer ${data.jwtToken}`,
+        },
+      });
+      setCustomerData(response.data);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível carregar os clientes, tente novamente mais tarde.",
+          "error"
+        );
       }
     }
-    handleGetUsers();
-  }, [customerData]);
+  };
+
+  const handleGetLP = async () => {
+    try {
+      const response = await api.get("/lps", {
+        headers: {
+          Authorization: `Bearer ${data.jwtToken}`,
+        },
+      });
+      setLPs(response.data);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível carregar os usuários, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  };
 
   useEffect(() => {
-    async function handleGetUsers() {
+    handleGetClient();
+    handleGetLP();
+  }, [data.jwtToken]);
+
+  useEffect(() => {
+    async function handleGetSingleClient() {
       try {
-        const response = await api.get(`/campaigns?clientId=${clienteId}`, {
+        const response = await api.get(`/campaigns?clientId=${clientId}`, {
           headers: {
             Authorization: `Bearer ${data.jwtToken}`,
           },
@@ -141,65 +208,29 @@ export function EditarAcao({
         }
       }
     }
-    handleGetUsers();
-  }, [campanhas]);
+    if (clientId) {
+      handleGetSingleClient();
+    }
+  }, [clientId]);
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    reset,
-    control,
-    formState: { errors },
-  } = useForm<actionData>({
-    resolver: zodResolver(verifyEditAction),
-    defaultValues: {
-      id,
-      name: acao,
-      selectCliente: cliente,
+  useEffect(() => {
+    reset({
+      id: id,
+      campaignId: 1,
+      selectCliente: client,
+      name: action,
+      landingPage: lp,
+      utm: utm,
       startAt: dataPadraoFormatada(dataInicio),
       endAt: dataPadraoFormatada(dataFim),
-    },
-  });
-
-  useEffect(() => {
-    if (isOpen) {
-      reset({
-        id,
-        name: acao,
-        campaignId: campanhas.find((camp) => camp.name === campanha)?.id || 0,
-        selectCliente: cliente,
-        startAt: dataPadraoFormatada(dataInicio),
-        endAt: dataPadraoFormatada(dataFim),
-        utm: '',
-        cost: '',
-        key: '',
-      });
-    }
+    });
+    handleSelectChange(client);
+    handleSelectLP(lp);
+    handleSelectCampaign(campaign);
   }, [isOpen]);
 
-  useEffect(() => {
-    if (campanha && campanhas.length > 0) {
-      const selectedCampaign = campanhas.find((camp) => camp.name === campanha);
-      if (selectedCampaign) {
-        setValue("campaignId", selectedCampaign.id);
-      }
-    }
-  }, [isOpen, campanha, campanhas]);
-
-  const handleSelectCampaign = (value: string) => {
-    const selectedCampaign = campanhas.find(
-      (campanha) => campanha.name === value
-    );
-    if (selectedCampaign) {
-      setValue("campaignId", selectedCampaign.id);
-      console.log(`id da campanha: ${selectedCampaign.id}`);
-    }
-  };
-
-  const editAction = async (data: editAction) => {
-    const { id, name, campaignId, startAt, endAt, utm, cost, key } = data;
-    console.log(name, campaignId, startAt, endAt, utm, cost, key);
+  const editAction = async (data: actionData) => {
+    const { name, campaignId, startAt, endAt, utm, cost, landingPageId } = data;
     const dataInicioFormatado = new Date(startAt);
     const dataFimFormatado = new Date(endAt);
     const inicioIso = dataInicioFormatado.toISOString();
@@ -217,14 +248,25 @@ export function EditarAcao({
           endAt: fimIso,
           utm: utm,
           cost,
+          landingPageId,
+          key: chave,
+        });
+        console.log({
+          name: name,
+          campaignId: campaignId,
+          startAt: inicioIso,
+          endAt: fimIso,
+          utm: utm,
+          cost: cost,
+          landingPageId: landingPageId,
           key: chave,
         });
         onEditAction();
+        setIsOpen(false);
+        reset();
       } catch (error) {
-        console.log("Não foi possível editar a ação:", error);
+        console.error("Erro ao editar ação:", error);
       }
-      setIsOpen(false);
-      reset();
     }
   };
 
@@ -244,29 +286,58 @@ export function EditarAcao({
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(editAction)}>
-          <input type="hidden" value={id} {...register("id")} />
           <div className="grid grid-cols-4 gap-4 py-4">
             <div className="col-span-4">
-              <Label htmlFor="cliente">Cliente</Label>
-              <Input
-                id="cliente"
-                value={cliente}
-                type="text"
-                disabled
-                {...register("selectCliente")}
+              <Label>Cliente</Label>
+              {/* SELECT CUSTOMER */}
+
+              <Controller
+                name="selectCliente"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                    }}
+                    defaultValue={client}
+                    disabled
+                  >
+                    <SelectTrigger
+                      className={`${errors.selectCliente && "border-rose-400"}`}
+                    >
+                      <SelectValue placeholder="Selecione o cliente" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Clientes</SelectLabel>
+                        {customerData.map((i, index) => (
+                          <SelectItem value={i.name} key={index}>
+                            {i.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
               />
+              {/* FINAL SELECT CUSTOMER */}
             </div>
             <div className="col-span-4">
-              <Label htmlFor="campanha">Campanha</Label>
-              <Select onValueChange={handleSelectCampaign}>
-                <SelectTrigger>
-                  <SelectValue placeholder={campanha} />
+              <Label>Campanha</Label>
+              <Select
+                onValueChange={handleSelectCampaign}
+                defaultValue={campaign}
+              >
+                <SelectTrigger
+                  className={`${errors.campaignId && "border-rose-400"}`}
+                >
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Campanhas</SelectLabel>
-                    {campanhas.map((i, index) => (
-                      <SelectItem value={i.name} key={index}>
+                    {campanhas.map((i) => (
+                      <SelectItem value={i.name} key={i.id}>
                         {i.name}
                       </SelectItem>
                     ))}
@@ -275,24 +346,47 @@ export function EditarAcao({
               </Select>
             </div>
             <div className="col-span-3">
-              <Label htmlFor="lprelacionada">LP Relacionada</Label>
-              <SelectLP />
+              <Label>LP Relacionada</Label>
+              <Controller
+                name="landingPage"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={(value) => {
+                      handleSelectLP(value);
+                      field.onChange(value);
+                    }}
+                    defaultValue={lp}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione a LP" />
+                    </SelectTrigger>
+                    <SelectContent className={`${errors.landingPageId}`}>
+                      <SelectGroup>
+                        <SelectLabel>LP's</SelectLabel>
+                        {lps.map((i, index) => (
+                          <SelectItem value={i.name} key={index}>
+                            {i.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
             <div className="col-span-1">
               <Label htmlFor="cost">Custo</Label>
-              <Input id="cost" type="text"
-              placeholder="0,99"
-              {...register("cost")}
-                className={`${errors.cost && "border-rose-400 bg-rose-100"}`}
+              <Input
+                id="cost"
+                type="text"
+                placeholder="0,99"
+                {...register("cost")}
+                className={`${errors.cost && "border-rose-400"}`}
               />
-              {errors.cost && (
-                <span className="text-xs text-rose-400 font-normal">
-                  {errors.cost.message}
-                </span>
-              )}
             </div>
             <div className="col-span-2">
-              <Label htmlFor="utm">UTM</Label>
+              <Label>UTM</Label>
               {/* SELECT UTM */}
               <Controller
                 name="utm"
@@ -305,7 +399,9 @@ export function EditarAcao({
                     }}
                     defaultValue="utm_source"
                   >
-                    <SelectTrigger>
+                    <SelectTrigger
+                      className={`${errors.utm && "border-rose-400"}`}
+                    >
                       <SelectValue placeholder="Selecione" />
                     </SelectTrigger>
                     <SelectContent>
@@ -322,15 +418,10 @@ export function EditarAcao({
                   </Select>
                 )}
               />
-              {errors.utm && (
-                <span className="text-xs text-rose-400 font-normal">
-                  *Campo obrigatório
-                </span>
-              )}
-              {/* FINAL SELECT CUSTOMER */}
+              {/* FINAL SELECT UTM */}
             </div>
             <div className="col-span-2">
-              <Label htmlFor="key">Chave</Label>
+              <Label>Chave</Label>
               {/* SELECT KEY */}
 
               <Controller
@@ -343,7 +434,9 @@ export function EditarAcao({
                       setChave(value);
                     }}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger
+                      className={`${errors.key && "border-rose-400"}`}
+                    >
                       <SelectValue placeholder="Selecione" />
                     </SelectTrigger>
                     <SelectContent>
@@ -384,11 +477,6 @@ export function EditarAcao({
                   </Select>
                 )}
               />
-              {errors.key && (
-                <span className="text-xs text-rose-400 font-normal">
-                  *Campo obrigatório
-                </span>
-              )}
               {/* FINAL SELECT KEY */}
             </div>
             <div className="col-span-4">
@@ -400,13 +488,8 @@ export function EditarAcao({
                 type="text"
                 placeholder="Digite a ação..."
                 {...register("name")}
-                className={`${errors.name && "border-rose-400 bg-rose-100"}`}
+                className={`${errors.name && "border-rose-400"}`}
               />
-              {errors.name && (
-                <span className="text-xs text-rose-400 font-normal">
-                  {errors.name.message}
-                </span>
-              )}
             </div>
             <div className="col-span-2">
               <Label id="dataInicio">Data/Hora Início</Label>
@@ -414,13 +497,8 @@ export function EditarAcao({
                 id="dataInicio"
                 type="datetime-local"
                 {...register("startAt")}
-                className={`${errors.startAt && "border-rose-400 bg-rose-100"}`}
+                className={`${errors.startAt && "border-rose-400"}`}
               />
-              {errors.startAt && (
-                <span className="text-xs text-rose-400 font-normal">
-                  *Campo obrigatório
-                </span>
-              )}
             </div>
             <div className="col-span-2">
               <Label id="dataFim">Data/Hora Fim</Label>
@@ -428,13 +506,8 @@ export function EditarAcao({
                 id="dataFim"
                 type="datetime-local"
                 {...register("endAt")}
-                className={`${errors.endAt && "border-rose-400 bg-rose-100"}`}
+                className={`${errors.endAt && "border-rose-400"}`}
               />
-              {errors.endAt && (
-                <span className="text-xs text-rose-400 font-normal">
-                  *Campo obrigatório
-                </span>
-              )}
             </div>
             <input
               type="hidden"
@@ -449,7 +522,7 @@ export function EditarAcao({
               onClick={() => setIsOpen(true)}
             >
               <FileCheck2 size={18} />
-              Editar
+              Criar
             </Button>
           </DialogFooter>
         </form>

@@ -33,7 +33,6 @@ export function UsuarioPage() {
         },
       });
       setUserData(response.data);
-      console.log(response.data);
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");

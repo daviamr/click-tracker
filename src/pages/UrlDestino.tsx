@@ -21,7 +21,6 @@ type dataURLProps = { data: DataProps };
 export function UrlDestinoPage() {
   const { data } = useAuth() as dataURLProps;
   const [finalURL, setFinalURL] = useState<finalURLProps[]>([]);
-  const [campanhas, setCampanhas] = useState<campaignData[]>([]);
 
   const handleGetFinalURL = async () => {
     try {
@@ -42,28 +41,8 @@ export function UrlDestinoPage() {
       }
     }
   };
-  const handleGetCampaign = async () => {
-    try {
-      const response = await api.get("/campaigns", {
-        headers: {
-          Authorization: `Bearer ${data.jwtToken}`,
-        },
-      });
-      setCampanhas(response.data);
-    } catch (error: unknown) {
-      if (error instanceof AxiosError && error.response) {
-        AlertMessage(error.response.data.message, "error");
-      } else {
-        AlertMessage(
-          "Não foi possível carregar as campanhas, tente novamente mais tarde.",
-          "error"
-        );
-      }
-    }
-  };
   useEffect(() => {
     handleGetFinalURL();
-    handleGetCampaign();
   }, [data.jwtToken]);
   console.log(finalURL)
 

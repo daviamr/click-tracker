@@ -67,7 +67,7 @@ export function HistoricoPage() {
         </TableHeader>
         <TableBody>
           {dataAction.map((i) => (
-            <TableRow>
+            <TableRow key={i.id}>
               <TableCell className="pl-4">{i.name}</TableCell>
               <TableCell>{i.campaignName}</TableCell>
               <TableCell>{i.clientName}</TableCell>

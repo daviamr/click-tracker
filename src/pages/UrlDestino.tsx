@@ -93,9 +93,9 @@ export function UrlDestinoPage() {
             <TableRow key={i.id}>
               <TableCell>{i.name}</TableCell>
               <TableCell>{i.url}</TableCell>
-              <TableCell>{i.campaign.client.name}</TableCell>
-              <TableCell>{campanhas.find((c) => i.campaignId === c.id)?.name || "0"}</TableCell>
-              <TableCell></TableCell>
+              <TableCell>{i.clientName}</TableCell>
+              <TableCell>{i.campaignName}</TableCell>
+              <TableCell>{i.totalClicks}</TableCell>
               <TableCell className="flex items-center justify-end gap-2 pr-4">
                 <Button className="p-2" variant={"outline"}>
                   <UserRoundPen size={18} />

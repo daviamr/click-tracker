@@ -275,6 +275,8 @@ export type CreateNewUser = {
   export type baseProps = {
     id: number;
     name: string;
+    actions: number;
+    campaigns: number;
     url: string;
   }
 
@@ -286,8 +288,9 @@ export type CreateNewUser = {
     id: number;
     name: string;
     url: string;
-    campaignId: number;
-    campaign: {client: {name: string}}
+    campaignName: string;
+    clientName: string;
+    totalClicks: number;
   }
 
   export type createFinalURL = {

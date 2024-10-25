@@ -54,6 +54,8 @@ export function BaseOrigemPage() {
     handleGetBase();
   };
 
+  console.log(base)
+
   return (
     <>
       <div>
@@ -79,8 +81,8 @@ export function BaseOrigemPage() {
             <TableRow key={i.id}>
               <TableCell>{i.name}</TableCell>
               <TableCell>{i.url}</TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
+              <TableCell>{i.campaigns}</TableCell>
+              <TableCell>{i.actions}</TableCell>
               <TableCell className="flex items-center justify-end gap-2 pr-4">
                 <EditarBase id={i.id} name={i.name} url={i.url}  handleGetBase={handleGetBase}/>
                 <Button

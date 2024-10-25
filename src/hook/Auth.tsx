@@ -1210,7 +1210,7 @@ function AuthProvider({ children }: ChildrenProps) {
 
       console.log(response.data);
 
-      AlertMessage(response.data.message, "success");
+      AlertMessage("Origem Base deletada com sucesso.", "success");
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.message, "error");

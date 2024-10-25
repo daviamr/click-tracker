@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Braces, UserRoundPen, UserRoundX } from "lucide-react";
 import { NovaUrlDestino } from "@/components/Modal/NovaUrlDestino";
 import { useEffect, useState } from "react";
-import { campaignData, DataProps, finalURLProps } from "@/interface/auth";
+import { DataProps, finalURLProps } from "@/interface/auth";
 import { api } from "@/services/Api";
 import { AxiosError } from "axios";
 import { AlertMessage } from "@/components/alert_message";

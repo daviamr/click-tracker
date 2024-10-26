@@ -64,6 +64,7 @@ export function NovaLP({ onCreateLP }: createLPProps) {
     reset,
     control,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<createLPForm>({
     resolver: zodResolver(createUserSchema),
@@ -90,6 +91,8 @@ export function NovaLP({ onCreateLP }: createLPProps) {
       setValue("campaignId", selectedCampaign.id);
     }
   };
+
+  console.log(watch('customer'))
 
   const handleGetClient = async () => {
     try {
@@ -170,12 +173,7 @@ export function NovaLP({ onCreateLP }: createLPProps) {
 
   useEffect(() => {
     reset();
-    setSelectedCustomer("");
   }, [isOpen]);
-
-  useEffect(() => {
-    reset({campaignId: 0})
-  }, [selectedCustomer])
 
   async function createLP(data: createLPForm) {
     try {
@@ -190,6 +188,8 @@ export function NovaLP({ onCreateLP }: createLPProps) {
       console.log('Erro: ' + error);
     }
   }
+
+  console.log(errors)
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -245,7 +245,7 @@ export function NovaLP({ onCreateLP }: createLPProps) {
                     onValueChange={(value) => {
                       field.onChange(value);
                       setSelectedCustomer(value);
-                      handleSelectCustomerChange(value)
+                      handleSelectCustomerChange(value);
                     }}
                   >
                     <SelectTrigger>
@@ -253,7 +253,7 @@ export function NovaLP({ onCreateLP }: createLPProps) {
                     </SelectTrigger>
                     <SelectContent className={`${errors.campaignId}`}>
                       <SelectGroup>
-                        <SelectLabel>Campanhas</SelectLabel>
+                        <SelectLabel>Clientes</SelectLabel>
                         {customerData.map((i, index) => (
                           <SelectItem value={i.name} key={index}>
                             {i.name}

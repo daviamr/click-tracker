@@ -62,7 +62,7 @@ export type CreateNewUser = {
     name: string;
     clientId: string;
     category: string;
-    subcategory: string;
+    subCategory: string;
     payout: number;
     model: string;
     type: string;
@@ -74,9 +74,9 @@ export type CreateNewUser = {
   export type editCampaign = {
     id: number;
     name: string;
-    clientId: string;
+    clientId?: string;
     category: string;
-    subcategory: string;
+    subCategory: string;
     payout: number;
     model: string;
     type: string;
@@ -117,7 +117,7 @@ export type CreateNewUser = {
     startAt: string;
     endAt: string;
     utm: string;
-    cost: string;
+    cost: number;
     key: string;
     landingPageId: number;
   }
@@ -129,7 +129,7 @@ export type CreateNewUser = {
     startAt: string;
     endAt: string;
     utm: string;
-    cost: string;
+    cost: number;
     landingPageId: number;
     key: string;
   }

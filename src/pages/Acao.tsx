@@ -27,6 +27,9 @@ export function AcaoPage() {
   const [switchStates, setSwitchStates] = useState<{ [key: string]: boolean }>(
     {}
   );
+  const formatCost = (cost: number) => {
+    return `R$ ${cost.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
 
   const handleSwitchChange = async (id: number, checked: boolean) => {
     setSwitchStates((prev) => ({ ...prev, [id]: checked }));
@@ -159,7 +162,7 @@ export function AcaoPage() {
                 <TableCell>{i.clientName}</TableCell>
                 <TableCell>{i.campaignName}</TableCell>
                 <TableCell>{i.landingPageName}</TableCell>
-                <TableCell>{i.cost}</TableCell>
+                <TableCell>{formatCost(i.cost)}</TableCell>
                 <TableCell>{i.totalClicks}</TableCell>
                 <TableCell>{i.totalLinks}</TableCell>
                 <TableCell>{dataFormatada(i.startAt)}</TableCell>

@@ -35,13 +35,13 @@ const verifyCreateCampaign = z.object({
   name: z.string().min(4, "*Mínimo de 4 caracteres"),
   clientId: z.string().min(1, ""),
   startAt: z.string(),
-  endAt: z.string().min(1, '*Campo obrigatório'),
-  category: z.string().min(1, '*Campo obrigatório'),
-  subcategory: z.string().min(1, '*Campo obrigatório'),
-  model: z.string().min(1, '*Campo obrigatório'),
-  type: z.string().min(1, '*Campo obrigatório'),
+  endAt: z.string().min(1, "*Campo obrigatório"),
+  category: z.string().min(1, "*Campo obrigatório"),
+  subCategory: z.string().min(1, "*Campo obrigatório"),
+  model: z.string().min(1, "*Campo obrigatório"),
+  type: z.string().min(1, "*Campo obrigatório"),
   obs: z.string(),
-  payout: z.number().min(1, '*Campo obrigatório'),
+  payout: z.string().min(1, "*Campo obrigatório"),
 });
 
 type campaignData = z.infer<typeof verifyCreateCampaign>;
@@ -50,7 +50,7 @@ type HandleCreateUsersProps = {
     name,
     clientId,
     category,
-    subcategory,
+    subCategory,
     model,
     type,
     startAt,
@@ -68,6 +68,35 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { data, handleCreateCampaign } = useAuth() as HandleCreateUsersProps;
   const [customerData, setCustomerData] = useState<customerData[]>([]);
+  const [payoutValue, setPayoutValue] = useState<string>("");
+
+  const formatToBRLCurrency = (value: string) => {
+    // Remove qualquer caractere que não seja número
+    const numericValue = value.replace(/[^0-9]/g, '');
+
+    // Retorna uma string vazia se o campo estiver vazio
+    if (!numericValue) return "";
+
+    // Converte para número e formata para o estilo brasileiro
+    const formattedValue = new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(parseFloat(numericValue) / 100);
+
+    return formattedValue;
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setPayoutValue(formatToBRLCurrency(value));
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const allowedChars = /[0-9,]/;
+    if (!allowedChars.test(event.key)) {
+      event.preventDefault();
+    }
+  };
 
   useEffect(() => {
     async function handleGetUsers() {
@@ -94,6 +123,7 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
 
   useEffect(() => {
     reset();
+    setPayoutValue('');
   }, [isOpen]);
 
   //data atual
@@ -116,12 +146,12 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
       name: "",
       clientId: "",
       category: "",
-      subcategory: "",
+      subCategory: "",
       model: "",
       type: "",
       startAt: "",
       endAt: "",
-      payout: 0,
+      payout: "",
       obs: "",
     },
   });
@@ -135,10 +165,9 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
       name,
       clientId,
       category,
-      subcategory,
+      subCategory,
       model,
       type,
-      payout,
       startAt,
       endAt,
       obs,
@@ -148,16 +177,17 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
     const dataFimFormatado = new Date(endAt);
     const inicioIso = dataInicioFormatado.toISOString();
     const fimIso = dataFimFormatado.toISOString();
-    
+    const payoutFormatado = payoutValue.replace(/\./g, '').replace(',', '.');
+
     console.log([
       {
         name: name,
         clientId: idClient,
         category: category,
-        subcategory: subcategory,
+        subcategory: subCategory,
         model: model,
         type: type,
-        payout: payout,
+        payout: payoutFormatado,
         startAt: inicioIso,
         endAt: fimIso,
         obs: obs,
@@ -170,10 +200,10 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
           name,
           clientId: idClient,
           category,
-          subcategory,
+          subCategory,
           model,
           type,
-          payout,
+          payout: Number(payoutFormatado),
           startAt: inicioIso,
           endAt: fimIso,
           obs,
@@ -187,7 +217,7 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
     } else {
       console.error("Id do cliente não encontrado.");
     }
-}
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -232,7 +262,9 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
                 control={control}
                 render={({ field }) => (
                   <Select onValueChange={field.onChange}>
-                    <SelectTrigger  className={`${errors.clientId && "border-rose-400"}`}>
+                    <SelectTrigger
+                      className={`${errors.clientId && "border-rose-400"}`}
+                    >
                       <SelectValue placeholder="Selecione o cliente" />
                     </SelectTrigger>
                     <SelectContent>
@@ -259,7 +291,9 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
                 control={control}
                 render={({ field }) => (
                   <Select onValueChange={field.onChange}>
-                    <SelectTrigger className={`${errors.category && "border-rose-400"}`}>
+                    <SelectTrigger
+                      className={`${errors.category && "border-rose-400"}`}
+                    >
                       <SelectValue placeholder="Selecione a categoria" />
                     </SelectTrigger>
                     <SelectContent>
@@ -273,6 +307,7 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
                         <SelectItem value="Facilities">Facilities</SelectItem>
                         <SelectItem value="Hardware">Hardware</SelectItem>
                         <SelectItem value="Escritório">Escritório</SelectItem>
+                        <SelectItem value="Outros">Outros</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -281,14 +316,16 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
               {/* FINAL SELECT CATEGORY */}
             </div>
             <div className="col-span-2">
-              <Label htmlFor="subcategoria">Subcategoria</Label>
+              <Label htmlFor="subCategoria">Subcategoria</Label>
               {/* SELECT SUBCATEGORY */}
               <Controller
-                name="subcategory"
+                name="subCategory"
                 control={control}
                 render={({ field }) => (
                   <Select onValueChange={field.onChange}>
-                    <SelectTrigger className={`${errors.subcategory && "border-rose-400"}`}>
+                    <SelectTrigger
+                      className={`${errors.subCategory && "border-rose-400"}`}
+                    >
                       <SelectValue placeholder="Selecione a subcategoria" />
                     </SelectTrigger>
                     <SelectContent>
@@ -334,6 +371,7 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
                           PCs e Notebooks
                         </SelectItem>
                         <SelectItem value="Mobiliários">Mobiliários</SelectItem>
+                        <SelectItem value="Outros">Outros</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -349,7 +387,9 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
                 control={control}
                 render={({ field }) => (
                   <Select onValueChange={field.onChange}>
-                    <SelectTrigger className={`${errors.model && "border-rose-400"}`}>
+                    <SelectTrigger
+                      className={`${errors.model && "border-rose-400"}`}
+                    >
                       <SelectValue placeholder="Selecione o modelo" />
                     </SelectTrigger>
                     <SelectContent>
@@ -378,7 +418,9 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
                 control={control}
                 render={({ field }) => (
                   <Select onValueChange={field.onChange}>
-                    <SelectTrigger className={`${errors.type && "border-rose-400"}`}>
+                    <SelectTrigger
+                      className={`${errors.type && "border-rose-400"}`}
+                    >
                       <SelectValue placeholder="Selecione" />
                     </SelectTrigger>
                     <SelectContent>
@@ -397,8 +439,15 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
               <Label>Payout</Label>
               <Input
                 id="payout"
-                type="number"
-                {...register("payout", { valueAsNumber: true })}
+                type="text"
+                {...register("payout", {
+                  onChange: (e) => {
+                    setPayoutValue(e.target.value);
+                  },
+                })}
+                value={payoutValue}
+                onChange={handleInputChange}
+                onKeyPress={handleKeyPress}
                 className={`${errors.payout && "border-rose-400"}`}
               />
             </div>
@@ -425,7 +474,7 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
               <Textarea
                 id="observacao"
                 placeholder="Digite uma observação, campo não obrigatório"
-                {...register('obs')}
+                {...register("obs")}
               />
             </div>
           </div>

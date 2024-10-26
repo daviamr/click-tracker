@@ -28,6 +28,9 @@ export function CampanhaPage() {
   const [switchStates, setSwitchStates] = useState<{ [key: string]: boolean }>(
     {}
   );
+  const formatPayout = (payout: number) => {
+    return `R$ ${payout.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
 
   const handleSwitchChange = async (id: number, checked: boolean) => {
     setSwitchStates((prev) => ({ ...prev, [id]: checked }));
@@ -192,7 +195,7 @@ export function CampanhaPage() {
                 <TableCell>{i.subCategory}</TableCell>
                 <TableCell>{i.model === 'LeadHunting' ? 'Lead Hunting' : i.model}</TableCell>
                 <TableCell>{i.type}</TableCell>
-                <TableCell>{i.payout}</TableCell>
+                <TableCell className="text-nowrap">{formatPayout(i.payout)}</TableCell>
                 <TableCell>{i.totalActions}</TableCell>
                 <TableCell>{i.totalClicks}</TableCell>
                 <TableCell>{i.totalLinks}</TableCell>

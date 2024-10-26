@@ -83,7 +83,7 @@ export function EditarAcao({
   client,
   campaign,
   lp,
-  // cost,
+  cost,
   action,
   dataInicio,
   dataFim,
@@ -117,6 +117,36 @@ export function EditarAcao({
   const dataPadraoFormatada = (data: string) => {
     return data.slice(0, 16);
   };
+  const [costValue, setCostValue] = useState<string>("");
+
+  const formatToBRLCurrency = (value: string) => {
+    // Remove qualquer caractere que não seja número
+    const numericValue = value.replace(/[^0-9]/g, '');
+
+    // Retorna uma string vazia se o campo estiver vazio
+    if (!numericValue) return "";
+
+    // Converte para número e formata para o estilo brasileiro
+    const formattedValue = new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(parseFloat(numericValue) / 100);
+
+    return formattedValue;
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setCostValue(formatToBRLCurrency(value));
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const allowedChars = /[0-9,]/;
+    if (!allowedChars.test(event.key)) {
+      event.preventDefault();
+    }
+  };
+
 
   const handleSelectChange = (value: string) => {
     const selectedCustomer = customerData.find(
@@ -227,14 +257,16 @@ export function EditarAcao({
     handleSelectChange(client);
     handleSelectLP(lp);
     handleSelectCampaign(campaign);
+    setCostValue(formatToBRLCurrency(cost.toString()));
   }, [isOpen]);
 
   const editAction = async (data: actionData) => {
-    const { name, campaignId, startAt, endAt, utm, cost, landingPageId } = data;
+    const { name, campaignId, startAt, endAt, utm, landingPageId } = data;
     const dataInicioFormatado = new Date(startAt);
     const dataFimFormatado = new Date(endAt);
     const inicioIso = dataInicioFormatado.toISOString();
     const fimIso = dataFimFormatado.toISOString();
+    const costFormatado = costValue.replace(/\./g, '').replace(',', '.');
 
     if (campaignId === 0) {
       alert("Campanha não encontrada.");
@@ -247,7 +279,7 @@ export function EditarAcao({
           startAt: inicioIso,
           endAt: fimIso,
           utm: utm,
-          cost,
+          cost: Number(costFormatado),
           landingPageId,
           key: chave,
         });
@@ -257,7 +289,7 @@ export function EditarAcao({
           startAt: inicioIso,
           endAt: fimIso,
           utm: utm,
-          cost: cost,
+          cost: Number(costFormatado),
           landingPageId: landingPageId,
           key: chave,
         });
@@ -380,8 +412,14 @@ export function EditarAcao({
               <Input
                 id="cost"
                 type="text"
-                placeholder="0,99"
-                {...register("cost")}
+                {...register("cost", {
+                  onChange: (e) => {
+                    setCostValue(e.target.value);
+                  },
+                })}
+                value={costValue}
+                onChange={handleInputChange}
+                onKeyPress={handleKeyPress}
                 className={`${errors.cost && "border-rose-400"}`}
               />
             </div>

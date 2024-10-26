@@ -38,11 +38,11 @@ const verifyEditCampaign = z.object({
   startAt: z.string(),
   endAt: z.string(),
   category: z.string(),
-  subcategory: z.string(),
+  subCategory: z.string(),
   model: z.string(),
   type: z.string(),
   obs: z.string(),
-  payout: z.number(),
+  payout: z.string(),
 });
 
 type campaignData = z.infer<typeof verifyEditCampaign>;
@@ -52,7 +52,7 @@ type HandleCreateUsersProps = {
     name,
     clientId,
     category,
-    subcategory,
+    subCategory,
     model,
     type,
     startAt,
@@ -93,8 +93,58 @@ export function EditarCampanha({
   const { data, handleEditCampaign } = useAuth() as HandleCreateUsersProps;
   const [customerData, setCustomerData] = useState<customerData[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [payoutValue, setPayoutValue] = useState<string>("");
   const dataPadraoFormatada = (data: string) => {
     return data.slice(0, 16);
+  };
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<campaignData>({
+    resolver: zodResolver(verifyEditCampaign),
+    defaultValues: {
+      id,
+      name: name,
+      category: category,
+      subCategory: subcategory,
+      model: model,
+      type: type,
+      startAt: dataPadraoFormatada(dataInicio),
+      endAt: dataPadraoFormatada(dataFim),
+      obs: obs,
+    },
+  });
+
+  const formatToBRLCurrency = (value: string) => {
+    // Remove qualquer caractere que não seja número
+    const numericValue = value.replace(/[^0-9]/g, '');
+
+    // Retorna uma string vazia se o campo estiver vazio
+    if (!numericValue) return "";
+
+    // Converte para número e formata para o estilo brasileiro
+    const formattedValue = new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(parseFloat(numericValue) / 100);
+
+    return formattedValue;
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setPayoutValue(formatToBRLCurrency(value));
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const allowedChars = /[0-9,]/;
+    if (!allowedChars.test(event.key)) {
+      event.preventDefault();
+    }
   };
 
   useEffect(() => {
@@ -117,42 +167,20 @@ export function EditarCampanha({
     handleGetUsers();
   }, [data.jwtToken]);
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    reset,
-    setValue,
-    formState: { errors },
-  } = useForm<campaignData>({
-    resolver: zodResolver(verifyEditCampaign),
-    defaultValues: {
-      id,
-      name: name,
-      category: category,
-      subcategory: subcategory,
-      model: model,
-      type: type,
-      payout: payout,
-      startAt: dataPadraoFormatada(dataInicio),
-      endAt: dataPadraoFormatada(dataFim),
-      obs: obs,
-    },
-  });
-
   useEffect(() => {
     if (isOpen) {
       reset({
         id,
         name: name,
         category: category,
-        subcategory: subcategory,
+        subCategory: subcategory,
         model: model,
         type: type,
         startAt: dataPadraoFormatada(dataInicio),
         endAt: dataPadraoFormatada(dataFim),
         obs: obs,
       });
+      setPayoutValue(formatToBRLCurrency(payout.toString()));
     }
   }, [isOpen]);
 
@@ -170,10 +198,9 @@ export function EditarCampanha({
       id,
       name,
       category,
-      subcategory,
+      subCategory,
       model,
       type,
-      payout,
       clientId,
       startAt,
       endAt,
@@ -184,18 +211,30 @@ export function EditarCampanha({
     const dataFimFormatado = new Date(endAt);
     const inicioIso = dataInicioFormatado.toISOString();
     const fimIso = dataFimFormatado.toISOString();
+    const payoutFormatado = payoutValue.replace(/\./g, '').replace(',', '.');
 
     if (idClient) {
+
+      console.log([{id,
+        name,
+        category,
+        subCategory,
+        model,
+        type,
+        payout: Number(payoutFormatado),
+        clientId: idClient,
+        startAt: inicioIso,
+        endAt: fimIso,
+        obs}])
       try {
         await handleEditCampaign({
           id,
           name,
           category,
-          subcategory,
+          subCategory,
           model,
           type,
-          payout,
-          clientId: idClient,
+          payout: Number(payoutFormatado),
           startAt: inicioIso,
           endAt: fimIso,
           obs,
@@ -205,7 +244,6 @@ export function EditarCampanha({
         console.error("Erro editar campanha:", error);
       }
       setIsOpen(false);
-      reset({ id, name: "", clientId: "" });
     } else {
       console.error("Id do cliente não encontrado.");
     }
@@ -315,7 +353,7 @@ export function EditarCampanha({
               <Label htmlFor="subcategoria">Subcategoria</Label>
               {/* SELECT SUBCATEGORY */}
               <Controller
-                name="subcategory"
+                name="subCategory"
                 control={control}
                 render={({ field }) => (
                   <Select
@@ -323,7 +361,7 @@ export function EditarCampanha({
                     defaultValue={subcategory}
                   >
                     <SelectTrigger
-                      className={`${errors.subcategory && "border-rose-400"}`}
+                      className={`${errors.subCategory && "border-rose-400"}`}
                     >
                       <SelectValue placeholder="Selecione a subcategoria" />
                     </SelectTrigger>
@@ -397,7 +435,7 @@ export function EditarCampanha({
                         <SelectItem value="CPI">CPI</SelectItem>
                         <SelectItem value="CPA">CPA</SelectItem>
                         <SelectItem value="CPC">CPC</SelectItem>
-                        <SelectItem value="Lead Hunting">
+                        <SelectItem value="LeadHunting">
                           Lead Hunting
                         </SelectItem>
                         <SelectItem value="Other">Other</SelectItem>
@@ -437,9 +475,15 @@ export function EditarCampanha({
               <Label>Payout</Label>
               <Input
                 id="payout"
-                type="number"
-                defaultValue={payout}
-                {...register("payout", { valueAsNumber: true })}
+                type="text"
+                {...register("payout", {
+                  onChange: (e) => {
+                    setPayoutValue(e.target.value);
+                  },
+                })}
+                value={payoutValue}
+                onChange={handleInputChange}
+                onKeyPress={handleKeyPress}
                 className={`${errors.payout && "border-rose-400"}`}
               />
             </div>

@@ -353,7 +353,7 @@ function AuthProvider({ children }: ChildrenProps) {
   }
 
   //CAMPAIGNS
-  async function handleCreateCampaign({ name, clientId, category, subcategory, payout, model, type, startAt, endAt, obs }: createNewCampaign) {
+  async function handleCreateCampaign({ name, clientId, category, subCategory, payout, model, type, startAt, endAt, obs }: createNewCampaign) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -367,7 +367,7 @@ function AuthProvider({ children }: ChildrenProps) {
           name,
           clientId,
           category,
-          subcategory,
+          subCategory,
           payout,
           model,
           type,
@@ -396,7 +396,7 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
-  async function handleEditCampaign({ id, name, clientId, category, subcategory, payout, model, type, startAt, endAt, obs }: editCampaign) {
+  async function handleEditCampaign({ id, name, category, subCategory, payout, model, type, startAt, endAt, obs }: editCampaign) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -409,9 +409,8 @@ function AuthProvider({ children }: ChildrenProps) {
         `/campaigns/${id}`,
         {
           name,
-          clientId,
           category,
-          subcategory,
+          subCategory,
           payout,
           model,
           type,

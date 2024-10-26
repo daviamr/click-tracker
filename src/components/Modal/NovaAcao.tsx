@@ -100,6 +100,36 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
     },
   });
 
+  const [costValue, setCostValue] = useState<string>("");
+
+  const formatToBRLCurrency = (value: string) => {
+    // Remove qualquer caractere que não seja número
+    const numericValue = value.replace(/[^0-9]/g, '');
+
+    // Retorna uma string vazia se o campo estiver vazio
+    if (!numericValue) return "";
+
+    // Converte para número e formata para o estilo brasileiro
+    const formattedValue = new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(parseFloat(numericValue) / 100);
+
+    return formattedValue;
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setCostValue(formatToBRLCurrency(value));
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const allowedChars = /[0-9,]/;
+    if (!allowedChars.test(event.key)) {
+      event.preventDefault();
+    }
+  };
+
   const handleSelectChange = (value: string) => {
     const selectedCustomer = customerData.find(
       (customer) => customer.name === value
@@ -199,14 +229,16 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
   useEffect(() => {
     reset();
     setSelectedClient('');
+    setCostValue('');
   }, [isOpen]);
 
   const createAction = async (data: actionData) => {
-    const { name, campaignId, startAt, endAt, utm, cost, landingPageId } = data;
+    const { name, campaignId, startAt, endAt, utm, landingPageId } = data;
     const dataInicioFormatado = new Date(startAt);
     const dataFimFormatado = new Date(endAt);
     const inicioIso = dataInicioFormatado.toISOString();
     const fimIso = dataFimFormatado.toISOString();
+    const costFormatado = costValue.replace(/\./g, '').replace(',', '.');
 
     if (campaignId === 0) {
       alert("Campanha não encontrada.");
@@ -218,7 +250,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
           startAt: inicioIso,
           endAt: fimIso,
           utm: utm,
-          cost,
+          cost: Number(costFormatado),
           landingPageId,
           key: chave,
         });
@@ -228,7 +260,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
           startAt: inicioIso,
           endAt: fimIso,
           utm: utm,
-          cost,
+          cost: Number(costFormatado),
           landingPageId,
           key: chave,
         });
@@ -313,8 +345,8 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Campanhas</SelectLabel>
-                    {campanhas.map((i) => (
-                      <SelectItem value={i.name} key={i.id}>
+                    {campanhas.map((i, index) => (
+                      <SelectItem value={i.name} key={index}>
                         {i.name}
                       </SelectItem>
                     ))}
@@ -337,7 +369,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                     <SelectTrigger>
                       <SelectValue placeholder="Selecione a LP" />
                     </SelectTrigger>
-                    <SelectContent className={`${errors.landingPageId}`}>
+                    <SelectContent className={`${errors.landingPageId && "border-rose-400"}`}>
                       <SelectGroup>
                         <SelectLabel>LP's</SelectLabel>
                         {lps.map((i, index) => (
@@ -357,7 +389,14 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                 id="cost"
                 type="text"
                 placeholder="0,99"
-                {...register("cost")}
+                {...register("cost", {
+                  onChange: (e) => {
+                    setCostValue(e.target.value);
+                  },
+                })}
+                value={costValue}
+                onChange={handleInputChange}
+                onKeyPress={handleKeyPress}
                 className={`${errors.cost && "border-rose-400"}`}
               />
             </div>

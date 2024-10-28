@@ -173,7 +173,7 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
-  async function handleEditUser({id, email, password, name }: EditNewUser) {
+  async function handleEditUser({ id, email, password, name }: EditNewUser) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -184,7 +184,7 @@ function AuthProvider({ children }: ChildrenProps) {
 
       // console.log(token)
 
-      console.log(id, email, password, name)
+      console.log(id, email, password, name);
 
       const response = await api.put(
         `/users/${id}`,
@@ -353,7 +353,18 @@ function AuthProvider({ children }: ChildrenProps) {
   }
 
   //CAMPAIGNS
-  async function handleCreateCampaign({ name, clientId, category, subCategory, payout, model, type, startAt, endAt, obs }: createNewCampaign) {
+  async function handleCreateCampaign({
+    name,
+    clientId,
+    category,
+    subCategory,
+    payout,
+    model,
+    type,
+    startAt,
+    endAt,
+    obs,
+  }: createNewCampaign) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -396,7 +407,18 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
-  async function handleEditCampaign({ id, name, category, subCategory, payout, model, type, startAt, endAt, obs }: editCampaign) {
+  async function handleEditCampaign({
+    id,
+    name,
+    category,
+    subCategory,
+    payout,
+    model,
+    type,
+    startAt,
+    endAt,
+    obs,
+  }: editCampaign) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -512,7 +534,7 @@ function AuthProvider({ children }: ChildrenProps) {
     utm,
     cost,
     landingPageId,
-    key
+    key,
   }: createNewAction) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
@@ -534,7 +556,7 @@ function AuthProvider({ children }: ChildrenProps) {
           utm,
           cost,
           landingPageId,
-          key
+          key,
         },
         {
           headers: {
@@ -566,7 +588,7 @@ function AuthProvider({ children }: ChildrenProps) {
     utm,
     cost,
     landingPageId,
-    key
+    key,
   }: editAction) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
@@ -575,6 +597,17 @@ function AuthProvider({ children }: ChildrenProps) {
         throw new Error("Token não encontrado.");
       }
       const token = JSON.parse(dataUser);
+
+      console.log({
+        name: name,
+        campaignId: campaignId,
+        startAt: startAt,
+        endAt: endAt,
+        utm: utm,
+        cost: cost,
+        landingPageId: landingPageId,
+        key: key,
+      });
 
       const response = await api.put(
         `/actions/${id}`,
@@ -586,7 +619,7 @@ function AuthProvider({ children }: ChildrenProps) {
           utm,
           cost,
           landingPageId,
-          key
+          key,
         },
         {
           headers: {
@@ -594,7 +627,7 @@ function AuthProvider({ children }: ChildrenProps) {
           },
         }
       );
-      console.log('response:', response);
+      console.log("response:", response);
       AlertMessage("Ação editada com sucesso.", "success");
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
@@ -992,7 +1025,6 @@ function AuthProvider({ children }: ChildrenProps) {
 
       AlertMessage("Link criado com sucesso.", "success");
       return response.data; // Retorna a resposta da API
-
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
@@ -1057,7 +1089,7 @@ function AuthProvider({ children }: ChildrenProps) {
 
       // console.log(token)
 
-      const response = await api.post(
+      const response = await api.put(
         `/lps/${id}`,
         {
           name,
@@ -1169,7 +1201,7 @@ function AuthProvider({ children }: ChildrenProps) {
         `/data-sources/${id}`,
         {
           name,
-          url
+          url,
         },
         {
           headers: {
@@ -1179,7 +1211,7 @@ function AuthProvider({ children }: ChildrenProps) {
       );
       console.log(response.data);
 
-      AlertMessage('Origem Base editada com sucesso.', "success");
+      AlertMessage("Origem Base editada com sucesso.", "success");
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.message, "error");
@@ -1223,7 +1255,11 @@ function AuthProvider({ children }: ChildrenProps) {
   }
 
   //URL destino
-  async function handleCreateFinalURL({ name, url, campaignId }: createFinalURL) {
+  async function handleCreateFinalURL({
+    name,
+    url,
+    campaignId,
+  }: createFinalURL) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 

@@ -258,6 +258,7 @@ export function EditarAcao({
     handleSelectLP(lp);
     handleSelectCampaign(campaign);
     setCostValue(formatToBRLCurrency(cost.toString()));
+    setUtm('utm_source');
   }, [isOpen]);
 
   const editAction = async (data: actionData) => {
@@ -276,16 +277,6 @@ export function EditarAcao({
           id,
           name,
           campaignId,
-          startAt: inicioIso,
-          endAt: fimIso,
-          utm: utm,
-          cost: Number(costFormatado),
-          landingPageId,
-          key: chave,
-        });
-        console.log({
-          name: name,
-          campaignId: campaignId,
           startAt: inicioIso,
           endAt: fimIso,
           utm: utm,
@@ -435,7 +426,7 @@ export function EditarAcao({
                       field.onChange(value); // Atualiza o valor no formulário
                       setUtm(value);
                     }}
-                    defaultValue="utm_source"
+                    defaultValue={utm}
                   >
                     <SelectTrigger
                       className={`${errors.utm && "border-rose-400"}`}

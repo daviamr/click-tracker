@@ -21,7 +21,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FilePenLine } from "lucide-react";
 import { z } from "zod";
-import { customerData, DataProps, editCampaign } from "@/interface/auth";
+import {
+  categoryProps,
+  customerData,
+  DataProps,
+  editCampaign,
+} from "@/interface/auth";
 import { useAuth } from "@/hook/Auth";
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
@@ -94,6 +99,9 @@ export function EditarCampanha({
   const [customerData, setCustomerData] = useState<customerData[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [payoutValue, setPayoutValue] = useState<string>("");
+  const [categoryValue, setCategoryValue] = useState<string>("");
+  const [subCategoryValue, setSubCategoryValue] = useState<string>("");
+  const [categoryData, setCategoryData] = useState<categoryProps[]>([]);
   const dataPadraoFormatada = (data: string) => {
     return data.slice(0, 16);
   };
@@ -121,15 +129,15 @@ export function EditarCampanha({
 
   const formatToBRLCurrency = (value: string) => {
     // Remove qualquer caractere que não seja número
-    const numericValue = value.replace(/[^0-9]/g, '');
+    const numericValue = value.replace(/[^0-9]/g, "");
 
     // Retorna uma string vazia se o campo estiver vazio
     if (!numericValue) return "";
 
     // Converte para número e formata para o estilo brasileiro
-    const formattedValue = new Intl.NumberFormat('pt-BR', {
+    const formattedValue = new Intl.NumberFormat("pt-BR", {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     }).format(parseFloat(numericValue) / 100);
 
     return formattedValue;
@@ -167,7 +175,28 @@ export function EditarCampanha({
     handleGetUsers();
   }, [data.jwtToken]);
 
+  const handleGetCategory = async () => {
+    try {
+      const response = await api.get("/categories", {
+        headers: {
+          Authorization: `Bearer ${data.jwtToken}`,
+        },
+      });
+      setCategoryData(response.data);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível carregar os clientes, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  };
+
   useEffect(() => {
+    handleGetCategory();
     if (isOpen) {
       reset({
         id,
@@ -180,6 +209,8 @@ export function EditarCampanha({
         endAt: dataPadraoFormatada(dataFim),
         obs: obs,
       });
+      setCategoryValue(category);
+      setSubCategoryValue(subcategory);
       setPayoutValue(formatToBRLCurrency(payout.toString()));
     }
   }, [isOpen]);
@@ -197,8 +228,6 @@ export function EditarCampanha({
     const {
       id,
       name,
-      category,
-      subCategory,
       model,
       type,
       clientId,
@@ -211,27 +240,30 @@ export function EditarCampanha({
     const dataFimFormatado = new Date(endAt);
     const inicioIso = dataInicioFormatado.toISOString();
     const fimIso = dataFimFormatado.toISOString();
-    const payoutFormatado = payoutValue.replace(/\./g, '').replace(',', '.');
+    const payoutFormatado = payoutValue.replace(/\./g, "").replace(",", ".");
 
     if (idClient) {
-
-      console.log([{id,
-        name,
-        category,
-        subCategory,
-        model,
-        type,
-        payout: Number(payoutFormatado),
-        clientId: idClient,
-        startAt: inicioIso,
-        endAt: fimIso,
-        obs}])
+      console.log([
+        {
+          id,
+          name,
+          category: categoryValue,
+          subCategory: subCategoryValue,
+          model,
+          type,
+          payout: Number(payoutFormatado),
+          clientId: idClient,
+          startAt: inicioIso,
+          endAt: fimIso,
+          obs,
+        },
+      ]);
       try {
         await handleEditCampaign({
           id,
           name,
-          category,
-          subCategory,
+          category: categoryValue,
+          subCategory: subCategoryValue,
           model,
           type,
           payout: Number(payoutFormatado),
@@ -323,25 +355,25 @@ export function EditarCampanha({
                 control={control}
                 render={({ field }) => (
                   <Select
-                    onValueChange={field.onChange}
-                    defaultValue={category}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setCategoryValue(value);
+                      setSubCategoryValue('');
+                    }}
                   >
                     <SelectTrigger
                       className={`${errors.category && "border-rose-400"}`}
                     >
-                      <SelectValue placeholder={category} />
+                      <SelectValue placeholder={categoryValue} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectLabel>Categorias</SelectLabel>
-                        <SelectItem value="Financeiro">Financeiro</SelectItem>
-                        <SelectItem value="Benefícios">Benefícios</SelectItem>
-                        <SelectItem value="Saúde">Saúde</SelectItem>
-                        <SelectItem value="Publicidade">Publicidade</SelectItem>
-                        <SelectItem value="Telecom">Telecom</SelectItem>
-                        <SelectItem value="Facilities">Facilities</SelectItem>
-                        <SelectItem value="Hardware">Hardware</SelectItem>
-                        <SelectItem value="Escritório">Escritório</SelectItem>
+                        <SelectLabel>Clientes</SelectLabel>
+                        {categoryData.map((i, index) => (
+                          <SelectItem value={i.name} key={index}>
+                            {i.name}
+                          </SelectItem>
+                        ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -350,65 +382,44 @@ export function EditarCampanha({
               {/* FINAL SELECT CATEGORY */}
             </div>
             <div className="col-span-2">
-              <Label htmlFor="subcategoria">Subcategoria</Label>
+              <Label htmlFor="subCategoria">Subcategoria</Label>
               {/* SELECT SUBCATEGORY */}
               <Controller
                 name="subCategory"
                 control={control}
                 render={({ field }) => (
                   <Select
-                    onValueChange={field.onChange}
-                    defaultValue={subcategory}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setSubCategoryValue(value);
+                    }}
+                    disabled={!categoryValue}
                   >
                     <SelectTrigger
                       className={`${errors.subCategory && "border-rose-400"}`}
                     >
-                      <SelectValue placeholder="Selecione a subcategoria" />
+                      <SelectValue placeholder={subCategoryValue} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Subcategorias</SelectLabel>
-                        <SelectItem value="Maquininha">Maquininha</SelectItem>
-                        <SelectItem value="Abertura de Contas">
-                          Abertura de Contas
-                        </SelectItem>
-                        <SelectItem value="Empréstimos">Empréstimos</SelectItem>
-                        <SelectItem value="Cartão de Crédito">
-                          Cartão de Crédito
-                        </SelectItem>
-                        <SelectItem value="Software">Software</SelectItem>
-                        <SelectItem value="Cartão Alimentação">
-                          Cartão Alimentação
-                        </SelectItem>
-                        <SelectItem value="Cartão Refeição">
-                          Cartão Refeição
-                        </SelectItem>
-                        <SelectItem value="Clano de Saúde">
-                          Plano de Saúde
-                        </SelectItem>
-                        <SelectItem value="Plano Odontológico">
-                          Plano Odontológico
-                        </SelectItem>
-                        <SelectItem value="E-mail Marketing">
-                          E-mail Marketing
-                        </SelectItem>
-                        <SelectItem value="Geração de Leads">
-                          Geração de Leads
-                        </SelectItem>
-                        <SelectItem value="Internet">Internet</SelectItem>
-                        <SelectItem value="Plano Móvel">Plano Móvel</SelectItem>
-                        <SelectItem value="Máquina de Café">
-                          Máquina de Café
-                        </SelectItem>
-                        <SelectItem value="Material de Escritório">
-                          Material de Escritório
-                        </SelectItem>
-                        <SelectItem value="Antivírus">Antivírus</SelectItem>
-                        <SelectItem value="PCs e Notebooks">
-                          PCs e Notebooks
-                        </SelectItem>
-                        <SelectItem value="Mobiliários">Mobiliários</SelectItem>
-                      </SelectGroup>
+                      {categoryData.map(
+                        (i, index) =>
+                          categoryValue === i.name &&
+                          Array.isArray(i.subcategories) && (
+                            <SelectGroup key={index}>
+                              <SelectLabel>Subcategorias</SelectLabel>
+                              {i.subcategories.map(
+                                (subcategory: string, subIndex: number) => (
+                                  <SelectItem
+                                    key={subIndex}
+                                    value={subcategory}
+                                  >
+                                    {subcategory}
+                                  </SelectItem>
+                                )
+                              )}
+                            </SelectGroup>
+                          )
+                      )}
                     </SelectContent>
                   </Select>
                 )}
@@ -422,11 +433,13 @@ export function EditarCampanha({
                 name="model"
                 control={control}
                 render={({ field }) => (
-                  <Select onValueChange={field.onChange} defaultValue={model === 'LeadHunting' ? 'Lead Hunting' : model}>
+                  <Select
+                    onValueChange={field.onChange}
+                  >
                     <SelectTrigger
                       className={`${errors.model && "border-rose-400"}`}
                     >
-                      <SelectValue placeholder="Selecione o modelo" />
+                      <SelectValue placeholder={model === 'LeadHunting' ? 'Lead Hunting' : model} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>

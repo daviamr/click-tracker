@@ -299,6 +299,11 @@ export type CreateNewUser = {
     campaignId: number;
   }
 
+  export type categoryProps = {
+    name: string;
+    subcategories: string;
+  }
+
   export interface ApiResponse {
     qrCode: string;
     redirectUrl: string;

@@ -24,7 +24,12 @@ import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/hook/Auth";
-import { createNewCampaign, customerData, DataProps } from "@/interface/auth";
+import {
+  categoryProps,
+  createNewCampaign,
+  customerData,
+  DataProps,
+} from "@/interface/auth";
 import { api } from "@/services/Api";
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
@@ -69,18 +74,43 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
   const { data, handleCreateCampaign } = useAuth() as HandleCreateUsersProps;
   const [customerData, setCustomerData] = useState<customerData[]>([]);
   const [payoutValue, setPayoutValue] = useState<string>("");
+  const [categoryValue, setCategoryValue] = useState<string>("");
+  const [subCategoryValue, setSubCategoryValue] = useState<string>("");
+  const [categoryData, setCategoryData] = useState<categoryProps[]>([]);
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<campaignData>({
+    resolver: zodResolver(verifyCreateCampaign),
+    defaultValues: {
+      name: "",
+      clientId: "",
+      category: "",
+      subCategory: "",
+      model: "",
+      type: "",
+      startAt: "",
+      endAt: "",
+      payout: "",
+      obs: "",
+    },
+  });
 
   const formatToBRLCurrency = (value: string) => {
     // Remove qualquer caractere que não seja número
-    const numericValue = value.replace(/[^0-9]/g, '');
+    const numericValue = value.replace(/[^0-9]/g, "");
 
     // Retorna uma string vazia se o campo estiver vazio
     if (!numericValue) return "";
 
     // Converte para número e formata para o estilo brasileiro
-    const formattedValue = new Intl.NumberFormat('pt-BR', {
+    const formattedValue = new Intl.NumberFormat("pt-BR", {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     }).format(parseFloat(numericValue) / 100);
 
     return formattedValue;
@@ -95,6 +125,32 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
     const allowedChars = /[0-9,]/;
     if (!allowedChars.test(event.key)) {
       event.preventDefault();
+    }
+  };
+
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); // Ajusta o fuso horário
+    return now.toISOString().slice(0, 16); // Formato compatível com datetime-local
+  };
+
+  const handleGetCategory = async () => {
+    try {
+      const response = await api.get("/categories", {
+        headers: {
+          Authorization: `Bearer ${data.jwtToken}`,
+        },
+      });
+      setCategoryData(response.data);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível carregar os clientes, tente novamente mais tarde.",
+          "error"
+        );
+      }
     }
   };
 
@@ -123,68 +179,36 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
 
   useEffect(() => {
     reset();
-    setPayoutValue('');
-  }, [isOpen]);
-
-  //data atual
-  const getCurrentDateTime = () => {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); // Ajusta o fuso horário
-    return now.toISOString().slice(0, 16); // Formato compatível com datetime-local
-  };
-
-  const {
-    register,
-    handleSubmit,
-    control,
-    reset,
-    setValue,
-    formState: { errors },
-  } = useForm<campaignData>({
-    resolver: zodResolver(verifyCreateCampaign),
-    defaultValues: {
-      name: "",
-      clientId: "",
-      category: "",
-      subCategory: "",
-      model: "",
-      type: "",
-      startAt: "",
-      endAt: "",
-      payout: "",
-      obs: "",
-    },
-  });
-
-  useEffect(() => {
+    setPayoutValue("");
+    setCategoryValue("");
+    setSubCategoryValue("");
+    handleGetCategory();
     setValue("startAt", getCurrentDateTime());
   }, [isOpen]);
 
+  useEffect(() => {
+    setSubCategoryValue("");
+  }, [categoryValue]);
+
+  useEffect(() => {
+    console.log(categoryValue, subCategoryValue);
+  }, [categoryValue, subCategoryValue]);
+
   async function createCampaign(data: campaignData) {
-    const {
-      name,
-      clientId,
-      category,
-      subCategory,
-      model,
-      type,
-      startAt,
-      endAt,
-      obs,
-    } = data;
+    const { name, clientId, model, type, startAt, endAt, obs } = data;
     const idClient = customerData.find((i) => i.name === clientId)?.id;
     const dataInicioFormatado = new Date(startAt);
     const dataFimFormatado = new Date(endAt);
     const inicioIso = dataInicioFormatado.toISOString();
     const fimIso = dataFimFormatado.toISOString();
-    const payoutFormatado = payoutValue.replace(/\./g, '').replace(',', '.');
+    const payoutFormatado = payoutValue.replace(/\./g, "").replace(",", ".");
 
     console.log([
       {
         name: name,
         clientId: idClient,
-        category: category,
-        subcategory: subCategory,
+        category: categoryValue,
+        subcategory: subCategoryValue,
         model: model,
         type: type,
         payout: payoutFormatado,
@@ -199,8 +223,8 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
         await handleCreateCampaign({
           name,
           clientId: idClient,
-          category,
-          subCategory,
+          category: categoryValue,
+          subCategory: subCategoryValue,
           model,
           type,
           payout: Number(payoutFormatado),
@@ -282,7 +306,6 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
               />
               {/* FINAL SELECT CUSTOMER */}
             </div>
-
             <div className="col-span-2">
               <Label htmlFor="categoria">Categoria</Label>
               {/* SELECT CATEGORY */}
@@ -290,24 +313,25 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
                 name="category"
                 control={control}
                 render={({ field }) => (
-                  <Select onValueChange={field.onChange}>
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setCategoryValue(value);
+                    }}
+                  >
                     <SelectTrigger
                       className={`${errors.category && "border-rose-400"}`}
                     >
-                      <SelectValue placeholder="Selecione a categoria" />
+                      <SelectValue placeholder="Selecione" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Categorias</SelectLabel>
-                        <SelectItem value="Financeiro">Financeiro</SelectItem>
-                        <SelectItem value="Benefícios">Benefícios</SelectItem>
-                        <SelectItem value="Saúde">Saúde</SelectItem>
-                        <SelectItem value="Publicidade">Publicidade</SelectItem>
-                        <SelectItem value="Telecom">Telecom</SelectItem>
-                        <SelectItem value="Facilities">Facilities</SelectItem>
-                        <SelectItem value="Hardware">Hardware</SelectItem>
-                        <SelectItem value="Escritório">Escritório</SelectItem>
-                        <SelectItem value="Outros">Outros</SelectItem>
+                        {categoryData.map((i, index) => (
+                          <SelectItem value={i.name} key={index}>
+                            {i.name}
+                          </SelectItem>
+                        ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -322,57 +346,38 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
                 name="subCategory"
                 control={control}
                 render={({ field }) => (
-                  <Select onValueChange={field.onChange}>
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setSubCategoryValue(value);
+                    }}
+                    disabled={!categoryValue}
+                  >
                     <SelectTrigger
                       className={`${errors.subCategory && "border-rose-400"}`}
                     >
-                      <SelectValue placeholder="Selecione a subcategoria" />
+                      <SelectValue placeholder="Selecione" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Subcategorias</SelectLabel>
-                        <SelectItem value="Maquininha">Maquininha</SelectItem>
-                        <SelectItem value="Abertura de Contas">
-                          Abertura de Contas
-                        </SelectItem>
-                        <SelectItem value="Empréstimos">Empréstimos</SelectItem>
-                        <SelectItem value="Cartão de Crédito">
-                          Cartão de Crédito
-                        </SelectItem>
-                        <SelectItem value="Software">Software</SelectItem>
-                        <SelectItem value="Cartão Alimentação">
-                          Cartão Alimentação
-                        </SelectItem>
-                        <SelectItem value="Cartão Refeição">
-                          Cartão Refeição
-                        </SelectItem>
-                        <SelectItem value="Clano de Saúde">
-                          Plano de Saúde
-                        </SelectItem>
-                        <SelectItem value="Plano Odontológico">
-                          Plano Odontológico
-                        </SelectItem>
-                        <SelectItem value="E-mail Marketing">
-                          E-mail Marketing
-                        </SelectItem>
-                        <SelectItem value="Geração de Leads">
-                          Geração de Leads
-                        </SelectItem>
-                        <SelectItem value="Internet">Internet</SelectItem>
-                        <SelectItem value="Plano Móvel">Plano Móvel</SelectItem>
-                        <SelectItem value="Máquina de Café">
-                          Máquina de Café
-                        </SelectItem>
-                        <SelectItem value="Material de Escritório">
-                          Material de Escritório
-                        </SelectItem>
-                        <SelectItem value="Antivírus">Antivírus</SelectItem>
-                        <SelectItem value="PCs e Notebooks">
-                          PCs e Notebooks
-                        </SelectItem>
-                        <SelectItem value="Mobiliários">Mobiliários</SelectItem>
-                        <SelectItem value="Outros">Outros</SelectItem>
-                      </SelectGroup>
+                      {categoryData.map(
+                        (i, index) =>
+                          categoryValue === i.name &&
+                          Array.isArray(i.subcategories) && (
+                            <SelectGroup key={index}>
+                              <SelectLabel>Subcategorias</SelectLabel>
+                              {i.subcategories.map(
+                                (subcategory: string, subIndex: number) => (
+                                  <SelectItem
+                                    key={subIndex}
+                                    value={subcategory}
+                                  >
+                                    {subcategory}
+                                  </SelectItem>
+                                )
+                              )}
+                            </SelectGroup>
+                          )
+                      )}
                     </SelectContent>
                   </Select>
                 )}

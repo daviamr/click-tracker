@@ -20,7 +20,6 @@ type dataHistoryProps = { data: DataProps };
 export function HistoricoPage() {
   const { data } = useAuth() as dataHistoryProps;
   const [dataAction, setAction] = useState<dataAction[]>([]);
-  console.log(dataAction)
 
   const handleGetAction = async () => {
     try {

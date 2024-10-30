@@ -92,7 +92,7 @@ export function Header() {
                       align="start"
                       side="right"
                       content="Usuários"
-                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] top-[0px] right-[0px] ${
                         isOpen ? "hidden" : "block"
                       }`}
                     />
@@ -116,7 +116,7 @@ export function Header() {
                       align="start"
                       side="right"
                       content="Clientes"
-                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] top-[0px] right-[0px] ${
                         isOpen ? "hidden" : "block"
                       }`}
                     />
@@ -142,7 +142,7 @@ export function Header() {
                       align="start"
                       side="right"
                       content="Campanhas"
-                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] top-[0px] right-[0px] ${
                         isOpen ? "hidden" : "block"
                       }`}
                     />
@@ -168,7 +168,7 @@ export function Header() {
                       align="start"
                       side="right"
                       content="LPs, Sites e Portais"
-                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] top-[0px] right-[0px] ${
                         isOpen ? "hidden" : "block"
                       }`}
                     />
@@ -192,7 +192,7 @@ export function Header() {
                       align="start"
                       side="right"
                       content="Ações"
-                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] top-[0px] right-[0px] ${
                         isOpen ? "hidden" : "block"
                       }`}
                     />
@@ -218,7 +218,7 @@ export function Header() {
                       align="start"
                       side="right"
                       content="SmartURLs"
-                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] top-[0px] right-[0px] ${
                         isOpen ? "hidden" : "block"
                       }`}
                     />
@@ -244,7 +244,7 @@ export function Header() {
                       align="start"
                       side="right"
                       content="Conversores"
-                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] top-[0px] right-[0px] ${
                         isOpen ? "hidden" : "block"
                       }`}
                     />
@@ -270,7 +270,7 @@ export function Header() {
                       align="start"
                       side="right"
                       content="Histórico"
-                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] top-[0px] right-[0px] ${
                         isOpen ? "hidden" : "block"
                       }`}
                     />
@@ -296,7 +296,7 @@ export function Header() {
                       align="start"
                       side="right"
                       content="Origem Base"
-                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] top-[0px] right-[0px] ${
                         isOpen ? "hidden" : "block"
                       }`}
                     />
@@ -322,7 +322,7 @@ export function Header() {
                       align="start"
                       side="right"
                       content="URLs de Destino"
-                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] top-[0px] right-[0px] ${
                         isOpen ? "hidden" : "block"
                       }`}
                     />
@@ -346,7 +346,7 @@ export function Header() {
                       align="start"
                       side="right"
                       content="Trackers"
-                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] top-[0px] right-[0px] ${
                         isOpen ? "hidden" : "block"
                       }`}
                     />
@@ -372,7 +372,7 @@ export function Header() {
                       align="start"
                       side="right"
                       content="Dashboard"
-                      className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] top-[0px] right-[0px] ${
                         isOpen ? "hidden" : "block"
                       }`}
                     />
@@ -393,17 +393,18 @@ export function Header() {
                     : "border-l-4 text-[16px] cursor-pointer border-col"
                 }`}
               >
-                <ModeToggle
-                  className={`flex items-center gap-2 py-3 w-full ${
-                    isOpen ? "pl-0" : "pl-5"
-                  }`}
-                />
                 <TooltipHeader
                   align="start"
                   side="right"
                   content="Tema"
-                  className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                  className={`hover:bg-transparent absolute w-[60px] h-[42px] top-0 right-0 ${
                     isOpen ? "hidden" : "block"
+                  }`}
+                />
+
+                <ModeToggle
+                  className={`z-1000 flex items-center gap-2 py-3 w-full ${
+                    isOpen ? "pl-0" : "pl-5"
                   }`}
                 />
               </li>
@@ -427,7 +428,7 @@ export function Header() {
                     align="start"
                     side="right"
                     content="Sair"
-                    className={`hover:bg-transparent absolute w-[60px] h-[42px] ${
+                    className={`hover:bg-transparent absolute w-[60px] h-[42px] top-[0px] right-[0px] ${
                       isOpen ? "hidden" : "block"
                     }`}
                   />

@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Braces, UserRoundPen, UserRoundX } from "lucide-react";
+import { Braces, UserRoundX } from "lucide-react";
 import { NovaUrlDestino } from "@/components/Modal/NovaUrlDestino";
 import { useEffect, useState } from "react";
 import { DataProps, finalURLProps } from "@/interface/auth";
@@ -15,11 +15,13 @@ import { api } from "@/services/Api";
 import { AxiosError } from "axios";
 import { AlertMessage } from "@/components/alert_message";
 import { useAuth } from "@/hook/Auth";
+import { EditarUrlDestino } from "@/components/Modal/EditarUrlDestino";
 
 type dataURLProps = { data: DataProps };
 
 export function UrlDestinoPage() {
   const { data } = useAuth() as dataURLProps;
+  const { deleteFinalUrl } = useAuth();
   const [finalURL, setFinalURL] = useState<finalURLProps[]>([]);
 
   const handleGetFinalURL = async () => {
@@ -44,7 +46,11 @@ export function UrlDestinoPage() {
   useEffect(() => {
     handleGetFinalURL();
   }, [data.jwtToken]);
-  console.log(finalURL)
+
+  const handleDeleteFinalUrl = async (id: number) => {
+    await deleteFinalUrl({ id });
+    handleGetFinalURL();
+  };
 
   return (
     <>
@@ -55,7 +61,7 @@ export function UrlDestinoPage() {
         </h1>
       </div>
       <div className="flex justify-end border-solid border-y-[1px] py-2 px-4">
-        <NovaUrlDestino handleGetFinalURL={handleGetFinalURL}/>
+        <NovaUrlDestino handleGetFinalURL={handleGetFinalURL} />
       </div>
       <Table>
         <TableHeader>
@@ -76,13 +82,18 @@ export function UrlDestinoPage() {
               <TableCell>{i.campaignName}</TableCell>
               <TableCell>{i.totalClicks}</TableCell>
               <TableCell className="flex items-center justify-end gap-2 pr-4">
-                <Button className="p-2" variant={"outline"}>
-                  <UserRoundPen size={18} />
-                </Button>
+                <EditarUrlDestino
+                  id={i.id}
+                  name={i.name}
+                  campaign={i.campaignName}
+                  client={i.clientName}
+                  url={i.url}
+                  handleGetFinalURL={handleGetFinalURL}
+                />
                 <Button
                   className="p-2 duration-300 hover:text-red-700"
                   variant={"outline"}
-                  // onClick={() => handleDeleteCustomer(i.id)}
+                  onClick={() => handleDeleteFinalUrl(i.id)}
                 >
                   <UserRoundX size={18} />
                 </Button>

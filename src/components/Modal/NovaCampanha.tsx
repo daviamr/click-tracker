@@ -190,10 +190,6 @@ export function NovaCampanha({ onCreateCampaign }: createCampaignProps) {
     setSubCategoryValue("");
   }, [categoryValue]);
 
-  useEffect(() => {
-    console.log(categoryValue, subCategoryValue);
-  }, [categoryValue, subCategoryValue]);
-
   async function createCampaign(data: campaignData) {
     const { name, clientId, model, type, startAt, endAt, obs } = data;
     const idClient = customerData.find((i) => i.name === clientId)?.id;

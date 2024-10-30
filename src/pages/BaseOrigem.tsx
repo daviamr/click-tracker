@@ -54,8 +54,6 @@ export function BaseOrigemPage() {
     handleGetBase();
   };
 
-  console.log(base)
-
   return (
     <>
       <div>

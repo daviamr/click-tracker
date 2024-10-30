@@ -198,6 +198,10 @@ export function EditarCampanha({
   useEffect(() => {
     handleGetCategory();
     if (isOpen) {
+      const payoutString = typeof payout === 'number' && Number.isInteger(payout)
+        ? `${payout}00`
+        : payout.toString();
+  
       reset({
         id,
         name: name,
@@ -209,9 +213,10 @@ export function EditarCampanha({
         endAt: dataPadraoFormatada(dataFim),
         obs: obs,
       });
+  
       setCategoryValue(category);
       setSubCategoryValue(subcategory);
-      setPayoutValue(formatToBRLCurrency(payout.toString()));
+      setPayoutValue(formatToBRLCurrency(payoutString));
     }
   }, [isOpen]);
 

@@ -43,6 +43,8 @@ import {
   deleteBase,
   createFinalURL,
   editLP,
+  editFinalURL,
+  deleteFinalUrl,
 } from "@/interface/auth";
 import { AlertMessage } from "@/components/alert_message";
 
@@ -77,6 +79,8 @@ interface AuthContextType {
   handleEditBase: (data: editBase) => Promise<void>;
   deleteBase: (data: deleteBase) => Promise<void>;
   handleCreateFinalURL: (data: createFinalURL) => Promise<void>;
+  handleEditFinalUrl: (data: editFinalURL) => Promise<void>;
+  deleteFinalUrl: (data: deleteFinalUrl) => Promise<void>;
   data: DataProps | null;
 }
 
@@ -232,7 +236,7 @@ function AuthProvider({ children }: ChildrenProps) {
 
       console.log(response.data);
 
-      AlertMessage("Usuário deletado com sucesso.", "success");
+      AlertMessage(response.data.messsage, "success");
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.message, "error");
@@ -338,7 +342,7 @@ function AuthProvider({ children }: ChildrenProps) {
 
       console.log(response.data);
 
-      AlertMessage("Cliente deletado com sucesso.", "success");
+      AlertMessage(response.data.message, "success");
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
@@ -1285,13 +1289,87 @@ function AuthProvider({ children }: ChildrenProps) {
       );
       console.log(response.data);
 
-      AlertMessage(response.data.message, "success");
+      AlertMessage('Final URL criada com sucesso.', "success");
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.message, "error");
       } else {
         AlertMessage(
           "Não foi possível criar uma URL de Destino agora, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  }
+
+  async function handleEditFinalUrl({
+    id,
+    name,
+    url,
+    campaignId,
+  }: editFinalURL) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      // console.log(token)
+
+      const response = await api.put(
+        `/final-urls/${id}`,
+        {
+          name,
+          url,
+          campaignId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token.jwtToken}`,
+          },
+        }
+      );
+      console.log(response.data);
+
+      AlertMessage('URL de destino editada com sucesso.', "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível editar a URL de destino agora, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  }
+
+  async function deleteFinalUrl({ id }: deleteFinalUrl) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      const response = await api.delete(`/final-urls/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token.jwtToken}`,
+        },
+      });
+
+      console.log(response.data);
+
+      AlertMessage(response.data.message, "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível deletar a base, tente novamente.",
           "error"
         );
       }
@@ -1332,6 +1410,8 @@ function AuthProvider({ children }: ChildrenProps) {
           handleEditBase,
           deleteBase,
           handleCreateFinalURL,
+          handleEditFinalUrl,
+          deleteFinalUrl,
           data,
         }}
       >

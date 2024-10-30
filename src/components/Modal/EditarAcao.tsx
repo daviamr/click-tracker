@@ -121,15 +121,15 @@ export function EditarAcao({
 
   const formatToBRLCurrency = (value: string) => {
     // Remove qualquer caractere que não seja número
-    const numericValue = value.replace(/[^0-9]/g, '');
+    const numericValue = value.replace(/[^0-9]/g, "");
 
     // Retorna uma string vazia se o campo estiver vazio
     if (!numericValue) return "";
 
     // Converte para número e formata para o estilo brasileiro
-    const formattedValue = new Intl.NumberFormat('pt-BR', {
+    const formattedValue = new Intl.NumberFormat("pt-BR", {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     }).format(parseFloat(numericValue) / 100);
 
     return formattedValue;
@@ -146,7 +146,6 @@ export function EditarAcao({
       event.preventDefault();
     }
   };
-
 
   const handleSelectChange = (value: string) => {
     const selectedCustomer = customerData.find(
@@ -244,21 +243,27 @@ export function EditarAcao({
   }, [clientId]);
 
   useEffect(() => {
-    reset({
-      id: id,
-      campaignId: 1,
-      selectCliente: client,
-      name: action,
-      landingPage: lp,
-      utm: utm,
-      startAt: dataPadraoFormatada(dataInicio),
-      endAt: dataPadraoFormatada(dataFim),
-    });
-    handleSelectChange(client);
-    handleSelectLP(lp);
-    handleSelectCampaign(campaign);
-    setCostValue(formatToBRLCurrency(cost.toString()));
-    setUtm('utm_source');
+    if (isOpen) {
+      const costString =
+        typeof cost === "number" && Number.isInteger(cost)
+          ? `${cost}00`
+          : cost.toString();
+      reset({
+        id: id,
+        campaignId: 1,
+        selectCliente: client,
+        name: action,
+        landingPage: lp,
+        utm: utm,
+        startAt: dataPadraoFormatada(dataInicio),
+        endAt: dataPadraoFormatada(dataFim),
+      });
+      handleSelectChange(client);
+      handleSelectLP(lp);
+      handleSelectCampaign(campaign);
+      setCostValue(formatToBRLCurrency(costString));
+      setUtm("utm_source");
+    }
   }, [isOpen]);
 
   const editAction = async (data: actionData) => {
@@ -267,7 +272,7 @@ export function EditarAcao({
     const dataFimFormatado = new Date(endAt);
     const inicioIso = dataInicioFormatado.toISOString();
     const fimIso = dataFimFormatado.toISOString();
-    const costFormatado = costValue.replace(/\./g, '').replace(',', '.');
+    const costFormatado = costValue.replace(/\./g, "").replace(",", ".");
 
     if (campaignId === 0) {
       alert("Campanha não encontrada.");

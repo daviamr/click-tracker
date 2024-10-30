@@ -299,6 +299,17 @@ export type CreateNewUser = {
     campaignId: number;
   }
 
+  export type editFinalURL = {
+    id: number;
+    name: string;
+    url: string;
+    campaignId: number;
+  }
+  
+  export type deleteFinalUrl = {
+    id: number;
+  }
+
   export type categoryProps = {
     name: string;
     subcategories: string;

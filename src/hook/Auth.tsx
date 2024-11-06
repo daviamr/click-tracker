@@ -6,10 +6,9 @@ import {
   useEffect,
   useState,
 } from "react";
-
 import { api } from "@/services/Api";
 import { AxiosError } from "axios";
-
+import fileDownload from 'js-file-download';
 import {
   createNewCampaign,
   createNewConversor,
@@ -956,10 +955,8 @@ function AuthProvider({ children }: ChildrenProps) {
         qrCode: qrCode,
         finalUrlId: finalUrlId,
         dataSourceId: dataSourceId,
-        tag: tag,
-        tagPosition: tagPosition,
         lpId: lpId
-      }]);      
+      }]);
 
       const formData = new FormData();
       formData.append("actionId", String(actionId));
@@ -969,12 +966,20 @@ function AuthProvider({ children }: ChildrenProps) {
       formData.append("qrCode", String(qrCode));
       formData.append("finalUrlId", String(finalUrlId));
       formData.append("dataSourceId", String(dataSourceId));
-      formData.append("tag", String(tag));
-      formData.append("tagPosition", String(tagPosition));
       formData.append("lpId", String(lpId));
 
       if (sheet) {
         formData.append("sheet", sheet);
+      }
+      if (tag) {
+        formData.append("tag", String(tag));
+      } else {
+        console.log("tag Desativada")
+      }
+      if (tagPosition) {
+        formData.append("tagPosition", String(tagPosition));
+      } else {
+        console.log("tagPosition Desativada")
       }
 
       // Envio da requisição com FormData
@@ -983,9 +988,11 @@ function AuthProvider({ children }: ChildrenProps) {
           Authorization: `Bearer ${token.jwtToken}`,
           "Content-Type": "multipart/form-data",
         },
+        responseType: 'blob',
       });
 
       console.log(response.data);
+      fileDownload(response.data, `atualizada_${sheet?.name}`)
 
       AlertMessage(response.data.message, "success");
     } catch (error: unknown) {
@@ -1030,6 +1037,7 @@ function AuthProvider({ children }: ChildrenProps) {
           headers: {
             Authorization: `Bearer ${token.jwtToken}`,
           },
+          responseType: 'blob',
         }
       );
       console.log(response.data);

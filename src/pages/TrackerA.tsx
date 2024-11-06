@@ -29,7 +29,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { TooltipTracker } from "@/components/TooltipTracker";
 import { Button } from "@/components/ui/button";
-import { Send } from "lucide-react";
+import { ArrowUpRight, CircleX, FileDown, Loader, Send } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -92,7 +92,8 @@ export function TrackerA() {
       qrCode: false,
       finalUrlId: "",
       dataSourceId: "",
-      tagPosition: "before",
+      tag: "",
+      tagPosition: "",
     },
   });
   const [customersData, setCustomersData] = useState<customerData[]>([]);
@@ -108,8 +109,7 @@ export function TrackerA() {
   const [selectedLP, handleSelectedLP] = useState<string>("");
   const [selectedAction, handleSelectedAction] = useState<string>("");
   const [lengthValue, setLengthValue] = useState<number>(6);
-  const [selectedTagPosition, setSelectedTagPosition] =
-    useState<string>("before");
+  const [selectedTagPosition, setSelectedTagPosition] = useState<string>("");
   //for the input example url
   const charactersLength = [
     "a",
@@ -136,6 +136,9 @@ export function TrackerA() {
   const [selectedUrl, setSelectedUrl] = useState<string>("");
   const tagValue = watch("tag");
   //
+  //loading manipulations
+  const [loading, setLoading] = useState<boolean>(false);
+  const [requestStatus, setRequestStatus] = useState<string>("loading");
 
   //support functions
   const handleClientId = (value: string) => {
@@ -407,6 +410,8 @@ export function TrackerA() {
 
   //create
   async function createTrackerA(data: trackerAData) {
+    setLoading(true);
+    setRequestStatus("loading");
     try {
       const {
         actionId,
@@ -443,13 +448,17 @@ export function TrackerA() {
       });
     } catch (error) {
       console.log("Erro: ", error);
+      setRequestStatus("error");
     } finally {
       reset();
+      setRequestStatus("success");
+      setTimeout(() => {setLoading(false);}, 3000)
     }
   }
+  console.log(errors);
   return (
     <>
-      <div className="p-8 bg-transparent rounded-md border border-input w-[601px]">
+      <div className="relative p-8 bg-transparent rounded-md border border-input w-[601px]">
         <form onSubmit={handleSubmit(createTrackerA)}>
           <div className="grid grid-cols-4 gap-2">
             <div className="col-span-4 flex justify-center gap-1 border-b-2 mb-2">
@@ -798,6 +807,7 @@ export function TrackerA() {
                 type="text"
                 placeholder="/personalização"
                 {...register("tag")}
+                disabled
               />
             </div>
 
@@ -826,6 +836,7 @@ export function TrackerA() {
                   <Select
                     value={selectedTagPosition}
                     onValueChange={handleSelectedTagPosition}
+                    disabled
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Posição da TAG" />
@@ -1062,6 +1073,25 @@ export function TrackerA() {
             </Button>
           </div>
         </form>
+        {loading && (
+          <div
+            className={`absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-20 w-[460px] h-[300px] p-4 bg-background rounded-md border border-input flex flex-col justify-center `}
+          >
+            <div className={`relative -top-[64px] flex justify-end ${requestStatus === "success" ? '' : 'hidden'}`}>
+            <ArrowUpRight size={38}/>
+            </div>
+            <div className={`flex flex-col gap-2 items-center`}>
+              {requestStatus === "loading" && <Loader size={60} className="animate-spin"/>}
+              {requestStatus === "error" && <CircleX size={60} />}
+              {requestStatus === "success" && <FileDown size={60} />}
+              <p className={`text-xl`}>
+                {requestStatus === "loading" && <span className="animate-pulse">Gerando planilha...</span>}
+                {requestStatus === "error" && <span>Ops, algo deu errado!</span>}
+                {requestStatus === "success" && <span className="animate-pulse">Fazendo o download da planilha...</span>}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

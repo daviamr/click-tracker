@@ -14,7 +14,6 @@ import { useAuth } from "@/hook/Auth";
 import {
   campaignData,
   conversorData,
-  createNewLink,
   customerData,
   dataAction,
   DataProps,
@@ -54,21 +53,21 @@ const verifyCreateLink = z.object({
 type encurtadorDados = z.infer<typeof verifyCreateLink>;
 
 type HandleCreateLinkProps = {
-  handleCreateLink: ({
-    actionId,//ok
-    baseUrlId,//ok
-    alphabetId,//ok
-    finalUrlId,//ok
-    dataSourceId,
-    sheet, //ok
-    length,//ok
-    qrCode,//ok
-  }: createNewLink) => void;
+  // handleCreateLink: ({
+  //   actionId,//ok
+  //   baseUrlId,//ok
+  //   alphabetId,//ok
+  //   finalUrlId,//ok
+  //   dataSourceId,
+  //   sheet, //ok
+  //   length,//ok
+  //   qrCode,//ok
+  // }: createNewLink) => void;
   data: DataProps;
 };
 
 export function EncutadorUm() {
-  const { data, handleCreateLink } = useAuth() as HandleCreateLinkProps;
+  const { data } = useAuth() as HandleCreateLinkProps;
   const [clients, setClients] = useState<customerData[]>([]);
   const [selectedClient, setSelectedClient] = useState<string>("");
   const [isSelectedCampaign, setIsSelectedCampaign] = useState<boolean>(false);
@@ -371,6 +370,14 @@ export function EncutadorUm() {
         qrCode,
       } = data;
       setProgress(50);
+      console.log(actionId,
+        baseUrlId,
+        alphabetId,
+        finalUrlId,
+        dataSourceId,
+        sheet,
+        length,
+        qrCode,)
 
       const file = sheet instanceof FileList ? sheet[0] : sheet;
       if (!file) {
@@ -378,16 +385,16 @@ export function EncutadorUm() {
         return;
       }
 
-      await handleCreateLink({
-        actionId,
-        baseUrlId,
-        alphabetId,
-        finalUrlId,
-        dataSourceId,
-        sheet: file,
-        length,
-        qrCode,
-      });
+      // await handleCreateLink({
+      //   actionId,
+      //   baseUrlId,
+      //   alphabetId,
+      //   finalUrlId,
+      //   dataSourceId,
+      //   sheet: file,
+      //   length,
+      //   qrCode,
+      // });
     } catch (error) {
       console.log("Erro:", error);
     } finally {

@@ -56,19 +56,19 @@ const verifyCreateLink = z.object({
 type encurtadorDados = z.infer<typeof verifyCreateLink>;
 
 type HandleCreateLinkProps = {
-  handleCreateSingleLink: ({
-    actionId,
-    baseUrlId,
-    alphabetId,
-    redirectUrl,
-    length,
-    qrCode,
-  }: createNewSingleLink) => Promise<ApiResponse>;
+  // handleCreateSingleLink: ({
+  //   actionId,
+  //   baseUrlId,
+  //   alphabetId,
+  //   redirectUrl,
+  //   length,
+  //   qrCode,
+  // }: createNewSingleLink) => Promise<ApiResponse>;
   data: DataProps;
 };
 
 export function EncurtadorDois() {
-  const { data, handleCreateSingleLink } = useAuth() as HandleCreateLinkProps;
+  const { data } = useAuth() as HandleCreateLinkProps;
   const [clients, setClients] = useState<customerData[]>([]);
   // const [progress, setProgress] = useState(0);
   // const [loading, setLoading] = useState(false);
@@ -269,7 +269,9 @@ export function EncurtadorDois() {
     }
   };
 
-  useEffect(() => {handleGetFinalURL()}, [data.jwtToken])
+  useEffect(() => {
+    handleGetFinalURL();
+  }, [data.jwtToken]);
 
   //GET BUSCANDO AS CAMPANHAS DO CLIENTE SELECIONADO
   useEffect(() => {
@@ -354,18 +356,19 @@ export function EncurtadorDois() {
   async function createLink(data: createNewSingleLink) {
     const { actionId, baseUrlId, alphabetId, redirectUrl, length, qrCode } =
       data;
+    console.log(actionId, baseUrlId, alphabetId, redirectUrl, length, qrCode);
 
     try {
-      const response: ApiResponse = await handleCreateSingleLink({
-        actionId,
-        baseUrlId,
-        alphabetId,
-        redirectUrl,
-        length,
-        qrCode,
-      });
+      // const response: ApiResponse = await handleCreateSingleLink({
+      //   actionId,
+      //   baseUrlId,
+      //   alphabetId,
+      //   redirectUrl,
+      //   length,
+      //   qrCode,
+      // });
 
-      setReturnData(response);
+      // setReturnData(response);
       setIsModalOpen(true);
       reset();
     } catch (error) {
@@ -751,13 +754,9 @@ export function EncurtadorDois() {
                 name="redirectUrl"
                 control={control}
                 render={() => (
-                  <Select
-                    onValueChange={handleSelectCampaign}
-                  >
+                  <Select onValueChange={handleSelectCampaign}>
                     <SelectTrigger>
-                      <SelectValue
-                        placeholder="Selecione a URL de destino"
-                      />
+                      <SelectValue placeholder="Selecione a URL de destino" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>

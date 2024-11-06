@@ -14,7 +14,6 @@ import { useAuth } from "@/hook/Auth";
 import {
   campaignData,
   conversorData,
-  createNewSingleLinkOptionThree,
   customerData,
   dataAction,
   DataProps,
@@ -54,20 +53,20 @@ const verifyCreateLink = z.object({
 type encurtadorDados = z.infer<typeof verifyCreateLink>;
 
 type HandleCreateLinkProps = {
-  handleCreateLink: ({
-    actionId,
-    baseUrlId,
-    alphabetId,
-    redirectUrl,
-    replace,
-    length,
-    qrCode,
-  }: createNewSingleLinkOptionThree) => void;
+  // handleCreateLink: ({
+  //   actionId,
+  //   baseUrlId,
+  //   alphabetId,
+  //   redirectUrl,
+  //   replace,
+  //   length,
+  //   qrCode,
+  // }: createNewSingleLinkOptionThree) => void;
   data: DataProps;
 };
 
 export function EncurtadorTres() {
-  const { data, handleCreateLink } = useAuth() as HandleCreateLinkProps;
+  const { data } = useAuth() as HandleCreateLinkProps;
   const [clients, setClients] = useState<customerData[]>([]);
   const [selectedClient, setSelectedClient] = useState<string>("");
   const [campanhas, setCampanhas] = useState<campaignData[]>([]);
@@ -362,18 +361,7 @@ export function EncurtadorTres() {
       } = data;
       setProgress(50);
 
-      // console.log([
-      //   `actionId: ` + actionId,
-      //   `baseUrlId: ` + baseUrlId,
-      //   `alphabetId: ` + alphabetId,
-      //   `longUrl: ` + redirectUrl,
-      //   `replace: ` + replace,
-      //   `sheet: ` + (file ? file.name : 'Nenhum arquivo selecionado'),
-      //   `length: ` + length,
-      //   `qrCode: ` + qrCode,
-      // ]);
-
-      await handleCreateLink({
+      console.log([
         actionId,
         baseUrlId,
         alphabetId,
@@ -381,7 +369,17 @@ export function EncurtadorTres() {
         replace,
         length,
         qrCode,
-      });
+      ]);
+
+      // await handleCreateLink({
+      //   actionId,
+      //   baseUrlId,
+      //   alphabetId,
+      //   redirectUrl,
+      //   replace,
+      //   length,
+      //   qrCode,
+      // });
     } catch (error) {
       console.log("Erro:", error);
     } finally {

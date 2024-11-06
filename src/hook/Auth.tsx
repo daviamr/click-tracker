@@ -30,7 +30,7 @@ import {
   deleteAction,
   statusAction,
   editAction,
-  createNewLink,
+  createTrackerA,
   createNewSingleLink,
   ApiResponse,
   statusCampaign,
@@ -70,7 +70,7 @@ interface AuthContextType {
   handleCreateConversor: (data: createNewConversor) => Promise<void>;
   handleEditConversor: (data: editConversor) => Promise<void>;
   deleteConversor: (data: deleteConversor) => Promise<void>;
-  handleCreateLink: (data: createNewLink) => Promise<void>;
+  handleTrackerA: (data: createTrackerA) => Promise<void>;
   handleCreateSingleLink: (data: createNewSingleLink) => Promise<ApiResponse>;
   handleCreateLP: (data: createLP) => Promise<void>;
   handleEditLP: (data: editLP) => Promise<void>;
@@ -926,16 +926,19 @@ function AuthProvider({ children }: ChildrenProps) {
   }
 
   //LINK
-  async function handleCreateLink({
+  async function handleTrackerA({
     actionId,
     baseUrlId,
     alphabetId,
-    redirectUrl,
-    replace,
     sheet,
     length,
     qrCode,
-  }: createNewLink) {
+    finalUrlId,
+    dataSourceId,
+    tag,
+    tagPosition,
+    lpId
+  }: createTrackerA) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -948,30 +951,34 @@ function AuthProvider({ children }: ChildrenProps) {
         `actionId: ` + actionId,
         `baseUrlId: ` + baseUrlId,
         `alphabetId: ` + alphabetId,
-        `longUrl: ` + redirectUrl,
-        `replace: ` + replace,
         `sheet:` + sheet,
         `length: ` + length,
         `qrCode: ` + qrCode,
+        `finalUrlId: ` + finalUrlId,
+        `dataSourceId: ` + dataSourceId,
+        `tag: ` + tag,
+        `tagPosition: ` + tagPosition,
+        `lpId: ` + lpId
       ]);
 
       const formData = new FormData();
       formData.append("actionId", String(actionId));
       formData.append("baseUrlId", String(baseUrlId));
       formData.append("alphabetId", String(alphabetId));
-      formData.append("redirectUrl", redirectUrl);
       formData.append("length", String(length));
       formData.append("qrCode", String(qrCode));
+      formData.append("finalUrlId", String(finalUrlId));
+      formData.append("dataSourceId", String(dataSourceId));
+      formData.append("tag", String(tag));
+      formData.append("tagPosition", String(tagPosition));
+      formData.append("lpId", String(lpId));
 
       if (sheet) {
         formData.append("sheet", sheet);
       }
-      if (replace) {
-        formData.append("replace", replace);
-      }
 
       // Envio da requisição com FormData
-      const response = await api.post("/links/multiple", formData, {
+      const response = await api.post("/links/a", formData, {
         headers: {
           Authorization: `Bearer ${token.jwtToken}`,
           "Content-Type": "multipart/form-data",
@@ -980,13 +987,13 @@ function AuthProvider({ children }: ChildrenProps) {
 
       console.log(response.data);
 
-      AlertMessage("Conversor criado com sucesso.", "success");
+      AlertMessage(response.data.message, "success");
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
       } else {
         AlertMessage(
-          "Não foi possível criar um Conversor agora, tente novamente mais tarde.",
+          "Não foi possível criar a planilha agora, tente novamente mais tarde.",
           "error"
         );
       }
@@ -1401,7 +1408,7 @@ function AuthProvider({ children }: ChildrenProps) {
           handleCreateConversor,
           handleEditConversor,
           deleteConversor,
-          handleCreateLink,
+          handleTrackerA,
           handleCreateSingleLink,
           handleCreateLP,
           handleEditLP,

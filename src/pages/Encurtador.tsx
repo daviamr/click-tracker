@@ -1,10 +1,10 @@
 import { Label } from "@radix-ui/react-label";
 import { Radar } from "lucide-react";
 import { useState } from "react";
-import { EncutadorUm } from "./EncurtadorUm";
 import { EncurtadorDois } from "./EncurtadorDois";
 import { EncurtadorTres } from "./EncurtadorTres";
 import { TooltipTracker } from "@/components/TooltipTracker";
+import { TrackerA } from "./TrackerA";
 
 export function EncurtadorPage() {
   const [selectedOption, setSelectedOption] = useState<string>("trackera");
@@ -99,7 +99,7 @@ export function EncurtadorPage() {
           </div> */}
         </div>
 
-        {selectedOption === "trackera" && <EncutadorUm />}
+        {selectedOption === "trackera" && <TrackerA />}
         {selectedOption === "trackerb" && <EncurtadorDois />}
         {selectedOption === "trackerc" && <EncurtadorTres />}
       </div>

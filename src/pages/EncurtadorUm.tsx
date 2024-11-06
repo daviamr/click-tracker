@@ -39,8 +39,8 @@ const verifyCreateLink = z.object({
   actionId: z.number().min(1, ""),
   baseUrlId: z.number().min(1, ""),
   alphabetId: z.number().min(1, ""),
-  redirectUrl: z.string().min(4, "*Digite uma url válida"),
-  replace: z.string().min(2, "*Mínimo de 2 caracteres."),
+  finalUrlId: z.string().min(4, "*Digite uma url válida"),
+  dataSourceId: z.string().min(2, "*Mínimo de 2 caracteres."),
   sheet: z
     .any()
     .refine((files) => files instanceof FileList && files.length > 0, {
@@ -55,14 +55,14 @@ type encurtadorDados = z.infer<typeof verifyCreateLink>;
 
 type HandleCreateLinkProps = {
   handleCreateLink: ({
-    actionId,
-    baseUrlId,
-    alphabetId,
-    redirectUrl,
-    replace,
-    sheet,
-    length,
-    qrCode,
+    actionId,//ok
+    baseUrlId,//ok
+    alphabetId,//ok
+    finalUrlId,//ok
+    dataSourceId,
+    sheet, //ok
+    length,//ok
+    qrCode,//ok
   }: createNewLink) => void;
   data: DataProps;
 };
@@ -341,8 +341,8 @@ export function EncutadorUm() {
     defaultValues: {
       actionId: 0,
       baseUrlId: 0,
-      redirectUrl: "",
-      replace: "",
+      finalUrlId: "",
+      dataSourceId: "",
       sheet: null,
       length: 6,
       qrCode: false,
@@ -350,7 +350,7 @@ export function EncutadorUm() {
   });
 
   //Assistindo o valor do input de personalizar url
-  const valorAssistido = watch("replace");
+  const valorAssistido = watch("dataSourceId");
 
   useEffect(() => {
     setValorPersonalizarUrl(valorPersonalizarUrl || "");
@@ -364,8 +364,8 @@ export function EncutadorUm() {
         actionId,
         baseUrlId,
         alphabetId,
-        redirectUrl,
-        replace,
+        finalUrlId,
+        dataSourceId,
         sheet,
         length,
         qrCode,
@@ -382,8 +382,8 @@ export function EncutadorUm() {
         actionId,
         baseUrlId,
         alphabetId,
-        redirectUrl,
-        replace,
+        finalUrlId,
+        dataSourceId,
         sheet: file,
         length,
         qrCode,
@@ -646,14 +646,14 @@ export function EncutadorUm() {
                 id="personalizarUrl"
                 type="text"
                 placeholder="/url-personalizada"
-                {...register("replace")}
+                {...register("dataSourceId")}
                 className={`pl-4 bg-transparent rounded-md border border-input min-h-[36px] ${
-                  errors.replace && "border-rose-400"
+                  errors.dataSourceId && "border-rose-400"
                 }`}
               />
-              {errors.replace && (
+              {errors.dataSourceId && (
                 <span className="text-xs text-rose-400 font-normal">
-                  {errors.replace.message}
+                  {errors.dataSourceId.message}
                 </span>
               )}
             </div>
@@ -820,7 +820,7 @@ export function EncutadorUm() {
                 />
               </div>
               <Controller
-                name="redirectUrl"
+                name="finalUrlId"
                 control={control}
                 render={() => (
                   <Select
@@ -844,7 +844,7 @@ export function EncutadorUm() {
                   </Select>
                 )}
               />
-              {errors.redirectUrl && (
+              {errors.finalUrlId && (
                 <span className="text-xs text-rose-400 font-normal">
                   *Campo obrigatório
                 </span>

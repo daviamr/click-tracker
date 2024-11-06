@@ -203,15 +203,18 @@ export type CreateNewUser = {
     url: string;
   }
 
-  export type createNewLink = {
-    actionId: number;
-    baseUrlId: number;
-    alphabetId: number;
-    redirectUrl: string;
-    replace?: string;
+  export type createTrackerA = {
+    actionId: string;
+    baseUrlId: string;
+    alphabetId: string;
+    finalUrlId: string;
+    dataSourceId: string;
     sheet?: File;
-    length: number;
+    length: string;
     qrCode: boolean;
+    tag: string;
+    tagPosition: string;
+    lpId: string;
   }
 
   export type createNewSingleLink = {

@@ -434,7 +434,7 @@ export function TrackerA() {
         alphabetId,
         sheet: file,
         length,
-        qrCode,
+        qrCode: qrCode.toString(),
         finalUrlId,
         dataSourceId,
         tag,

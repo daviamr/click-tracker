@@ -211,7 +211,7 @@ export type CreateNewUser = {
     dataSourceId: string;
     sheet?: File;
     length: string;
-    qrCode: boolean;
+    qrCode: string;
     tag: string;
     tagPosition: string;
     lpId: string;

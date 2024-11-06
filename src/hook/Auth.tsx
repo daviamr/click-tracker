@@ -947,19 +947,19 @@ function AuthProvider({ children }: ChildrenProps) {
       }
       const token = JSON.parse(dataUser);
 
-      console.log([
-        `actionId: ` + actionId,
-        `baseUrlId: ` + baseUrlId,
-        `alphabetId: ` + alphabetId,
-        `sheet:` + sheet,
-        `length: ` + length,
-        `qrCode: ` + qrCode,
-        `finalUrlId: ` + finalUrlId,
-        `dataSourceId: ` + dataSourceId,
-        `tag: ` + tag,
-        `tagPosition: ` + tagPosition,
-        `lpId: ` + lpId
-      ]);
+      console.log([{
+        actionId: actionId,
+        baseUrlId: baseUrlId,
+        alphabetId: alphabetId,
+        sheet: sheet,
+        length: length,
+        qrCode: qrCode,
+        finalUrlId: finalUrlId,
+        dataSourceId: dataSourceId,
+        tag: tag,
+        tagPosition: tagPosition,
+        lpId: lpId
+      }]);      
 
       const formData = new FormData();
       formData.append("actionId", String(actionId));

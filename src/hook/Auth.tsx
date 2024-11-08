@@ -44,6 +44,7 @@ import {
   editLP,
   editFinalURL,
   deleteFinalUrl,
+  createTrackerB,
 } from "@/interface/auth";
 import { AlertMessage } from "@/components/alert_message";
 
@@ -70,6 +71,7 @@ interface AuthContextType {
   handleEditConversor: (data: editConversor) => Promise<void>;
   deleteConversor: (data: deleteConversor) => Promise<void>;
   handleTrackerA: (data: createTrackerA) => Promise<void>;
+  handleTrackerB: (data: createTrackerB) => Promise<void>;
   handleCreateSingleLink: (data: createNewSingleLink) => Promise<ApiResponse>;
   handleCreateLP: (data: createLP) => Promise<void>;
   handleEditLP: (data: editLP) => Promise<void>;
@@ -1007,6 +1009,81 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
+  async function handleTrackerB({
+    actionId,
+    baseUrlId,
+    alphabetId,
+    length,
+    qrCode,
+    finalUrlId,
+    tag,
+    tagPosition,
+    lpId
+  }: createTrackerB) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      console.log([{
+        actionId: actionId,
+        baseUrlId: baseUrlId,
+        alphabetId: alphabetId,
+        length: length,
+        qrCode: qrCode,
+        finalUrlId: finalUrlId,
+        lpId: lpId
+      }]);
+
+      const formData = new FormData();
+      formData.append("actionId", String(actionId));
+      formData.append("baseUrlId", String(baseUrlId));
+      formData.append("alphabetId", String(alphabetId));
+      formData.append("length", String(length));
+      formData.append("qrCode", String(qrCode));
+      formData.append("finalUrlId", String(finalUrlId));
+      formData.append("lpId", String(lpId));
+
+      if (tag) {
+        formData.append("tag", String(tag));
+      } else {
+        console.log("tag Desativada")
+      }
+      if (tagPosition) {
+        formData.append("tagPosition", String(tagPosition));
+      } else {
+        console.log("tagPosition Desativada")
+      }
+
+
+      // Envio da requisição com FormData
+      const response = await api.post("/links/b", formData, {
+        headers: {
+          Authorization: `Bearer ${token.jwtToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+        responseType: 'blob',
+      });
+
+      console.log(response.data);
+      fileDownload(response.data, `planilha_dados`);
+
+      AlertMessage(response.data.message, "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível criar a planilha agora, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  }
+
   async function handleCreateSingleLink({
     actionId,
     baseUrlId,
@@ -1417,6 +1494,7 @@ function AuthProvider({ children }: ChildrenProps) {
           handleEditConversor,
           deleteConversor,
           handleTrackerA,
+          handleTrackerB,
           handleCreateSingleLink,
           handleCreateLP,
           handleEditLP,

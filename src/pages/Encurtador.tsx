@@ -3,6 +3,7 @@ import { Radar } from "lucide-react";
 import { useState } from "react";
 import { TooltipTracker } from "@/components/TooltipTracker";
 import { TrackerA } from "./TrackerA";
+import { TrackerB } from "./TrackerB";
 
 export function EncurtadorPage() {
   const [selectedOption, setSelectedOption] = useState<string>("trackera");
@@ -98,8 +99,8 @@ export function EncurtadorPage() {
         </div>
 
         {selectedOption === "trackera" && <TrackerA />}
-        {/* {selectedOption === "trackerb" && <EncurtadorDois />}
-        {selectedOption === "trackerc" && <EncurtadorTres />} */}
+        {selectedOption === "trackerb" && <TrackerB />}
+        {/* {selectedOption === "trackerc" && <EncurtadorTres />} */}
       </div>
     </>
   );

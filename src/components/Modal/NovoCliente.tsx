@@ -17,7 +17,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/hook/Auth";
 import { createNewCustomer } from "@/interface/auth";
 import { useState } from "react";
-import { TooltipTracker } from "../TooltipTracker";
 
 const verifyCreateCustomer = z.object({
   image: z

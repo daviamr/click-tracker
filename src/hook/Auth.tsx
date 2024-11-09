@@ -8,7 +8,7 @@ import {
 } from "react";
 import { api } from "@/services/Api";
 import { AxiosError } from "axios";
-import fileDownload from 'js-file-download';
+import fileDownload from "js-file-download";
 import {
   createNewCampaign,
   createNewConversor,
@@ -30,8 +30,6 @@ import {
   statusAction,
   editAction,
   createTrackerA,
-  createNewSingleLink,
-  ApiResponse,
   statusCampaign,
   createLP,
   deleteLp,
@@ -45,6 +43,7 @@ import {
   editFinalURL,
   deleteFinalUrl,
   createTrackerB,
+  createTrackerC,
 } from "@/interface/auth";
 import { AlertMessage } from "@/components/alert_message";
 
@@ -72,7 +71,7 @@ interface AuthContextType {
   deleteConversor: (data: deleteConversor) => Promise<void>;
   handleTrackerA: (data: createTrackerA) => Promise<void>;
   handleTrackerB: (data: createTrackerB) => Promise<void>;
-  handleCreateSingleLink: (data: createNewSingleLink) => Promise<ApiResponse>;
+  handleTrackerC: (data: createTrackerC) => Promise<void>;
   handleCreateLP: (data: createLP) => Promise<void>;
   handleEditLP: (data: editLP) => Promise<void>;
   deleteLp: (data: deleteLp) => Promise<void>;
@@ -926,7 +925,7 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
-  //LINK
+  //TRACKER
   async function handleTrackerA({
     actionId,
     baseUrlId,
@@ -938,7 +937,7 @@ function AuthProvider({ children }: ChildrenProps) {
     dataSourceId,
     tag,
     tagPosition,
-    lpId
+    lpId,
   }: createTrackerA) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
@@ -948,17 +947,19 @@ function AuthProvider({ children }: ChildrenProps) {
       }
       const token = JSON.parse(dataUser);
 
-      console.log([{
-        actionId: actionId,
-        baseUrlId: baseUrlId,
-        alphabetId: alphabetId,
-        sheet: sheet,
-        length: length,
-        qrCode: qrCode,
-        finalUrlId: finalUrlId,
-        dataSourceId: dataSourceId,
-        lpId: lpId
-      }]);
+      console.log([
+        {
+          actionId: actionId,
+          baseUrlId: baseUrlId,
+          alphabetId: alphabetId,
+          sheet: sheet,
+          length: length,
+          qrCode: qrCode,
+          finalUrlId: finalUrlId,
+          dataSourceId: dataSourceId,
+          lpId: lpId,
+        },
+      ]);
 
       const formData = new FormData();
       formData.append("actionId", String(actionId));
@@ -976,12 +977,12 @@ function AuthProvider({ children }: ChildrenProps) {
       if (tag) {
         formData.append("tag", String(tag));
       } else {
-        console.log("tag Desativada")
+        console.log("tag Desativada");
       }
       if (tagPosition) {
         formData.append("tagPosition", String(tagPosition));
       } else {
-        console.log("tagPosition Desativada")
+        console.log("tagPosition Desativada");
       }
 
       // Envio da requisição com FormData
@@ -990,11 +991,11 @@ function AuthProvider({ children }: ChildrenProps) {
           Authorization: `Bearer ${token.jwtToken}`,
           "Content-Type": "multipart/form-data",
         },
-        responseType: 'blob',
+        responseType: "blob",
       });
 
       console.log(response.data);
-      fileDownload(response.data, `atualizada_${sheet?.name}`)
+      fileDownload(response.data, `atualizada_${sheet?.name}`);
 
       AlertMessage(response.data.message, "success");
     } catch (error: unknown) {
@@ -1018,7 +1019,7 @@ function AuthProvider({ children }: ChildrenProps) {
     finalUrlId,
     tag,
     tagPosition,
-    lpId
+    lpId,
   }: createTrackerB) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
@@ -1028,15 +1029,17 @@ function AuthProvider({ children }: ChildrenProps) {
       }
       const token = JSON.parse(dataUser);
 
-      console.log([{
-        actionId: actionId,
-        baseUrlId: baseUrlId,
-        alphabetId: alphabetId,
-        length: length,
-        qrCode: qrCode,
-        finalUrlId: finalUrlId,
-        lpId: lpId
-      }]);
+      console.log([
+        {
+          actionId: actionId,
+          baseUrlId: baseUrlId,
+          alphabetId: alphabetId,
+          length: length,
+          qrCode: qrCode,
+          finalUrlId: finalUrlId,
+          lpId: lpId,
+        },
+      ]);
 
       const formData = new FormData();
       formData.append("actionId", String(actionId));
@@ -1050,14 +1053,13 @@ function AuthProvider({ children }: ChildrenProps) {
       if (tag) {
         formData.append("tag", String(tag));
       } else {
-        console.log("tag Desativada")
+        console.log("tag Desativada");
       }
       if (tagPosition) {
         formData.append("tagPosition", String(tagPosition));
       } else {
-        console.log("tagPosition Desativada")
+        console.log("tagPosition Desativada");
       }
-
 
       // Envio da requisição com FormData
       const response = await api.post("/links/b", formData, {
@@ -1065,7 +1067,7 @@ function AuthProvider({ children }: ChildrenProps) {
           Authorization: `Bearer ${token.jwtToken}`,
           "Content-Type": "multipart/form-data",
         },
-        responseType: 'blob',
+        responseType: "blob",
       });
 
       console.log(response.data);
@@ -1084,14 +1086,18 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
-  async function handleCreateSingleLink({
+  async function handleTrackerC({
     actionId,
-    baseUrlId,
     alphabetId,
-    redirectUrl,
+    url,
+    replace,
+    sheet,
     length,
     qrCode,
-  }: createNewSingleLink): Promise<ApiResponse> {
+    dataSourceId,
+    tag,
+    tagPosition,
+  }: createTrackerC) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
 
@@ -1100,37 +1106,66 @@ function AuthProvider({ children }: ChildrenProps) {
       }
       const token = JSON.parse(dataUser);
 
-      const response = await api.post(
-        "/links/single",
+      console.log([
         {
-          actionId,
-          baseUrlId,
-          alphabetId,
-          redirectUrl,
-          length,
-          qrCode,
+          actionId: actionId,
+          alphabetId: alphabetId,
+          url: url,
+          replace: replace,
+          sheet: sheet,
+          length: length,
+          qrCode: qrCode,
+          tag: tag,
+          tagPosition: tagPosition,
+          dataSourceId: dataSourceId,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token.jwtToken}`,
-          },
-          responseType: 'blob',
-        }
-      );
-      console.log(response.data);
+      ]);
 
-      AlertMessage("Link criado com sucesso.", "success");
-      return response.data; // Retorna a resposta da API
+      const formData = new FormData();
+      formData.append("actionId", String(actionId));
+      formData.append("alphabetId", String(alphabetId));
+      formData.append("url", String(url));
+      formData.append("replace", String(replace));
+      formData.append("length", String(length));
+      formData.append("qrCode", String(qrCode));
+      formData.append("dataSourceId", String(dataSourceId));
+
+      if (sheet) {
+        formData.append("sheet", sheet);
+      }
+      if (tag) {
+        formData.append("tag", String(tag));
+      } else {
+        console.log("tag Desativada");
+      }
+      if (tagPosition) {
+        formData.append("tagPosition", String(tagPosition));
+      } else {
+        console.log("tagPosition Desativada");
+      }
+
+      // Envio da requisição com FormData
+      const response = await api.post("/links/c", formData, {
+        headers: {
+          Authorization: `Bearer ${token.jwtToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+        responseType: "blob",
+      });
+
+      console.log(response.data);
+      fileDownload(response.data, `atualizada_${sheet?.name}`);
+
+      AlertMessage(response.data.message, "success");
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
       } else {
         AlertMessage(
-          "Não foi possível criar uma campanha agora, tente novamente mais tarde.",
+          "Não foi possível criar a planilha agora, tente novamente mais tarde.",
           "error"
         );
       }
-      throw error;
     }
   }
 
@@ -1381,7 +1416,7 @@ function AuthProvider({ children }: ChildrenProps) {
       );
       console.log(response.data);
 
-      AlertMessage('Final URL criada com sucesso.', "success");
+      AlertMessage("Final URL criada com sucesso.", "success");
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.message, "error");
@@ -1425,7 +1460,7 @@ function AuthProvider({ children }: ChildrenProps) {
       );
       console.log(response.data);
 
-      AlertMessage('URL de destino editada com sucesso.', "success");
+      AlertMessage("URL de destino editada com sucesso.", "success");
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.message, "error");
@@ -1495,7 +1530,7 @@ function AuthProvider({ children }: ChildrenProps) {
           deleteConversor,
           handleTrackerA,
           handleTrackerB,
-          handleCreateSingleLink,
+          handleTrackerC,
           handleCreateLP,
           handleEditLP,
           deleteLp,

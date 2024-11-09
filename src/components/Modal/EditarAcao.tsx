@@ -35,6 +35,7 @@ import {
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SelectMidia } from "../SelectMidia";
 
 const verifyCreateAction = z.object({
   id: z.number(),
@@ -513,7 +514,13 @@ export function EditarAcao({
               />
               {/* FINAL SELECT KEY */}
             </div>
-            <div className="col-span-4">
+            <div className="col-span-2">
+              <Label htmlFor="nome" className="text-right">
+                Mídia
+              </Label>
+              <SelectMidia />
+            </div>
+            <div className="col-span-2">
               <Label htmlFor="nome" className="text-right">
                 Ação
               </Label>

@@ -53,6 +53,8 @@ export function ClientesPage() {
     handleGetClient();
   };
 
+  console.log(customerData)
+
   return (
     <>
       <div>

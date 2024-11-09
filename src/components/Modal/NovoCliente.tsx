@@ -74,19 +74,20 @@ export function NovoCliente({ onCreateClient }: createClientProps) {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+        <DialogHeader className="pb-4 border-b-[1px]">
           <DialogTitle>Cadastrar Cliente</DialogTitle>
-          <DialogDescription className="pb-2 border-solid border-b-[1px]">
+          <DialogDescription>
             Preencha o nome do cliente e selecione um logo para fundo branco.
             Formatos permitidos X,Y, Z. Peso máximo do arquivo 200 kb. Este logo
             será renderizado na página de transição e redirecionamento após
-            click do usuário final.
+            click do usuário final.
           </DialogDescription>
         </DialogHeader>
-        <form action="" onSubmit={handleSubmit(createCustomer)}>
-          <div className="grid grid-cols-4 gap-4 py-4">
-            <div className="col-span-4">
-              <Label htmlFor="customer" className="text-right">
+        <form onSubmit={handleSubmit(createCustomer)}>
+          <div className="grid grid-cols-4 gap-4 gap-y-6 py-4">
+
+            <div className="relative col-span-4">
+              <Label htmlFor="customer" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold">
                 Cliente
               </Label>
               <Input
@@ -94,7 +95,7 @@ export function NovoCliente({ onCreateClient }: createClientProps) {
                 type="text"
                 placeholder="Nome do cliente..."
                 {...register("name")}
-                className={`${errors.name && "border-rose-400 bg-rose-100"}`}
+                className={`${errors.name && "border-rose-400"}`}
               />
               {errors.name && (
                 <span className="text-xs text-rose-400 font-normal">
@@ -102,21 +103,15 @@ export function NovoCliente({ onCreateClient }: createClientProps) {
                 </span>
               )}
             </div>
-            <div className="col-span-4 flex flex-col gap-1">
-              <div className="flex">
-                <Label htmlFor="logo">Logo</Label>
-                <TooltipTracker
-                  side="right"
-                  align="start"
-                  content="Preencha o nome do cliente e selecione um logo para fundo branco. Formatos permitidos X,Y, Z. Peso máximo do arquivo 200 kb. Este logo será renderizado na página de transição e redirecionamento após click do usuário final."
-                />
-              </div>
+
+            <div className="relative col-span-4 flex flex-col gap-1">
+                <Label htmlFor="logo" className="absolute px-2 bg-background -top-3 left-1 text-xs font-semibold rounded-sm">Logo</Label>
               <input
                 id="logo"
                 type="file"
                 {...register("image")}
-                className={`${
-                  errors.image && "border-rose-400 bg-rose-100"
+                className={`border border-input rounded-md pt-1 ${
+                  errors.image && "border-rose-400"
                 }"col-span-4"`}
               />
               {errors.image && (
@@ -127,6 +122,7 @@ export function NovoCliente({ onCreateClient }: createClientProps) {
                 </span>
               )}
             </div>
+
           </div>
           <DialogFooter>
             <Button

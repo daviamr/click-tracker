@@ -29,7 +29,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { TooltipTracker } from "@/components/TooltipTracker";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, CircleX, FileDown, Loader, Send } from "lucide-react";
+import { ArrowUpRight, CircleX, FileDown, Loader, Tag } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -659,7 +659,7 @@ export function TrackerA() {
               </div>
             </div>
 
-            <div className="col-span-4 flex justify-center gap-1 border-b-2 my-2">
+            <div className="col-span-4 flex justify-center gap-1 border-b-2 mb-2 mt-4">
               <h1 className="flex items-center gap-2 uppercase font-bold pb-[10px]">
                 <span className="flex items-center justify-center w-6 h-6 bg-[#a2d515] rounded-full dark:text-[#000000]">
                   2
@@ -674,15 +674,15 @@ export function TrackerA() {
             </div>
 
             <div className="relative col-span-2 mt-2">
-              <div className="flex">
+              {/* <div className="flex">
                 <p className="font-semibold">SmartURL</p>
                 <TooltipTracker
                   side="right"
                   align="start"
                   content='Você pode escolher qualquer uma das SmartURLs da lista para gerar seus links personalizados. Veja em "URL exemplo" para visualizar o formato que os links serão gerados.'
                 />
-              </div>
-              {/* <p className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold">
+              </div> */}
+              <p className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold">
                 SmartUrl
                 <TooltipTracker
                   className="absolute -right-3 -top-1"
@@ -690,7 +690,7 @@ export function TrackerA() {
                   align="start"
                   content='Você pode escolher qualquer uma das SmartURLs da lista para gerar seus links personalizados. Veja em "URL exemplo" para visualizar o formato que os links serão gerados.'
                 />
-              </p> */}
+              </p>
               <Controller
                 name="baseUrlId"
                 control={control}
@@ -719,18 +719,18 @@ export function TrackerA() {
                   </Select>
                 )}
               />
-            </div>
+            </div>      
 
             <div className="relative col-span-1 mt-2">
-              <div className="flex">
+              {/* <div className="flex">
                 <p className="font-semibold">Conversor</p>
                 <TooltipTracker
                   side="right"
                   align="start"
                   content='Caso queira gerar uma URL encurtada, é necessário selecionar um conversor. Cada protocolo é compatível com um tipo de conversor diferente. Se não quiser usar um conversor, a plataforma vai simplesmente inserir o dado presente na coluna "A" da planilha enviada para gerar os links de tracking.'
                 />
-              </div>
-              {/* <p className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold">
+              </div> */}
+              <p className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold">
                 Conversor
                 <TooltipTracker
                   className="absolute -right-3 -top-1"
@@ -738,7 +738,7 @@ export function TrackerA() {
                   align="start"
                   content='Caso queira gerar uma URL encurtada, é necessário selecionar um conversor. Cada protocolo é compatível com um tipo de conversor diferente. Se não quiser usar um conversor, a plataforma vai simplesmente inserir o dado presente na coluna "A" da planilha enviada para gerar os links de tracking.'
                 />
-              </p> */}
+              </p>
               <Controller
                 name="alphabetId"
                 control={control}
@@ -771,7 +771,7 @@ export function TrackerA() {
             </div>
 
             <div className="relative col-span-1 mt-2">
-              <div className="flex">
+              {/* <div className="flex">
                 <Label htmlFor="length" className="font-semibold text-[16px]">
                   Extensão
                 </Label>
@@ -780,7 +780,16 @@ export function TrackerA() {
                   align="start"
                   content="É o número de caracteres que o conversor vai utilizar. Quanto maior o comprimento, maior o número de links possíveis de serem gerados sem repetição. (por default, deixar inativo. Somente deixar ativo se o cara escolher um conversor. Colocar na lista, em cada opção, o número de links possíveis de serem gerados)"
                 />
-              </div>
+              </div> */}
+              <p className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold">
+                Extensão
+                <TooltipTracker
+                  className="absolute -right-3 -top-1"
+                  side="right"
+                  align="start"
+                  content='É o número de caracteres que o conversor vai utilizar. Quanto maior o comprimento, maior o número de links possíveis de serem gerados sem repetição. (por default, deixar inativo. Somente deixar ativo se o cara escolher um conversor. Colocar na lista, em cada opção, o número de links possíveis de serem gerados)'
+                />
+              </p>
               <Input
                 id="length"
                 type="number"
@@ -792,7 +801,7 @@ export function TrackerA() {
             </div>
 
             <div className="relative col-span-2 mt-2">
-              <div className="flex">
+              {/* <div className="flex">
                 <Label htmlFor="tag" className="font-semibold text-[16px]">
                   TAG
                 </Label>
@@ -801,7 +810,17 @@ export function TrackerA() {
                   align="start"
                   content='Se quiser, você pode inserir uma TAG personalizada nas URLs geradas. Experimente preencher o campo e veja em "URL exemplo" uma simulação de como as URLs ficarão.'
                 />
-              </div>
+              </div> */}
+              <p className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold z-10">
+                TAG
+                <TooltipTracker
+                  className="absolute -right-3 -top-1"
+                  side="right"
+                  align="start"
+                  content='Se quiser, você pode inserir uma TAG personalizada nas URLs geradas. Experimente preencher o campo e veja em "URL exemplo" uma simulação de como as URLs ficarão.'
+                />
+              </p>
+              
               <Input
                 id="tag"
                 type="text"
@@ -812,15 +831,15 @@ export function TrackerA() {
             </div>
 
             <div className="relative col-span-2 mt-2">
-              <div className="flex">
+              {/* <div className="flex">
                 <p className="font-semibold">Posição TAG</p>
                 <TooltipTracker
                   side="right"
                   align="start"
                   content='As tags podem ser geradas antes ou depois dos dados convertidos. Veja "URL exemplo" para entender melhor.'
                 />
-              </div>
-              {/* <p className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold">
+              </div> */}
+              <p className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold z-10">
                 Posição TAG
                 <TooltipTracker
                   className="absolute -right-3 -top-1"
@@ -828,7 +847,7 @@ export function TrackerA() {
                   align="start"
                   content='As tags podem ser geradas antes ou depois dos dados convertidos. Veja "URL exemplo" para entender melhor.'
                 />
-              </p> */}
+              </p>
               <Controller
                 name="tagPosition"
                 control={control}
@@ -902,8 +921,22 @@ export function TrackerA() {
               </div>
             </div>
 
+            <div className="col-span-4 flex justify-center gap-1 border-b-2 mb-2 mt-4">
+              <h1 className="flex items-center gap-2 uppercase font-bold pb-[10px]">
+                <span className="flex items-center justify-center w-6 h-6 bg-[#a2d515] rounded-full dark:text-[#000000]">
+                  3
+                </span>
+                Dados do disparo
+              </h1>
+              <TooltipTracker
+                side="right"
+                align="start"
+                content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quos, magni dolor, beatae voluptatibus ipsa rem similique minus ut porro quo commodi obcaecati provident dolore molestiae, maxime hic? Error, eum!"
+              />
+            </div>
+
             <div className="relative col-span-2 mt-2">
-              <div className="flex">
+              {/* <div className="flex">
                 <Label htmlFor="sheet" className="font-semibold text-[16px]">
                   Planilha
                 </Label>
@@ -912,7 +945,17 @@ export function TrackerA() {
                   align="start"
                   content='Carregue a planilha com os dados que você deseja fazer o tracking. É necessário que a planilha siga o arquivo de exemplo. Clique em "download de planilha exemplo" para visualizar.'
                 />
-              </div>
+              </div> */}
+              <p className="absolute px-2 bg-background -top-2 left-2 text-xs font-semibold z-10 leading-3">
+                Base
+                <TooltipTracker
+                  className="absolute -right-3 -top-1"
+                  side="right"
+                  align="start"
+                  content='Carregue a planilha com os dados que você deseja fazer o tracking. É necessário que a planilha siga o arquivo de exemplo. Clique em "download de planilha exemplo" para visualizar.'
+                />
+              </p>
+              
               <input
                 id="sheet"
                 type="file"
@@ -924,15 +967,15 @@ export function TrackerA() {
             </div>
 
             <div className="relative col-span-1 mt-2">
-              <div className="flex">
+              {/* <div className="flex">
                 <p className="font-semibold">Origem Base</p>
                 <TooltipTracker
                   side="right"
                   align="start"
                   content="LOREM LOREM LOREM"
                 />
-              </div>
-              {/* <p className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold">
+              </div> */}
+              <p className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold">
                 Origem Base
                 <TooltipTracker
                   className="absolute -right-3 -top-1"
@@ -940,7 +983,7 @@ export function TrackerA() {
                   align="start"
                   content='LOREM LOREM LOREM'
                 />
-              </p> */}
+              </p>
               <Controller
                 name="dataSourceId"
                 control={control}
@@ -971,30 +1014,39 @@ export function TrackerA() {
               />
             </div>
 
-            <div className="col-span-1 flex flex-col items-left justify-end">
-              <div className="flex">
+            <div className="relative col-span-1 mt-2">
+              {/* <div className="flex">
                 <Label className="text-[16px]">Exemplo</Label>
                 <TooltipTracker
                   side="right"
                   align="start"
                   content="Baixe uma planilha exemplo."
                 />
-              </div>
-              <Button variant={"outline"} type="button">
+              </div> */}
+              <p className="absolute px-2 bg-background rounded-sm leading-3 -top-2 left-1 text-xs font-semibold">
+                Exemplo
+                <TooltipTracker
+                  className="absolute -right-3 -top-1"
+                  side="right"
+                  align="start"
+                  content='LOREM LOREM LOREM'
+                />
+              </p>
+              <Button variant={"secondary"} type="button">
                 Download
               </Button>
             </div>
 
             <div className="relative col-span-4 mt-2">
-              <div className="flex">
+              {/* <div className="flex">
                 <p className="font-semibold">Url de destino</p>
                 <TooltipTracker
                   side="right"
                   align="start"
                   content="É o endereço (URL) final para onde o click deve ser direcionado."
                 />
-              </div>
-              {/* <p className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold">
+              </div> */}
+              <p className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold">
                 URL de destino
                 <TooltipTracker
                   className="absolute -right-3 -top-1"
@@ -1002,7 +1054,7 @@ export function TrackerA() {
                   align="start"
                   content='É o endereço (URL) final para onde o click deve ser direcionado.'
                 />
-              </p> */}
+              </p>
               <Controller
                 name="finalUrlId"
                 control={control}
@@ -1065,11 +1117,11 @@ export function TrackerA() {
             </div>
 
             <Button
-              variant={"outline"}
+              variant={"secondary"}
               className="flex items-center gap-2 col-span-4 font-semibold mt-4"
             >
-              <Send size={18} className="animate-pulse" />
-              Enviar
+              <Tag size={18} className="animate-pulse" />
+              Tags
             </Button>
           </div>
         </form>

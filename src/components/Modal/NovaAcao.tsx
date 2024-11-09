@@ -35,6 +35,7 @@ import {
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SelectMidia } from "../SelectMidia";
 
 const verifyCreateAction = z.object({
   name: z.string().min(4, "*Mínimo de 4 caracteres"),
@@ -104,15 +105,15 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
 
   const formatToBRLCurrency = (value: string) => {
     // Remove qualquer caractere que não seja número
-    const numericValue = value.replace(/[^0-9]/g, '');
+    const numericValue = value.replace(/[^0-9]/g, "");
 
     // Retorna uma string vazia se o campo estiver vazio
     if (!numericValue) return "";
 
     // Converte para número e formata para o estilo brasileiro
-    const formattedValue = new Intl.NumberFormat('pt-BR', {
+    const formattedValue = new Intl.NumberFormat("pt-BR", {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     }).format(parseFloat(numericValue) / 100);
 
     return formattedValue;
@@ -228,8 +229,8 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
 
   useEffect(() => {
     reset();
-    setSelectedClient('');
-    setCostValue('');
+    setSelectedClient("");
+    setCostValue("");
   }, [isOpen]);
 
   const createAction = async (data: actionData) => {
@@ -238,7 +239,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
     const dataFimFormatado = new Date(endAt);
     const inicioIso = dataInicioFormatado.toISOString();
     const fimIso = dataFimFormatado.toISOString();
-    const costFormatado = costValue.replace(/\./g, '').replace(',', '.');
+    const costFormatado = costValue.replace(/\./g, "").replace(",", ".");
 
     if (campaignId === 0) {
       alert("Campanha não encontrada.");
@@ -369,7 +370,9 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                     <SelectTrigger>
                       <SelectValue placeholder="Selecione a LP" />
                     </SelectTrigger>
-                    <SelectContent className={`${errors.landingPageId && "border-rose-400"}`}>
+                    <SelectContent
+                      className={`${errors.landingPageId && "border-rose-400"}`}
+                    >
                       <SelectGroup>
                         <SelectLabel>LP's</SelectLabel>
                         {lps.map((i, index) => (
@@ -494,7 +497,13 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
               />
               {/* FINAL SELECT KEY */}
             </div>
-            <div className="col-span-4">
+            <div className="col-span-2">
+              <Label htmlFor="nome" className="text-right">
+                Mídia
+              </Label>
+              <SelectMidia />
+            </div>
+            <div className="col-span-2">
               <Label htmlFor="nome" className="text-right">
                 Ação
               </Label>

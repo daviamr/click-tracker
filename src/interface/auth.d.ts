@@ -227,6 +227,18 @@ export type CreateNewUser = {
     tagPosition?: string;
     lpId: string;
   }
+  export type createTrackerC = {
+    actionId: string;
+    alphabetId: string;
+    url: string;
+    replace: string;
+    sheet?: File;
+    length: string;
+    qrCode: string;
+    tag: string;
+    tagPosition: string;
+    dataSourceId: string;
+  }
 
   export type createNewSingleLink = {
     actionId: number;

@@ -70,7 +70,7 @@ export function NovoUsuario({ onCreateUser }: createUserProps) {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+        <DialogHeader className="pb-4 border-b-[1px]">
           <DialogTitle>Novo Usuário</DialogTitle>
           <DialogDescription>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore
@@ -78,10 +78,11 @@ export function NovoUsuario({ onCreateUser }: createUserProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <form action="" onSubmit={handleSubmit(createUser)}>
-          <div className="grid grid-cols-4 gap-4 py-4">
-            <div className="col-span-2">
-              <Label htmlFor="username" className="text-right">
+        <form onSubmit={handleSubmit(createUser)}>
+          <div className="grid grid-cols-4 gap-4 gap-y-6 py-4">
+            
+            <div className="relative col-span-2">
+              <Label htmlFor="username" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold">
                 Nome
               </Label>
 
@@ -90,7 +91,7 @@ export function NovoUsuario({ onCreateUser }: createUserProps) {
                 type="text"
                 placeholder="Nome do usuário..."
                 {...register("name")}
-                className={`${errors.name && "border-rose-400 bg-rose-100"}`}
+                className={`${errors.name && "border-rose-400"}`}
               />
 
               {errors.name && (
@@ -100,8 +101,8 @@ export function NovoUsuario({ onCreateUser }: createUserProps) {
               )}
             </div>
 
-            <div className="col-span-2">
-              <Label htmlFor="password" className="text-right">
+            <div className="relative col-span-2">
+              <Label htmlFor="password" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold">
                 Senha
               </Label>
 
@@ -112,7 +113,7 @@ export function NovoUsuario({ onCreateUser }: createUserProps) {
                 {...register("password")}
                 {...register("password")}
                 className={`${
-                  errors.password && "border-rose-400 bg-rose-100"
+                  errors.password && "border-rose-400"
                 }`}
               />
 
@@ -122,14 +123,15 @@ export function NovoUsuario({ onCreateUser }: createUserProps) {
                 </span>
               )}
             </div>
-            <div className="col-span-4">
-              <Label htmlFor="email">E-mail</Label>
+
+            <div className="relative col-span-4">
+              <Label htmlFor="email" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold">E-mail</Label>
               <Input
                 type="email"
                 placeholder="usuaro@email.com"
                 {...register("email")}
                 {...register("email")}
-                className={`${errors.email && "border-rose-400 bg-rose-100"}`}
+                className={`${errors.email && "border-rose-400"}`}
               />
 
               {errors.email && (
@@ -138,6 +140,7 @@ export function NovoUsuario({ onCreateUser }: createUserProps) {
                 </span>
               )}
             </div>
+
           </div>
           <DialogFooter>
             <Button

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { TooltipTracker } from "@/components/TooltipTracker";
 import { TrackerA } from "./TrackerA";
 import { TrackerB } from "./TrackerB";
+import { TrackerC } from "./TrackerC";
 
 export function EncurtadorPage() {
   const [selectedOption, setSelectedOption] = useState<string>("trackera");
@@ -26,8 +27,8 @@ export function EncurtadorPage() {
             <Label
               className={`grow p-2 rounded-l-lg cursor-pointer rounded-bl-none ${
                 selectedOption === "trackera"
-                  ? "font-semibold bg-[#a2d515]"
-                  : "bg-[#608104]"
+                  ? "font-semibold bg-[#a2d515] dark:bg-[#3f413c]"
+                  : "bg-[#7fa31d] dark:bg-[#1b1b1b]"
               }`}
               onClick={() => setSelectedOption("trackera")}
             >
@@ -44,8 +45,8 @@ export function EncurtadorPage() {
             <Label
               className={`grow p-2 cursor-pointer ${
                 selectedOption === "trackerb"
-                  ? "font-semibold bg-[#a2d515]"
-                  : "bg-[#608104]"
+                  ? "font-semibold bg-[#a2d515] dark:bg-[#3f413c]"
+                  : "bg-[#7fa31d] dark:bg-[#1b1b1b]"
               }`}
               onClick={() => setSelectedOption("trackerb")}
             >
@@ -62,8 +63,8 @@ export function EncurtadorPage() {
             <Label
               className={`grow p-2 rounded-r-lg rounded-br-none cursor-pointer ${
                 selectedOption === "trackerc"
-                  ? "font-semibold bg-[#a2d515]"
-                  : "bg-[#608104]"
+                  ? "font-semibold bg-[#a2d515] dark:bg-[#3f413c]"
+                  : "bg-[#7fa31d] dark:bg-[#1b1b1b]"
               }`}
               onClick={() => setSelectedOption("trackerc")}
             >
@@ -78,29 +79,11 @@ export function EncurtadorPage() {
               </div>
             </Label>
           </div>
-          {/* <div className="bg-transparent rounded-md border border-input h-max p-4">
-            <p className="flex items-center text-2xl font-semibold gap-2 mb-4 text-[#a2d515]">
-              <Info size={30} />
-              {selectedOption === "trackera" && "Tracker A"}
-              {selectedOption === "trackerb" && "Tracker B"}
-              {selectedOption === "trackerc" && "Tracker C"}
-            </p>
-            <p>
-              {selectedOption === "trackera" &&
-                "Utilize esta opção para gerar uma planilha com links individualizados e personalizados, permitindo acompanhar exatamente qual destinatário clicou em cada link. A geração de relatórios pode ser feita tanto click a click - com registro de data/hora/IP e fingerprint de cada click, - quanto através da totalização de dados, segmentada por cliente, campanha, LP/Site/Portal e/ou ação."}
-
-              {selectedOption === "trackerb" &&
-                "Utilize esta opção quando não houver a possibilidade de realizar o tracking individualizado, como por exemplo em campanhas de tráfego pago no Google ou em redes sociais, disparos de ofertas em grupos de whatsapp, etc. A plataforma irá gerar um link único que será utilizado para contabilizar os clicks redirecionados ao link de destino final. A geração de relatórios será feita somente através da totalização de dados, segmentada por cliente, campanha, LP/Site/Portal e/ou ação."}
-
-              {selectedOption === "trackerc" &&
-                'Utilize o Tracker C para os casos onde você somente possa personalizar um parâmetro específico de uma URL fornecida pelo cliente/parceiro, não sendo possível utilizar nossas ShortURLs. Para isso, você deve definir qual é o parâmetro a ser substituído na "URL destino" e selecionar as opções desejadas para a individualização dos links. A geração de relatórios só poderá ser feita utilizando a consolidação dos dados fornecida pelo cliente/parceiro.'}
-            </p>
-          </div> */}
         </div>
 
         {selectedOption === "trackera" && <TrackerA />}
         {selectedOption === "trackerb" && <TrackerB />}
-        {/* {selectedOption === "trackerc" && <EncurtadorTres />} */}
+        {selectedOption === "trackerc" && <TrackerC />}
       </div>
     </>
   );

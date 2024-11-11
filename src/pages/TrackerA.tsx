@@ -468,11 +468,6 @@ export function TrackerA() {
                 </span>
                 Dados da ação
               </h1>
-              <TooltipTracker
-                side="right"
-                align="start"
-                content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quos, magni dolor, beatae voluptatibus ipsa rem similique minus ut porro quo commodi obcaecati provident dolore molestiae, maxime hic? Error, eum!"
-              />
             </div>
 
             <div className="relative col-span-2 mt-2">
@@ -666,11 +661,6 @@ export function TrackerA() {
                 </span>
                 Encurtador
               </h1>
-              <TooltipTracker
-                side="right"
-                align="start"
-                content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quos, magni dolor, beatae voluptatibus ipsa rem similique minus ut porro quo commodi obcaecati provident dolore molestiae, maxime hic? Error, eum!"
-              />
             </div>
 
             <div className="relative col-span-2 mt-2">
@@ -928,11 +918,6 @@ export function TrackerA() {
                 </span>
                 Dados do disparo
               </h1>
-              <TooltipTracker
-                side="right"
-                align="start"
-                content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quos, magni dolor, beatae voluptatibus ipsa rem similique minus ut porro quo commodi obcaecati provident dolore molestiae, maxime hic? Error, eum!"
-              />
             </div>
 
             <div className="relative col-span-2 mt-2">
@@ -1032,7 +1017,7 @@ export function TrackerA() {
                   content='LOREM LOREM LOREM'
                 />
               </p>
-              <Button variant={"secondary"} type="button">
+              <Button variant={"secondary"} type="button" className="w-full">
                 Download
               </Button>
             </div>
@@ -1121,7 +1106,7 @@ export function TrackerA() {
               className="flex items-center gap-2 col-span-4 font-semibold mt-4"
             >
               <Tag size={18} className="animate-pulse" />
-              Tags
+              Gerar Tags
             </Button>
           </div>
         </form>

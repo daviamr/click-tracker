@@ -27,8 +27,8 @@ export function EncurtadorPage() {
             <Label
               className={`grow p-2 rounded-l-lg cursor-pointer rounded-bl-none ${
                 selectedOption === "trackera"
-                  ? "font-semibold bg-[#a2d515] dark:bg-[#3f413c]"
-                  : "bg-[#7fa31d] dark:bg-[#1b1b1b]"
+                  ? "font-semibold bg-[#a2d515] dark:bg-[#1b1b1b]"
+                  : "bg-[#7fa31d] dark:bg-[#3f413c]"
               }`}
               onClick={() => setSelectedOption("trackera")}
             >
@@ -45,8 +45,8 @@ export function EncurtadorPage() {
             <Label
               className={`grow p-2 cursor-pointer ${
                 selectedOption === "trackerb"
-                  ? "font-semibold bg-[#a2d515] dark:bg-[#3f413c]"
-                  : "bg-[#7fa31d] dark:bg-[#1b1b1b]"
+                  ? "font-semibold bg-[#a2d515] dark:bg-[#1b1b1b]"
+                  : "bg-[#7fa31d] dark:bg-[#3f413c]"
               }`}
               onClick={() => setSelectedOption("trackerb")}
             >
@@ -63,8 +63,8 @@ export function EncurtadorPage() {
             <Label
               className={`grow p-2 rounded-r-lg rounded-br-none cursor-pointer ${
                 selectedOption === "trackerc"
-                  ? "font-semibold bg-[#a2d515] dark:bg-[#3f413c]"
-                  : "bg-[#7fa31d] dark:bg-[#1b1b1b]"
+                  ? "font-semibold bg-[#a2d515] dark:bg-[#1b1b1b]"
+                  : "bg-[#7fa31d] dark:bg-[#3f413c]"
               }`}
               onClick={() => setSelectedOption("trackerc")}
             >

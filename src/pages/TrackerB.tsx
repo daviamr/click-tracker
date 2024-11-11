@@ -816,15 +816,6 @@ export function TrackerB() {
               />
             </div>
 
-            <div className="col-span-4 flex justify-center gap-1 border-b-2 mb-2 mt-4">
-              <h1 className="flex items-center gap-2 uppercase font-bold pb-[10px]">
-                <span className="flex items-center justify-center w-6 h-6 bg-[#a2d515] rounded-full dark:text-[#000000]">
-                  3
-                </span>
-                Dados do disparo
-              </h1>
-            </div>
-
             <div className="relative col-span-4 mt-4">
               {/* <div className="flex">
                 <p className="font-semibold">Conversor</p>
@@ -872,6 +863,15 @@ export function TrackerB() {
                   }
                 />
               </div>
+            </div>
+
+            <div className="col-span-4 flex justify-center gap-1 border-b-2 mb-2 mt-4">
+              <h1 className="flex items-center gap-2 uppercase font-bold pb-[10px]">
+                <span className="flex items-center justify-center w-6 h-6 bg-[#a2d515] rounded-full dark:text-[#000000]">
+                  3
+                </span>
+                Dados do disparo
+              </h1>
             </div>
 
             <div className="relative col-span-4 mt-2">

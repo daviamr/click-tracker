@@ -35,7 +35,6 @@ import {
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SelectMidia } from "../SelectMidia";
 
 const verifyCreateAction = z.object({
   id: z.number(),
@@ -49,6 +48,7 @@ const verifyCreateAction = z.object({
   key: z.string().min(1, "*Campo obrigatório"),
   landingPage: z.string(),
   landingPageId: z.number().min(1, "*Campo obrigatório"),
+  media: z.string(),
 });
 
 type actionData = z.infer<typeof verifyCreateAction>;
@@ -63,6 +63,7 @@ type hnadleEditActionProps = {
     cost,
     landingPageId,
     key,
+    media
   }: editAction) => void;
   data: DataProps;
 };
@@ -76,6 +77,7 @@ type editActionProps = {
   action: string;
   dataInicio: string;
   dataFim: string;
+  media: string;
   onEditAction: () => void;
 };
 
@@ -88,6 +90,7 @@ export function EditarAcao({
   action,
   dataInicio,
   dataFim,
+  media,
   onEditAction,
 }: editActionProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -256,6 +259,7 @@ export function EditarAcao({
         name: action,
         landingPage: lp,
         utm: utm,
+        media: media,
         startAt: dataPadraoFormatada(dataInicio),
         endAt: dataPadraoFormatada(dataFim),
       });
@@ -268,7 +272,7 @@ export function EditarAcao({
   }, [isOpen]);
 
   const editAction = async (data: actionData) => {
-    const { name, campaignId, startAt, endAt, utm, landingPageId } = data;
+    const { name, campaignId, startAt, endAt, utm, landingPageId, media } = data;
     const dataInicioFormatado = new Date(startAt);
     const dataFimFormatado = new Date(endAt);
     const inicioIso = dataInicioFormatado.toISOString();
@@ -289,6 +293,7 @@ export function EditarAcao({
           cost: Number(costFormatado),
           landingPageId: landingPageId,
           key: chave,
+          media,
         });
         onEditAction();
         setIsOpen(false);
@@ -307,7 +312,7 @@ export function EditarAcao({
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+        <DialogHeader className="pb-4 border-b-[1px]">
           <DialogTitle>Editar Ação</DialogTitle>
           <DialogDescription>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore
@@ -315,9 +320,10 @@ export function EditarAcao({
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(editAction)}>
-          <div className="grid grid-cols-4 gap-4 py-4">
-            <div className="col-span-4">
-              <Label>Cliente</Label>
+          <div className="grid grid-cols-4 gap-4 gap-y-6 py-4">
+
+            <div className="relative col-span-4">
+              <Label className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Cliente</Label>
               {/* SELECT CUSTOMER */}
 
               <Controller
@@ -351,8 +357,9 @@ export function EditarAcao({
               />
               {/* FINAL SELECT CUSTOMER */}
             </div>
-            <div className="col-span-4">
-              <Label>Campanha</Label>
+
+            <div className="relative col-span-4">
+              <Label className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Campanha</Label>
               <Select
                 onValueChange={handleSelectCampaign}
                 defaultValue={campaign}
@@ -374,8 +381,9 @@ export function EditarAcao({
                 </SelectContent>
               </Select>
             </div>
-            <div className="col-span-3">
-              <Label>LP Relacionada</Label>
+
+            <div className="relative col-span-3">
+              <Label className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">LP Relacionada</Label>
               <Controller
                 name="landingPage"
                 control={control}
@@ -404,8 +412,9 @@ export function EditarAcao({
                 )}
               />
             </div>
-            <div className="col-span-1">
-              <Label htmlFor="cost">Custo</Label>
+
+            <div className="relative col-span-1">
+              <Label htmlFor="cost" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Custo</Label>
               <Input
                 id="cost"
                 type="text"
@@ -420,8 +429,9 @@ export function EditarAcao({
                 className={`${errors.cost && "border-rose-400"}`}
               />
             </div>
-            <div className="col-span-2">
-              <Label>UTM</Label>
+
+            <div className="relative col-span-2">
+              <Label className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">UTM</Label>
               {/* SELECT UTM */}
               <Controller
                 name="utm"
@@ -455,8 +465,9 @@ export function EditarAcao({
               />
               {/* FINAL SELECT UTM */}
             </div>
-            <div className="col-span-2">
-              <Label>Chave</Label>
+
+            <div className="relative col-span-2">
+              <Label className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Chave</Label>
               {/* SELECT KEY */}
 
               <Controller
@@ -514,14 +525,46 @@ export function EditarAcao({
               />
               {/* FINAL SELECT KEY */}
             </div>
-            <div className="col-span-2">
-              <Label htmlFor="nome" className="text-right">
+
+            <div className="relative col-span-2">
+              <Label htmlFor="nome" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 Mídia
               </Label>
-              <SelectMidia />
+              {/* SELECT MEDIA */}
+              <Controller
+                name="media"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value); // Atualiza o valor no formulário
+                    }}
+                    defaultValue={media}
+                  >
+                    <SelectTrigger
+                      className={`${errors.media && "border-rose-400"}`}
+                    >
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Chaves</SelectLabel>
+                        <SelectItem value="Mail mkt">Mail mkt</SelectItem>
+                        <SelectItem value="Push">Push</SelectItem>
+                        <SelectItem value="Display">Display</SelectItem>
+                        <SelectItem value="SMS">SMS</SelectItem>
+                        <SelectItem value="Whatsapp">Whatsapp</SelectItem>
+                        <SelectItem value="Native">Native</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {/* FINAL SELECT MEDIA */}
             </div>
-            <div className="col-span-2">
-              <Label htmlFor="nome" className="text-right">
+
+            <div className="relative col-span-2">
+              <Label htmlFor="nome" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 Ação
               </Label>
               <Input
@@ -532,8 +575,9 @@ export function EditarAcao({
                 className={`${errors.name && "border-rose-400"}`}
               />
             </div>
-            <div className="col-span-2">
-              <Label id="dataInicio">Data/Hora Início</Label>
+
+            <div className="relative col-span-2">
+              <Label id="dataInicio" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Data/Hora Início</Label>
               <Input
                 id="dataInicio"
                 type="datetime-local"
@@ -541,8 +585,9 @@ export function EditarAcao({
                 className={`${errors.startAt && "border-rose-400"}`}
               />
             </div>
-            <div className="col-span-2">
-              <Label id="dataFim">Data/Hora Fim</Label>
+
+            <div className="relative col-span-2">
+              <Label id="dataFim" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Data/Hora Fim</Label>
               <Input
                 id="dataFim"
                 type="datetime-local"
@@ -550,6 +595,7 @@ export function EditarAcao({
                 className={`${errors.endAt && "border-rose-400"}`}
               />
             </div>
+
             <input
               type="hidden"
               {...register("campaignId", { valueAsNumber: true })}

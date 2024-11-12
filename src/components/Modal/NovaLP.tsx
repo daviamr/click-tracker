@@ -195,7 +195,7 @@ export function NovaLP({ onCreateLP }: createLPProps) {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+        <DialogHeader className="pb-4 border-b-[1px]">
           <DialogTitle>Nova LP</DialogTitle>
           <DialogDescription>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore
@@ -204,9 +204,10 @@ export function NovaLP({ onCreateLP }: createLPProps) {
         </DialogHeader>
 
         <form action="" onSubmit={handleSubmit(createLP)}>
-          <div className="grid grid-cols-4 gap-4 py-4">
-            <div className="col-span-4">
-              <Label htmlFor="username" className="text-right">
+          <div className="grid grid-cols-4 gap-4 gap-y-6 py-4">
+
+            <div className="relative col-span-4">
+              <Label htmlFor="username" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 Nome
               </Label>
 
@@ -225,8 +226,8 @@ export function NovaLP({ onCreateLP }: createLPProps) {
               )}
             </div>
 
-            <div className="col-span-4">
-              <Label htmlFor="customer" className="text-right">
+            <div className="relative col-span-4">
+              <Label htmlFor="customer" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 Cliente
               </Label>
 
@@ -267,8 +268,8 @@ export function NovaLP({ onCreateLP }: createLPProps) {
               {/* FINAL SELECT CAMPAIGN */}
             </div>
 
-            <div className="col-span-4">
-              <Label htmlFor="campanha" className="text-right">
+            <div className="relative col-span-4">
+              <Label htmlFor="campanha" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 Campanha
               </Label>
 
@@ -311,12 +312,13 @@ export function NovaLP({ onCreateLP }: createLPProps) {
               )}
               {/* FINAL SELECT CAMPAIGN */}
             </div>
-            <div className="col-span-4">
-              <Label htmlFor="urlFinal">URL final</Label>
+
+            <div className="relative col-span-4">
+              <Label htmlFor="urlFinal" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">URL final</Label>
               <Input
                 id="urlFinal"
                 type="text"
-                placeholder="Insira a URL"
+                defaultValue={`https://`}
                 {...register("url")}
                 className={`${errors.url && "border-rose-400 bg-rose-100"}`}
               />
@@ -327,6 +329,7 @@ export function NovaLP({ onCreateLP }: createLPProps) {
                 </span>
               )}
             </div>
+
           </div>
           <DialogFooter>
             <Button

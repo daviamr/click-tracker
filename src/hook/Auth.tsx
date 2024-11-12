@@ -539,6 +539,7 @@ function AuthProvider({ children }: ChildrenProps) {
     cost,
     landingPageId,
     key,
+    media,
   }: createNewAction) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
@@ -561,6 +562,7 @@ function AuthProvider({ children }: ChildrenProps) {
           cost,
           landingPageId,
           key,
+          media
         },
         {
           headers: {
@@ -593,6 +595,7 @@ function AuthProvider({ children }: ChildrenProps) {
     cost,
     landingPageId,
     key,
+    media
   }: editAction) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
@@ -611,6 +614,7 @@ function AuthProvider({ children }: ChildrenProps) {
         cost: cost,
         landingPageId: landingPageId,
         key: key,
+        media: media
       });
 
       const response = await api.put(
@@ -624,6 +628,7 @@ function AuthProvider({ children }: ChildrenProps) {
           cost,
           landingPageId,
           key,
+          media
         },
         {
           headers: {

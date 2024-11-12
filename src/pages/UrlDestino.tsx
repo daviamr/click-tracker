@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Braces, UserRoundX } from "lucide-react";
+import { Braces, RefreshCw, UserRoundX } from "lucide-react";
 import { NovaUrlDestino } from "@/components/Modal/NovaUrlDestino";
 import { useEffect, useState } from "react";
 import { DataProps, finalURLProps } from "@/interface/auth";
@@ -23,6 +23,7 @@ export function UrlDestinoPage() {
   const { data } = useAuth() as dataURLProps;
   const { deleteFinalUrl } = useAuth();
   const [finalURL, setFinalURL] = useState<finalURLProps[]>([]);
+  const [refreshStatus, setRefreshStatus] = useState<Boolean>(false);
 
   const handleGetFinalURL = async () => {
     try {
@@ -52,6 +53,15 @@ export function UrlDestinoPage() {
     handleGetFinalURL();
   };
 
+  const refresh = () => {
+    setRefreshStatus(true);
+    handleGetFinalURL();
+    setTimeout(() => {
+      setRefreshStatus(false);
+      AlertMessage("Planilha atualizada com sucesso.", "success");
+    }, 1000);
+  };
+
   return (
     <>
       <div>
@@ -60,7 +70,19 @@ export function UrlDestinoPage() {
           URLs de Destino
         </h1>
       </div>
-      <div className="flex justify-end border-solid border-y-[1px] py-2 px-4">
+      <div className="flex gap-2 justify-end border-solid border-y-[1px] py-2 px-4">
+        <Button
+          className="flex gap-2"
+          variant={"secondary"}
+          onClick={refresh}
+          disabled={!!refreshStatus}
+        >
+          <RefreshCw
+            size={18}
+            className={`${refreshStatus && "animate-spin"}`}
+          />
+          Atualizar
+        </Button>
         <NovaUrlDestino handleGetFinalURL={handleGetFinalURL} />
       </div>
       <Table>

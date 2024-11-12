@@ -74,7 +74,7 @@ export function NovoConversor({ onCreateConversor }: createConversorProps) {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+        <DialogHeader className="pb-4 border-b-[1px]">
           <DialogTitle>Novo Conversor</DialogTitle>
           <DialogDescription>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore
@@ -82,9 +82,10 @@ export function NovoConversor({ onCreateConversor }: createConversorProps) {
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(createConversor)}>
-          <div className="grid grid-cols-4 gap-4 py-4">
-            <div className="col-span-4">
-              <Label htmlFor="characters" className="text-right">
+          <div className="grid grid-cols-4 gap-4 gap-y-6 py-4">
+
+            <div className="relative col-span-4">
+              <Label htmlFor="characters" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 Conversor
               </Label>
               <TextareaWithCounter
@@ -100,8 +101,9 @@ export function NovoConversor({ onCreateConversor }: createConversorProps) {
                 </span>
               )}
             </div>
-            <div className="col-span-4">
-              <Label>Título</Label>
+
+            <div className="relative col-span-4">
+              <Label className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Título</Label>
               <Input
                 type="text"
                 placeholder="..."
@@ -114,6 +116,7 @@ export function NovoConversor({ onCreateConversor }: createConversorProps) {
                 </span>
               )}
             </div>
+
           </div>
           <DialogFooter>
             <Button

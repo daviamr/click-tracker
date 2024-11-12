@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Database, UserRoundX } from "lucide-react";
+import { Database, RefreshCw, UserRoundX } from "lucide-react";
 import { NovaBase } from "@/components/Modal/NovaBase";
 import { api } from "@/services/Api";
 import { baseProps, DataProps } from "@/interface/auth";
@@ -23,6 +23,7 @@ export function BaseOrigemPage() {
   const { data } = useAuth() as dataBaseProps;
   const { deleteBase } = useAuth();
   const [base, setBase] = useState<baseProps[]>([]);
+  const [refreshStatus, setRefreshStatus] = useState<Boolean>(false);
 
   const handleGetBase = async () => {
     try {
@@ -54,6 +55,15 @@ export function BaseOrigemPage() {
     handleGetBase();
   };
 
+  const refresh = () => {
+    setRefreshStatus(true);
+    handleGetBase();
+    setTimeout(() => {
+      setRefreshStatus(false);
+      AlertMessage("Planilha atualizada com sucesso.", "success");
+    }, 1000);
+  };
+
   return (
     <>
       <div>
@@ -62,8 +72,20 @@ export function BaseOrigemPage() {
           Origem Base
         </h1>
       </div>
-      <div className="flex justify-end border-solid border-y-[1px] py-2 px-4">
-        <NovaBase handleGetBase={handleGetBase}/>
+      <div className="flex gap-2 justify-end border-solid border-y-[1px] py-2 px-4">
+        <Button
+          className="flex gap-2"
+          variant={"secondary"}
+          onClick={refresh}
+          disabled={!!refreshStatus}
+        >
+          <RefreshCw
+            size={18}
+            className={`${refreshStatus && "animate-spin"}`}
+          />
+          Atualizar
+        </Button>
+        <NovaBase handleGetBase={handleGetBase} />
       </div>
       <Table>
         <TableHeader>
@@ -82,7 +104,12 @@ export function BaseOrigemPage() {
               <TableCell>{i.campaigns}</TableCell>
               <TableCell>{i.actions}</TableCell>
               <TableCell className="flex items-center justify-end gap-2 pr-4">
-                <EditarBase id={i.id} name={i.name} url={i.url}  handleGetBase={handleGetBase}/>
+                <EditarBase
+                  id={i.id}
+                  name={i.name}
+                  url={i.url}
+                  handleGetBase={handleGetBase}
+                />
                 <Button
                   className="p-2 duration-300 hover:text-red-700"
                   variant={"outline"}

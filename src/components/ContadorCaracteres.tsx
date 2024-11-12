@@ -19,7 +19,7 @@ const TextareaWithCounter = forwardRef<HTMLTextAreaElement, TextareaWithCounterP
           ref={ref}
         />
         <div>
-          <span className='text-base'>
+          <span className='text-[14px]'>
             <strong>{value.length}</strong> caracteres
           </span>
         </div>

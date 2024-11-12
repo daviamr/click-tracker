@@ -35,7 +35,6 @@ import {
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SelectMidia } from "../SelectMidia";
 
 const verifyCreateAction = z.object({
   name: z.string().min(4, "*Mínimo de 4 caracteres"),
@@ -48,6 +47,7 @@ const verifyCreateAction = z.object({
   key: z.string().min(1, "*Campo obrigatório"),
   landingPage: z.string(),
   landingPageId: z.number().min(1, "*Campo obrigatório"),
+  media: z.string().min(1),
 });
 
 type actionData = z.infer<typeof verifyCreateAction>;
@@ -61,6 +61,7 @@ type HandleCreateUsersProps = {
     cost,
     landingPageId,
     key,
+    media
   }: createNewAction) => void;
   data: DataProps;
 };
@@ -98,6 +99,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
       utm: utm,
       cost: "",
       key: "",
+      media: "",
     },
   });
 
@@ -234,7 +236,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
   }, [isOpen]);
 
   const createAction = async (data: actionData) => {
-    const { name, campaignId, startAt, endAt, utm, landingPageId } = data;
+    const { name, campaignId, startAt, endAt, utm, landingPageId, media } = data;
     const dataInicioFormatado = new Date(startAt);
     const dataFimFormatado = new Date(endAt);
     const inicioIso = dataInicioFormatado.toISOString();
@@ -254,6 +256,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
           cost: Number(costFormatado),
           landingPageId,
           key: chave,
+          media
         });
         console.log({
           name,
@@ -283,7 +286,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+        <DialogHeader className="pb-4 border-b-[1px]">
           <DialogTitle>Nova Ação</DialogTitle>
           <DialogDescription>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore
@@ -291,9 +294,10 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(createAction)}>
-          <div className="grid grid-cols-4 gap-4 py-4">
-            <div className="col-span-4">
-              <Label htmlFor="selectCliente">Cliente</Label>
+          <div className="grid grid-cols-4 gap-4 gap-y-6 py-4">
+
+            <div className="relative col-span-4">
+              <Label htmlFor="selectCliente" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Cliente</Label>
               {/* SELECT CUSTOMER */}
 
               <Controller
@@ -326,8 +330,9 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
               />
               {/* FINAL SELECT CUSTOMER */}
             </div>
-            <div className="col-span-4">
-              <Label htmlFor="campanha">Campanha</Label>
+
+            <div className="relative col-span-4">
+              <Label htmlFor="campanha" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Campanha</Label>
               <Select
                 disabled={!selectedClient}
                 onValueChange={handleSelectCampaign}
@@ -355,8 +360,9 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                 </SelectContent>
               </Select>
             </div>
-            <div className="col-span-3">
-              <Label htmlFor="lprelacionada">LP Relacionada</Label>
+
+            <div className="relative col-span-3">
+              <Label htmlFor="lprelacionada" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">LP Relacionada</Label>
               <Controller
                 name="landingPage"
                 control={control}
@@ -386,8 +392,9 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                 )}
               />
             </div>
-            <div className="col-span-1">
-              <Label htmlFor="cost">Custo</Label>
+
+            <div className="relative col-span-1">
+              <Label htmlFor="cost" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Custo</Label>
               <Input
                 id="cost"
                 type="text"
@@ -403,8 +410,9 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                 className={`${errors.cost && "border-rose-400"}`}
               />
             </div>
-            <div className="col-span-2">
-              <Label htmlFor="utm">UTM</Label>
+
+            <div className="relative col-span-2">
+              <Label htmlFor="utm" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">UTM</Label>
               {/* SELECT UTM */}
               <Controller
                 name="utm"
@@ -438,8 +446,9 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
               />
               {/* FINAL SELECT UTM */}
             </div>
-            <div className="col-span-2">
-              <Label htmlFor="key">Chave</Label>
+
+            <div className="relative col-span-2">
+              <Label htmlFor="key" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Chave</Label>
               {/* SELECT KEY */}
 
               <Controller
@@ -497,14 +506,45 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
               />
               {/* FINAL SELECT KEY */}
             </div>
-            <div className="col-span-2">
-              <Label htmlFor="nome" className="text-right">
+
+            <div className="relative col-span-2">
+              <Label htmlFor="nome" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 Mídia
               </Label>
-              <SelectMidia />
+              {/* SELECT MEDIA */}
+              <Controller
+                name="media"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value); // Atualiza o valor no formulário
+                    }}
+                  >
+                    <SelectTrigger
+                      className={`${errors.media && "border-rose-400"}`}
+                    >
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Chaves</SelectLabel>
+                        <SelectItem value="Mail mkt">Mail mkt</SelectItem>
+                        <SelectItem value="Push">Push</SelectItem>
+                        <SelectItem value="Display">Display</SelectItem>
+                        <SelectItem value="SMS">SMS</SelectItem>
+                        <SelectItem value="Whatsapp">Whatsapp</SelectItem>
+                        <SelectItem value="Native">Native</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {/* FINAL SELECT MEDIA */}
             </div>
-            <div className="col-span-2">
-              <Label htmlFor="nome" className="text-right">
+
+            <div className="relative col-span-2">
+              <Label htmlFor="nome" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 Ação
               </Label>
               <Input
@@ -515,8 +555,9 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                 className={`${errors.name && "border-rose-400"}`}
               />
             </div>
-            <div className="col-span-2">
-              <Label id="dataInicio">Data/Hora Início</Label>
+
+            <div className="relative col-span-2">
+              <Label id="dataInicio" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Data/Hora Início</Label>
               <Input
                 id="dataInicio"
                 type="datetime-local"
@@ -524,8 +565,9 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                 className={`${errors.startAt && "border-rose-400"}`}
               />
             </div>
-            <div className="col-span-2">
-              <Label id="dataFim">Data/Hora Fim</Label>
+
+            <div className="relative col-span-2">
+              <Label id="dataFim" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Data/Hora Fim</Label>
               <Input
                 id="dataFim"
                 type="datetime-local"
@@ -533,6 +575,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                 className={`${errors.endAt && "border-rose-400"}`}
               />
             </div>
+
             <input
               type="hidden"
               {...register("campaignId", { valueAsNumber: true })}

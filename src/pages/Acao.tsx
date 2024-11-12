@@ -15,7 +15,7 @@ import { useAuth } from "@/hook/Auth";
 import { dataAction, DataProps } from "@/interface/auth";
 import { api } from "@/services/Api";
 import { AxiosError } from "axios";
-import { CircleX, Waypoints } from "lucide-react";
+import { CircleX, RefreshCw, Waypoints } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type dataActionProps = { data: DataProps };
@@ -24,11 +24,15 @@ export function AcaoPage() {
   const { data } = useAuth() as dataActionProps;
   const { deleteAction, handleStatusAction } = useAuth();
   const [dataAction, setAction] = useState<dataAction[]>([]);
+  const [refreshStatus, setRefreshStatus] = useState<Boolean>(false);
   const [switchStates, setSwitchStates] = useState<{ [key: string]: boolean }>(
     {}
   );
   const formatCost = (cost: number) => {
-    return `R$ ${cost.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    return `R$ ${cost.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
   };
 
   const handleSwitchChange = async (id: number, checked: boolean) => {
@@ -77,6 +81,15 @@ export function AcaoPage() {
     handleGetAction();
   };
 
+  const refresh = () => {
+    setRefreshStatus(true);
+    handleGetAction();
+    setTimeout(() => {
+      setRefreshStatus(false);
+      AlertMessage("Planilha atualizada com sucesso.", "success");
+    }, 1000);
+  };
+
   return (
     <>
       <div>
@@ -104,7 +117,21 @@ export function AcaoPage() {
             Desativado
           </p>
         </div>
-        <NovaAcao onCreateAction={handleGetAction} />
+        <div className="flex gap-2">
+          <Button
+            className="flex gap-2"
+            variant={"secondary"}
+            onClick={refresh}
+            disabled={!!refreshStatus}
+          >
+            <RefreshCw
+              size={18}
+              className={`${refreshStatus && "animate-spin"}`}
+            />
+            Atualizar
+          </Button>
+          <NovaAcao onCreateAction={handleGetAction} />
+        </div>
       </div>
       <Table>
         <TableHeader>
@@ -115,6 +142,7 @@ export function AcaoPage() {
             <TableHead>Campanha</TableHead>
             <TableHead>LP</TableHead>
             <TableHead>Custo</TableHead>
+            <TableHead>Display</TableHead>
             <TableHead>Clicks</TableHead>
             <TableHead>Links</TableHead>
             <TableHead>Início</TableHead>
@@ -137,7 +165,7 @@ export function AcaoPage() {
             return (
               <TableRow key={i.id}>
                 <TableCell className="pl-4">
-                {i.status === "Active" && (
+                  {i.status === "Active" && (
                     <p className="flex itemns-center gap-2 text-xs">
                       <span className="w-4 h-4 bg-green-600 rounded-full animate-pulse"></span>
                     </p>
@@ -163,6 +191,7 @@ export function AcaoPage() {
                 <TableCell>{i.campaignName}</TableCell>
                 <TableCell>{i.landingPageName}</TableCell>
                 <TableCell>{formatCost(i.cost)}</TableCell>
+                <TableCell>{i.media}</TableCell>
                 <TableCell>{i.totalClicks}</TableCell>
                 <TableCell>{i.totalLinks}</TableCell>
                 <TableCell>{dataFormatada(i.startAt)}</TableCell>
@@ -184,6 +213,7 @@ export function AcaoPage() {
                     lp={i.landingPageName}
                     dataInicio={i.startAt}
                     dataFim={i.endAt}
+                    media={i.media}
                     onEditAction={handleGetAction}
                   />
                   <Button

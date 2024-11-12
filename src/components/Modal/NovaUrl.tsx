@@ -14,7 +14,7 @@ import { useAuth } from "@/hook/Auth";
 import { createNewURL } from "@/interface/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, Link2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -42,7 +42,7 @@ export function NovaUrl({ onCreateUrl }: createUrlProps) {
   } = useForm<urlData>({
     resolver: zodResolver(verifyCreateURL),
     defaultValues: {
-      url: "",
+      url: "https://",
     },
   });
 
@@ -60,6 +60,8 @@ export function NovaUrl({ onCreateUrl }: createUrlProps) {
     }
   }
 
+  useEffect(() => {reset()}, [isOpen])
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -69,22 +71,23 @@ export function NovaUrl({ onCreateUrl }: createUrlProps) {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+        <DialogHeader className="pb-4 border-b-[1px]">
           <DialogTitle>Nova URL</DialogTitle>
           <DialogDescription>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore
             veritatis ipsa nisi hic at!
           </DialogDescription>
         </DialogHeader>
-        <form action="" onSubmit={handleSubmit(createURL)}>
+        <form onSubmit={handleSubmit(createURL)}>
           <div className="grid grid-cols-4 gap-4 py-4">
-            <div className="col-span-4">
-              <Label htmlFor="url" className="text-right">
+
+            <div className="relative col-span-4">
+              <Label htmlFor="url" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 URL
               </Label>
               <Input
                 id="url"
-                placeholder="https://exemple.com"
+                defaultValue={`https://`}
                 {...register("url")}
                 className={`${errors.url && "border-rose-400"}`}
               />
@@ -94,6 +97,7 @@ export function NovaUrl({ onCreateUrl }: createUrlProps) {
                 </span>
               )}
             </div>
+
           </div>
           <DialogFooter>
             <Button

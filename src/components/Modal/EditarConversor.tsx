@@ -86,18 +86,20 @@ export function EditarConversor({
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+        <DialogHeader className="pb-4 border-b-[1px]">
           <DialogTitle>Editar Conversor</DialogTitle>
           <DialogDescription>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore
             veritatis ipsa nisi hic at!
           </DialogDescription>
         </DialogHeader>
-        <form action="" onSubmit={handleSubmit(editConversor)}>
+        <form onSubmit={handleSubmit(editConversor)}>
+
           <input type="hidden" value={id} {...register("id")} />
-          <div className="grid grid-cols-4 gap-4 py-4">
-            <div className="col-span-4">
-              <Label htmlFor="url" className="text-right">
+          <div className="grid grid-cols-4 gap-4 gap-y-6 py-4">
+
+            <div className="relative col-span-4">
+              <Label htmlFor="url" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 Conversor
               </Label>
               <TextareaWithCounter
@@ -114,8 +116,9 @@ export function EditarConversor({
               )}
               <div></div>
             </div>
-            <div className="col-span-4">
-              <Label>Novo Título</Label>
+
+            <div className="relative col-span-4">
+              <Label className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Novo Título</Label>
               <Input
                 type="text"
                 {...register("name")}
@@ -127,6 +130,7 @@ export function EditarConversor({
                 </span>
               )}
             </div>
+
           </div>
           <DialogFooter>
             <Button

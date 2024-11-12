@@ -120,6 +120,7 @@ export type CreateNewUser = {
     cost: number;
     key: string;
     landingPageId: number;
+    media: string;
   }
 
   export type editAction = {
@@ -132,6 +133,7 @@ export type CreateNewUser = {
     cost: number;
     landingPageId: number;
     key: string;
+    media: string;
   }
 
   export type dataAction = {
@@ -146,6 +148,7 @@ export type CreateNewUser = {
     status: string;
     totalClicks: number;
     totalLinks: number;
+    media: string;
   }
 
   export type statusAction = {

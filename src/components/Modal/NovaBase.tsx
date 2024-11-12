@@ -40,11 +40,14 @@ export function NovaBase({handleGetBase}: baseProps) {
     resolver: zodResolver(createBaseShema),
     defaultValues: {
       name: "",
-      url: "",
+      url: "https://",
     },
   });
 
-  useEffect(() => {!isOpen && reset({name: '', url: ''})}, [isOpen])
+  useEffect(() => {
+    if (!isOpen) reset();
+  }, [isOpen, reset]);
+  
 
   async function createBase(data: createBaseProps) {
     try {
@@ -67,7 +70,7 @@ export function NovaBase({handleGetBase}: baseProps) {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+        <DialogHeader className="pb-4 border-b-[1px]">
           <DialogTitle>Nova base</DialogTitle>
           <DialogDescription>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore
@@ -76,9 +79,10 @@ export function NovaBase({handleGetBase}: baseProps) {
         </DialogHeader>
 
         <form onSubmit={handleSubmit(createBase)}>
-          <div className="grid grid-cols-4 gap-4 py-4">
-            <div className="col-span-4">
-              <Label htmlFor="name" className="text-right">
+          <div className="grid grid-cols-4 gap-4 gap-y-6 py-4">
+
+            <div className="relative col-span-4">
+              <Label htmlFor="name" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 Nome
               </Label>
               <Input
@@ -95,14 +99,14 @@ export function NovaBase({handleGetBase}: baseProps) {
               )}
             </div>
 
-            <div className="col-span-4">
-              <Label htmlFor="link" className="text-right">
+            <div className="relative col-span-4">
+              <Label htmlFor="link" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 Link
               </Label>
               <Input
                 id="link"
                 type="url"
-                placeholder="https://"
+                defaultValue={`https://`}
                 {...register("url")}
                 className={`${errors.url && "border-rose-400 bg-rose-100"}`}
               />
@@ -112,6 +116,7 @@ export function NovaBase({handleGetBase}: baseProps) {
                 </span>
               )}
             </div>
+
           </div>
           <DialogFooter>
             <Button

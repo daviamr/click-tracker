@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { CaseLower, CircleX } from "lucide-react";
+import { CaseLower, CircleX, RefreshCw } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -21,6 +21,7 @@ type dataConversorProps = { data: DataProps };
 
 export function ConversorPage() {
   const [conversor, setConversor] = useState<conversorData[]>([]);
+  const [refreshStatus, setRefreshStatus] = useState<Boolean>(false);
   const { data } = useAuth() as dataConversorProps;
   const { deleteConversor } = useAuth();
 
@@ -53,15 +54,36 @@ export function ConversorPage() {
     handleGetConversor();
   };
 
+  const refresh = () => {
+    setRefreshStatus(true);
+    handleGetConversor();
+    setTimeout(() => {
+      setRefreshStatus(false);
+      AlertMessage("Planilha atualizada com sucesso.", "success");
+    }, 1000);
+  };
+
   return (
     <>
       <div>
         <h1 className="flex items-center gap-2 text-4xl border-solid border-b-[6px] w-max m-auto rounded-sm pt-8 mb-8">
-          <CaseLower size={30} className="animate-pulse"/>
+          <CaseLower size={30} className="animate-pulse" />
           Conversores
         </h1>
       </div>
-      <div className="flex justify-end border-solid border-y-[1px] py-2 px-4">
+      <div className="flex gap-2 justify-end border-solid border-y-[1px] py-2 px-4">
+        <Button
+          className="flex gap-2"
+          variant={"secondary"}
+          onClick={refresh}
+          disabled={!!refreshStatus}
+        >
+          <RefreshCw
+            size={18}
+            className={`${refreshStatus && "animate-spin"}`}
+          />
+          Atualizar
+        </Button>
         <NovoConversor onCreateConversor={handleGetConversor} />
       </div>
       <Table>

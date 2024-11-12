@@ -1103,7 +1103,7 @@ export function TrackerA() {
 
             <Button
               variant={"secondary"}
-              className="flex items-center gap-2 col-span-4 font-semibold mt-4"
+              className="flex items-center gap-2 col-span-4 font-semibold mt-4 duration-300 bg-[#7fa31d] hover:bg-[#a2d515]"
             >
               <Tag size={18} className="animate-pulse" />
               Gerar Tags

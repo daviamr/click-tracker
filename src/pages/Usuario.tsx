@@ -14,16 +14,17 @@ import { api } from "@/services/Api";
 import { useAuth } from "@/hook/Auth";
 import { DataProps, userDataProps } from "@/interface/auth";
 import { Button } from "@/components/ui/button";
-import { UserRoundX, Users } from "lucide-react";
+import { RefreshCw, UserRoundX, Users } from "lucide-react";
 import { EditarUsuario } from "@/components/Modal/EditarUsuario";
 
 type dataUserProps = { data: DataProps };
 
 export function UsuarioPage() {
   const { data } = useAuth() as dataUserProps;
-  const {deleteUser} = useAuth();
+  const { deleteUser } = useAuth();
 
   const [userData, setUserData] = useState<userDataProps[]>([]);
+  const [refreshStatus, setRefreshStatus] = useState<Boolean>(false);
 
   const handleGetUsers = async () => {
     try {
@@ -49,11 +50,20 @@ export function UsuarioPage() {
     handleGetUsers();
   }, [data.jwtToken]);
 
-    /* deletar usuário */
-    const handleDeleteUser = async (id: string) => {
-      await deleteUser({ id });
-      handleGetUsers();
-    };
+  /* deletar usuário */
+  const handleDeleteUser = async (id: string) => {
+    await deleteUser({ id });
+    handleGetUsers();
+  };
+
+  const refresh = () => {
+    setRefreshStatus(true);
+    handleGetUsers();
+    setTimeout(() => {
+      setRefreshStatus(false);
+      AlertMessage("Planilha atualizada com sucesso.", "success");
+    }, 1000);
+  };
 
   return (
     <>
@@ -63,7 +73,19 @@ export function UsuarioPage() {
           Usuários
         </h1>
       </div>
-      <div className="flex justify-end border-solid border-y-[1px] py-2 px-4">
+      <div className="flex gap-2 justify-end border-solid border-y-[1px] py-2 px-4">
+        <Button
+          className="flex gap-2"
+          variant={"secondary"}
+          onClick={refresh}
+          disabled={!!refreshStatus}
+        >
+          <RefreshCw
+            size={18}
+            className={`${refreshStatus && "animate-spin"}`}
+          />
+          Atualizar
+        </Button>
         <NovoUsuario onCreateUser={handleGetUsers} />
       </div>
       <Table>

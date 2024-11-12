@@ -14,7 +14,7 @@ import { useAuth } from "@/hook/Auth";
 import { customerData, DataProps } from "@/interface/auth";
 import { api, aws } from "@/services/Api";
 import { AxiosError } from "axios";
-import { Building2, UserRoundX } from "lucide-react";
+import { Building2, RefreshCw, UserRoundX } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type dataCustomerProps = { data: DataProps };
@@ -23,6 +23,7 @@ export function ClientesPage() {
   const { data } = useAuth() as dataCustomerProps;
   const { deleteCustomer } = useAuth();
   const [customerData, setCustomerData] = useState<customerData[]>([]);
+  const [refreshStatus, setRefreshStatus] = useState<Boolean>(false);
 
   const handleGetClient = async () => {
     try {
@@ -53,17 +54,36 @@ export function ClientesPage() {
     handleGetClient();
   };
 
-  console.log(customerData)
+  const refresh = () => {
+    setRefreshStatus(true);
+    handleGetClient();
+    setTimeout(() => {
+      setRefreshStatus(false);
+      AlertMessage("Planilha atualizada com sucesso.", "success");
+    }, 1000);
+  };
 
   return (
     <>
       <div>
         <h1 className="flex items-center gap-2 text-4xl border-solid border-b-[6px] w-max m-auto rounded-sm pt-8 mb-8">
-          <Building2 size={30} className="animate-pulse"/>
+          <Building2 size={30} className="animate-pulse" />
           Clientes
         </h1>
       </div>
-      <div className="flex justify-end border-solid border-y-[1px] py-2 px-4">
+      <div className="flex gap-2 justify-end border-solid border-y-[1px] py-2 px-4">
+        <Button
+          className="flex gap-2"
+          variant={"secondary"}
+          onClick={refresh}
+          disabled={!!refreshStatus}
+        >
+          <RefreshCw
+            size={18}
+            className={`${refreshStatus && "animate-spin"}`}
+          />
+          Atualizar
+        </Button>
         <NovoCliente onCreateClient={handleGetClient} />
       </div>
       <Table>

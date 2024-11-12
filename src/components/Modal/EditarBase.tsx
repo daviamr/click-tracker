@@ -73,7 +73,7 @@ export function EditarBase({ id, name, url, handleGetBase }: editBaseDate) {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+        <DialogHeader className="pb-4 border-b-[1px]">
           <DialogTitle>Editar base</DialogTitle>
           <DialogDescription>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore
@@ -83,9 +83,10 @@ export function EditarBase({ id, name, url, handleGetBase }: editBaseDate) {
 
         <form onSubmit={handleSubmit(createBase)}>
           <input type="hidden" {...register('id')}/>
-          <div className="grid grid-cols-4 gap-4 py-4">
-            <div className="col-span-4">
-              <Label htmlFor="name" className="text-right">
+          <div className="grid grid-cols-4 gap-4 gap-y-6 py-4">
+
+            <div className="relative col-span-4">
+              <Label htmlFor="name" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 Nome
               </Label>
               <Input
@@ -102,8 +103,8 @@ export function EditarBase({ id, name, url, handleGetBase }: editBaseDate) {
               )}
             </div>
 
-            <div className="col-span-4">
-              <Label htmlFor="link" className="text-right">
+            <div className="relative col-span-4">
+              <Label htmlFor="link" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 Link
               </Label>
               <Input
@@ -119,6 +120,7 @@ export function EditarBase({ id, name, url, handleGetBase }: editBaseDate) {
                 </span>
               )}
             </div>
+
           </div>
           <DialogFooter>
             <Button

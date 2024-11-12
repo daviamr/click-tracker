@@ -79,7 +79,7 @@ export function EditarUrl({id, url, onEditUrl}: editUrlProps) {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+        <DialogHeader className="pb-4 border-b-[1px]">
           <DialogTitle>Editar URL</DialogTitle>
           <DialogDescription>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore
@@ -91,8 +91,9 @@ export function EditarUrl({id, url, onEditUrl}: editUrlProps) {
           value={id}
           {...register("id")}/>
         <div className="grid grid-cols-4 gap-4 py-4">
-          <div className="col-span-4">
-            <Label htmlFor="url" className="text-right">
+
+          <div className="relative col-span-4">
+            <Label htmlFor="url" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 Nova URL
             </Label>
             <Input
@@ -105,6 +106,7 @@ export function EditarUrl({id, url, onEditUrl}: editUrlProps) {
                   {errors.url.message}
                 </span>)}
           </div>
+
         </div>
         <DialogFooter>
           <Button

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { FileX2, Megaphone } from "lucide-react";
+import { FileX2, Megaphone, RefreshCw } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -25,11 +25,15 @@ export function CampanhaPage() {
   const [customerData, setCustomerData] = useState<customerData[]>([]);
   const { deleteCampaign, handleStatusCampaign } = useAuth();
   const { data } = useAuth() as dataCampaignProps;
+  const [refreshStatus, setRefreshStatus] = useState<Boolean>(false);
   const [switchStates, setSwitchStates] = useState<{ [key: string]: boolean }>(
     {}
   );
   const formatPayout = (payout: number) => {
-    return `R$ ${payout.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    return `R$ ${payout.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
   };
 
   const handleSwitchChange = async (id: number, checked: boolean) => {
@@ -99,6 +103,15 @@ export function CampanhaPage() {
     handleGetCampaign();
   };
 
+  const refresh = () => {
+    setRefreshStatus(true);
+    handleGetCampaign();
+    setTimeout(() => {
+      setRefreshStatus(false);
+      AlertMessage("Planilha atualizada com sucesso.", "success");
+    }, 1000);
+  };
+
   return (
     <>
       <div>
@@ -126,7 +139,21 @@ export function CampanhaPage() {
             Desativado
           </p>
         </div>
-        <NovaCampanha onCreateCampaign={handleGetCampaign} />
+        <div className="flex gap-2">
+          <Button
+            className="flex gap-2"
+            variant={"secondary"}
+            onClick={refresh}
+            disabled={!!refreshStatus}
+          >
+            <RefreshCw
+              size={18}
+              className={`${refreshStatus && "animate-spin"}`}
+            />
+            Atualizar
+          </Button>
+          <NovaCampanha onCreateCampaign={handleGetCampaign} />
+        </div>
       </div>
       <Table>
         <TableHeader>
@@ -193,9 +220,13 @@ export function CampanhaPage() {
                 <TableCell className="text-nowrap">{customerName}</TableCell>
                 <TableCell>{i.category}</TableCell>
                 <TableCell>{i.subCategory}</TableCell>
-                <TableCell>{i.model === 'LeadHunting' ? 'Lead Hunting' : i.model}</TableCell>
+                <TableCell>
+                  {i.model === "LeadHunting" ? "Lead Hunting" : i.model}
+                </TableCell>
                 <TableCell>{i.type}</TableCell>
-                <TableCell className="text-nowrap">{formatPayout(i.payout)}</TableCell>
+                <TableCell className="text-nowrap">
+                  {formatPayout(i.payout)}
+                </TableCell>
                 <TableCell>{i.totalActions}</TableCell>
                 <TableCell>{i.totalClicks}</TableCell>
                 <TableCell>{i.totalLinks}</TableCell>

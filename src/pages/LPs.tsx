@@ -13,7 +13,7 @@ import { api } from "@/services/Api";
 import { useAuth } from "@/hook/Auth";
 import { DataProps, lpsData } from "@/interface/auth";
 import { Button } from "@/components/ui/button";
-import { Laptop, UserRoundX } from "lucide-react";
+import { Laptop, RefreshCw, UserRoundX } from "lucide-react";
 import { NovaLP } from "@/components/Modal/NovaLP";
 import { EditarLP } from "@/components/Modal/EditarLP";
 
@@ -23,6 +23,7 @@ export function LPsPage() {
   const { data } = useAuth() as dataUserProps;
   const { deleteLp } = useAuth();
   const [lps, setLPs] = useState<lpsData[]>([]);
+  const [refreshStatus, setRefreshStatus] = useState<Boolean>(false);
 
   const handleGetLP = async () => {
     try {
@@ -54,6 +55,15 @@ export function LPsPage() {
     handleGetLP();
   };
 
+  const refresh = () => {
+    setRefreshStatus(true);
+    handleGetLP();
+    setTimeout(() => {
+      setRefreshStatus(false);
+      AlertMessage("Planilha atualizada com sucesso.", "success");
+    }, 1000);
+  };
+
   return (
     <>
       <div>
@@ -62,7 +72,19 @@ export function LPsPage() {
           LPs, Sites e Portais
         </h1>
       </div>
-      <div className="flex justify-end border-solid border-y-[1px] py-2 px-4">
+      <div className="flex gap-2 justify-end border-solid border-y-[1px] py-2 px-4">
+      <Button
+          className="flex gap-2"
+          variant={"secondary"}
+          onClick={refresh}
+          disabled={!!refreshStatus}
+        >
+          <RefreshCw
+            size={18}
+            className={`${refreshStatus && "animate-spin"}`}
+          />
+          Atualizar
+        </Button>
         <NovaLP onCreateLP={handleGetLP} />
       </div>
       <Table>

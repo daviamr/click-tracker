@@ -210,7 +210,7 @@ export function EditarLP({
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+        <DialogHeader className="pb-4 border-b-[1px]">
           <DialogTitle>Editar LP</DialogTitle>
           <DialogDescription>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore
@@ -220,9 +220,10 @@ export function EditarLP({
 
         <form action="" onSubmit={handleSubmit(editLP)}>
           <input type="hidden" {...register("id")} />
-          <div className="grid grid-cols-4 gap-4 py-4">
-            <div className="col-span-4">
-              <Label htmlFor="username" className="text-right">
+          <div className="grid grid-cols-4 gap-4 gap-y-6 py-4">
+
+            <div className="relative col-span-4">
+              <Label htmlFor="username" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 Nome
               </Label>
 
@@ -241,8 +242,8 @@ export function EditarLP({
               )}
             </div>
 
-            <div className="col-span-4">
-              <Label htmlFor="customer" className="text-right">
+            <div className="relative col-span-4">
+              <Label htmlFor="customer" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 Cliente
               </Label>
 
@@ -284,8 +285,8 @@ export function EditarLP({
               {/* FINAL SELECT CAMPAIGN */}
             </div>
 
-            <div className="col-span-4">
-              <Label htmlFor="campanha" className="text-right">
+            <div className="relative col-span-4">
+              <Label htmlFor="campanha" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 Campanha
               </Label>
 
@@ -322,8 +323,9 @@ export function EditarLP({
               )}
               {/* FINAL SELECT CAMPAIGN */}
             </div>
-            <div className="col-span-4">
-              <Label htmlFor="urlFinal">URL final</Label>
+
+            <div className="relative col-span-4">
+              <Label htmlFor="urlFinal" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">URL final</Label>
               <Input
                 id="urlFinal"
                 type="text"

@@ -188,7 +188,7 @@ export function EditarUrlDestino({
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+        <DialogHeader className="pb-4 border-b-[1px]">
           <DialogTitle>Editar URL de destino</DialogTitle>
           <DialogDescription>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore
@@ -198,9 +198,10 @@ export function EditarUrlDestino({
 
         <form onSubmit={handleSubmit(editUrlDestino)}>
           <input type="hidden" {...register("id")} />
-          <div className="grid grid-cols-4 gap-4 py-4">
-            <div className="col-span-4">
-              <Label htmlFor="name" className="text-right">
+          <div className="grid grid-cols-4 gap-4 gap-y-6 py-4">
+
+            <div className="relative col-span-4">
+              <Label htmlFor="name" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 Nome
               </Label>
               <Input
@@ -217,8 +218,8 @@ export function EditarUrlDestino({
               )}
             </div>
 
-            <div className="col-span-4">
-              <Label htmlFor="destinationUrl" className="text-right">
+            <div className="relative col-span-4">
+              <Label htmlFor="destinationUrl" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 URL de destino
               </Label>
               <Input
@@ -234,8 +235,9 @@ export function EditarUrlDestino({
                 </span>
               )}
             </div>
-            <div className="col-span-4">
-              <Label htmlFor="campanhas">Cliente</Label>
+
+            <div className="relative col-span-4">
+              <Label htmlFor="campanhas" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Cliente</Label>
               {/* SELECT CUSTOMER */}
 
               <Controller
@@ -273,8 +275,9 @@ export function EditarUrlDestino({
               )}
               {/* FINAL SELECT CAMPAIGN */}
             </div>
-            <div className="col-span-4">
-              <Label htmlFor="campanhas">Campanha</Label>
+
+            <div className="relative col-span-4">
+              <Label htmlFor="campanhas" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Campanha</Label>
               {/* SELECT CAMPAIGN */}
 
               <Controller
@@ -317,6 +320,7 @@ export function EditarUrlDestino({
               )}
               {/* FINAL SELECT CAMPAIGN */}
             </div>
+
           </div>
           <DialogFooter>
             <Button

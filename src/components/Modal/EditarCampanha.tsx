@@ -294,7 +294,7 @@ export function EditarCampanha({
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+        <DialogHeader className="pb-4 border-b-[1px]">
           <DialogTitle>Editar Campanha</DialogTitle>
           <DialogDescription>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore
@@ -303,9 +303,10 @@ export function EditarCampanha({
         </DialogHeader>
         <form onSubmit={handleSubmit(editCampaign)}>
           <input type="hidden" value={id} {...register("id")} />
-          <div className="grid grid-cols-4 gap-4 py-4">
-            <div className="col-span-4">
-              <Label htmlFor="nome" className="text-right">
+          <div className="grid grid-cols-4 gap-4 gap-y-6 py-4">
+            
+            <div className="relative col-span-4">
+              <Label htmlFor="nome" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
                 Nome
               </Label>
               <Input
@@ -320,8 +321,9 @@ export function EditarCampanha({
                 </span>
               )}
             </div>
-            <div className="col-span-4">
-              <Label htmlFor="campanhas">Cliente</Label>
+
+            <div className="relative col-span-4">
+              <Label htmlFor="campanhas" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Cliente</Label>
               {/* SELECT CUSTOMER */}
 
               <Controller
@@ -352,8 +354,9 @@ export function EditarCampanha({
               )}
               {/* FINAL SELECT CUSTOMER */}
             </div>
-            <div className="col-span-2">
-              <Label htmlFor="categoria">Categoria</Label>
+
+            <div className="relative col-span-2">
+              <Label htmlFor="categoria" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Categoria</Label>
               {/* SELECT CATEGORY */}
               <Controller
                 name="category"
@@ -386,8 +389,9 @@ export function EditarCampanha({
               />
               {/* FINAL SELECT CATEGORY */}
             </div>
-            <div className="col-span-2">
-              <Label htmlFor="subCategoria">Subcategoria</Label>
+            
+            <div className="relative col-span-2">
+              <Label htmlFor="subCategoria" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Subcategoria</Label>
               {/* SELECT SUBCATEGORY */}
               <Controller
                 name="subCategory"
@@ -431,8 +435,9 @@ export function EditarCampanha({
               />
               {/* FINAL SELECT SUBCATEGORY */}
             </div>
-            <div className="col-span-2">
-              <Label htmlFor="modelo">Modelo</Label>
+
+            <div className="relative col-span-2">
+              <Label htmlFor="modelo" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Modelo</Label>
               {/* SELECT MODEL */}
               <Controller
                 name="model"
@@ -464,8 +469,9 @@ export function EditarCampanha({
               />
               {/* FINAL SELECT MODEL */}
             </div>
-            <div className="col-span-1">
-              <Label htmlFor="tipo">Tipo</Label>
+
+            <div className="relative col-span-1">
+              <Label htmlFor="tipo" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Tipo</Label>
               {/* SELECT TYPE */}
               <Controller
                 name="type"
@@ -489,8 +495,9 @@ export function EditarCampanha({
               />
               {/* FINAL SELECT TYPE */}
             </div>
-            <div className="col-span-1">
-              <Label>Payout</Label>
+
+            <div className="relative col-span-1">
+              <Label className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Payout</Label>
               <Input
                 id="payout"
                 type="text"
@@ -505,8 +512,9 @@ export function EditarCampanha({
                 className={`${errors.payout && "border-rose-400"}`}
               />
             </div>
-            <div className="col-span-2">
-              <Label id="dataInicio">Data/Hora Início</Label>
+
+            <div className="relative col-span-2">
+              <Label id="dataInicio" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Data/Hora Início</Label>
               <Input
                 id="dataInicio"
                 type="datetime-local"
@@ -514,8 +522,9 @@ export function EditarCampanha({
                 className={`${errors.startAt && "border-rose-400 bg-rose-100"}`}
               />
             </div>
-            <div className="col-span-2">
-              <Label id="dataFim">Data/Hora Fim</Label>
+
+            <div className="relative col-span-2">
+              <Label id="dataFim" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Data/Hora Fim</Label>
               <Input
                 id="dataFim"
                 type="datetime-local"
@@ -523,8 +532,9 @@ export function EditarCampanha({
                 className={`${errors.endAt && "border-rose-400 bg-rose-100"}`}
               />
             </div>
-            <div className="col-span-4">
-              <Label htmlFor="observacao">Observação</Label>
+
+            <div className="relative col-span-4">
+              <Label htmlFor="observacao" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Observação</Label>
               <Textarea
                 id="observacao"
                 placeholder="Digite uma observação, campo não obrigatório"
@@ -532,6 +542,7 @@ export function EditarCampanha({
                 {...register("obs")}
               />
             </div>
+
           </div>
           <DialogFooter>
             <Button

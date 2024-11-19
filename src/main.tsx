@@ -8,7 +8,7 @@ import { AuthProvider } from "./hook/Auth";
 import 'react-toastify/dist/ReactToastify.css';
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+  <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
     <ContextStateProvider>
       <AuthProvider>
         <Routes />

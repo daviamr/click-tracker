@@ -20,10 +20,15 @@ import { ModeToggle } from "./mode-toggle";
 import { useContextState } from "@/hook/state";
 import { useState } from "react";
 import { TooltipHeader } from "./TooltipHeader";
+import { useTheme } from "@/hook/theme-provider";
+import { LogoA } from "./logoA";
+import { LogoB } from "./logoB";
+import { LogoC } from "./logoC";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState<Boolean>(true);
   const { isFocus, setIsFocus } = useContextState();
+  const {theme} = useTheme();
 
   function logOut() {
     try {
@@ -43,15 +48,10 @@ export function Header() {
       >
         <div className="flex flex-col mb-8 justify-between h-full">
           <div>
-            <div className="flex justify-center mb-8">
-              <p
-                className={`text-xl relative z-10 w-max m-auto font-bold ${
-                  isOpen ? "block" : "hidden"
-                }`}
-              >
-                <span className="absolute w-[140px] h-4 bg-[#799b09] z-[-1] left-[-8px] bottom-0"></span>
-                LinkTracker
-              </p>
+            <div className={`flex justify-center mb-8 ${!isOpen ? 'flex-col items-center gap-2' : ''}`}>
+              {isOpen && theme === "dark" && <LogoA/>}
+              {isOpen && theme === "light" && <LogoB/>}
+              {!isOpen ? <LogoC/> : ''}
               <Button onClick={() => setIsOpen(!isOpen)} variant={"ghost"}>
                 {isOpen ? (
                   <ArrowLeftFromLine size={16} />
@@ -61,15 +61,14 @@ export function Header() {
               </Button>
             </div>
 
-            <div className="flex items-center px-4 mb-8 gap-2">
-              <img
+            <div className="flex items-center mb-8 gap-2">
+              {/* <img
                 src="https://i.imgur.com/LDJu8HS.jpeg"
                 alt="usuário"
                 className={`w-12 rounded-sm`}
-              />
+              /> */}
               <div className={`${isOpen ? "block" : "hidden"}`}>
-                <p className="leading-4 text-[14px]">Bem vindo (a),</p>
-                <p className="text-[14px]">Fulano.</p>
+                <p className="px-4 border-l-4 border-[#a2d515] leading-4 text-[14px]">Bem vindo (a), Fulano</p>
               </div>
             </div>
 

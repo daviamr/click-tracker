@@ -1076,7 +1076,6 @@ function AuthProvider({ children }: ChildrenProps) {
       });
 
       console.log(response.data);
-      fileDownload(response.data, `planilha_dados`);
 
       AlertMessage(response.data.message, "success");
     } catch (error: unknown) {

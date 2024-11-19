@@ -62,6 +62,8 @@ export function UrlDestinoPage() {
     }, 1000);
   };
 
+  console.log(finalURL)
+
   return (
     <>
       <div>

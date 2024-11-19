@@ -909,7 +909,7 @@ export function TrackerB() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectLabel>Origem Bases</SelectLabel>
+                        <SelectLabel>URL's de destino</SelectLabel>
                         {finalUrlsData.map((i, index) => (
                           <SelectItem value={i.name} key={index}>
                             {i.name}

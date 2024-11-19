@@ -6,6 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/hook/Auth";
 import { Login } from "@/interface/auth";
 import { AtSign, LogIn, RectangleEllipsis } from "lucide-react";
+import { LogoA } from "@/components/logoA";
+import { useTheme } from "@/hook/theme-provider";
+import { LogoB } from "@/components/logoB";
 
 const loginSchema = z.object({
   email: z.string().min(1, "*Campo obrigatório").email("E-mail invalido."),
@@ -19,6 +22,7 @@ type HandleLogin = {
 
 export function LoginPage() {
   const { signIn } = useAuth() as HandleLogin;
+  const {theme} = useTheme();
   const {
     register,
     handleSubmit,
@@ -41,10 +45,7 @@ export function LoginPage() {
       <div className="flex justify-center items-center h-screen bg-gradient-to-r from-[#0c0f01] to-[#0a0a0a]">
         <form onSubmit={handleSubmit(handleSignIn)}>
           <div className="flex flex-col gap-16">
-            <p className={`text-4xl relative z-10 w-max m-auto font-bold text-white`}>
-              <span className="absolute w-[230px] h-5 bg-[#799b09] z-[-1] left-[-8px] bottom-0"></span>
-              LinkTracker
-            </p>
+            {theme === "dark" ? <LogoA/> : <LogoB/>}
 
             <div className="flex flex-col gap-4">
               <h1 className="font-semibold text-center text-white">
@@ -95,7 +96,7 @@ export function LoginPage() {
             </div>
           </div>
           <div className="flex justify-center">
-            <Button variant={"outline"} className="flex gap-2 mt-10 mb-10 px-14 w-max">
+            <Button variant={"secondary"} className="flex gap-2 mt-10 mb-10 px-14 w-max">
               Entrar
               <LogIn size={20}/>
             </Button>

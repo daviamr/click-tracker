@@ -49,10 +49,11 @@ export function Header() {
         <div className="flex flex-col mb-8 justify-between h-full">
           <div>
             <div
-              className={`flex justify-center mb-8 ${
+              className={`flex justify-center items-center mb-8 ${
                 !isOpen ? "flex-col items-center gap-2" : ""
               }`}
             >
+              <div className="w-full px-4">
               {isOpen ? (
                 theme === "dark" ? (
                   <LogoA />
@@ -62,6 +63,7 @@ export function Header() {
               ) : (
                 <LogoC />
               )}
+              </div>
               <Button onClick={() => setIsOpen(!isOpen)} variant={"ghost"}>
                 {isOpen ? (
                   <ArrowLeftFromLine size={16} />

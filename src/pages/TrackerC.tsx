@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpRight, CircleX, FileDown, Loader, Tag } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import fileDownload from "js-file-download";
 
 const verifyTrackerA = z.object({
   customer: z.string().min(1),
@@ -293,6 +294,28 @@ export function TrackerC() {
       } else {
         AlertMessage(
           "Não foi possível carregar as Origem Bases, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  };
+  const handleGetExampleSheet = async () => {
+    try {
+      const response = await api.get(`/links/example-sheet`, {
+        headers: {
+          Authorization: `Bearer ${data.jwtToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+        responseType: 'blob',
+      });
+      console.log(response.data)
+      fileDownload(response.data, `planilha-exemplo.xlsx`);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível baixar a planilha de exemplo.",
           "error"
         );
       }
@@ -843,7 +866,7 @@ export function TrackerC() {
                   content="LOREM LOREM LOREM"
                 />
               </p>
-              <Button variant={"secondary"} type="button" className="w-full">
+              <Button variant={"secondary"} type="button" className="w-full" onClick={handleGetExampleSheet}>
                 Download
               </Button>
             </div>

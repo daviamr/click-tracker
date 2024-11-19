@@ -345,7 +345,9 @@ export type CreateNewUser = {
   }
 
   export interface ApiResponse {
-    qrCode: string;
-    redirectUrl: string;
-    shortUrl: string;
+    link: {
+      qrCode: string;
+      url: string;
+    }
+    message: string;
   }

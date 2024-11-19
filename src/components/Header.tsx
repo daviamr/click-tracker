@@ -49,7 +49,7 @@ export function Header() {
         <div className="flex flex-col mb-8 justify-between h-full">
           <div>
             <div
-              className={`flex justify-center items-center mb-8 ${
+              className={`flex justify-center items-center mb-2 ${
                 !isOpen ? "flex-col items-center gap-2" : ""
               }`}
             >
@@ -61,7 +61,7 @@ export function Header() {
                   <LogoB />
                 ) : null
               ) : (
-                <LogoC />
+                <div className="w-[32px] h-[42px]"><LogoC /></div>
               )}
               </div>
               <Button onClick={() => setIsOpen(!isOpen)} variant={"ghost"}>
@@ -80,8 +80,8 @@ export function Header() {
                 className={`w-12 rounded-sm`}
               /> */}
               <div className={`${isOpen ? "block" : "hidden"}`}>
-                <p className="px-4 border-l-4 border-[#a2d515] leading-4 text-[14px]">
-                  Bem vindo (a), Fulano
+                <p className="px-4 border-l-8 border-[#a2d515] leading-[18px] text-[14px]">
+                  Bem vindo (a), <span className="block">Fulano.</span>
                 </p>
               </div>
             </div>

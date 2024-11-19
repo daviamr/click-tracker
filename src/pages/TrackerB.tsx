@@ -1,6 +1,7 @@
 import { AlertMessage } from "@/components/alert_message";
 import { useAuth } from "@/hook/Auth";
 import {
+  ApiResponse,
   campaignData,
   conversorData,
   createTrackerB,
@@ -22,13 +23,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { TooltipTracker } from "@/components/TooltipTracker";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, CircleX, FileDown, Loader, Tag } from "lucide-react";
+import { Link2, Tag } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -37,7 +45,7 @@ const verifyTrackerA = z.object({
   campaign: z.string().min(1),
   actionId: z.string().min(1),
   baseUrlId: z.string().min(1),
-  alphabetId: z.string().min(1),
+  alphabetId: z.string(),
 //   sheet: z
 //     .any()
 //     .refine((files) => files instanceof FileList && files.length > 0, {
@@ -65,7 +73,7 @@ type trackerBProps = {
     tag,
     tagPosition,
     lpId,
-  }: createTrackerB) => void;
+  }: createTrackerB) => Promise<ApiResponse>;
 };
 
 export function TrackerB() {
@@ -104,6 +112,8 @@ export function TrackerB() {
   const [selectedAction, handleSelectedAction] = useState<string>("");
   const [lengthValue, setLengthValue] = useState<number>(6);
   const [selectedTagPosition, setSelectedTagPosition] = useState<string>("");
+  const [responseModalIsOpen, setResponseModalIsOpen] = useState(false);
+  const [returnData, setReturnData] = useState<ApiResponse | null>(null);
   //for the input example url
   const charactersLength = [
     "a",
@@ -130,9 +140,6 @@ export function TrackerB() {
   const [selectedUrl, setSelectedUrl] = useState<string>("");
   const tagValue = watch("tag");
   //
-  //loading manipulations
-  const [loading, setLoading] = useState<boolean>(false);
-  const [requestStatus, setRequestStatus] = useState<string>("loading");
 
   //support functions
   const handleClientId = (value: string) => {
@@ -175,7 +182,7 @@ export function TrackerB() {
   const handleAlphabetId = (value: string) => {
     const alphabetId =
       alphabetsData.find((alphabet) => alphabet.name === value)?.id ||
-      "Id do conversor não encontrado ou é nulo.";
+      "";
     if (alphabetId) {
       setValue("alphabetId", alphabetId.toString());
       console.log("Id do conversor: " + alphabetId);
@@ -193,6 +200,37 @@ export function TrackerB() {
     setSelectedTagPosition(value);
     console.log("Posição da tag: " + value);
   };
+  const handleCopyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Link copiado para a área de transferência!");
+    });
+  };
+  const handleDownloadQRCode = async () => {
+    if (returnData) {
+      const imageUrl = `${returnData.link.qrCode}`;
+
+      try {
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `qrcode-${returnData.link.url}.png`; // Nome do arquivo a ser salvo
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url); // Limpa o URL após o download
+      } catch (error) {
+        console.error("Erro ao baixar a imagem:", error);
+      }
+    }
+  };
+  const handleCloseResponseModal = () => {
+    setReturnData(null);
+    setResponseModalIsOpen(false);
+  }
+  
   //for the input example url
   const generateLink = () => {
     return charactersLength.slice(0, lengthValue).join("");
@@ -352,7 +390,6 @@ export function TrackerB() {
       }
     }
   };
-
   //useeffects
   useEffect(() => {
     handleGetUsers();
@@ -374,8 +411,6 @@ export function TrackerB() {
 
   //create
   async function createTrackerB(data: trackerBData) {
-    setLoading(true);
-    setRequestStatus("loading");
     try {
       const {
         actionId,
@@ -389,7 +424,7 @@ export function TrackerB() {
         lpId,
       } = data;
 
-      await handleTrackerB({
+      const response = await handleTrackerB({
         actionId,
         baseUrlId,
         alphabetId,
@@ -400,16 +435,16 @@ export function TrackerB() {
         tagPosition,
         lpId,
       });
+      setReturnData(response);
+      setResponseModalIsOpen(true);
     } catch (error) {
       console.log("Erro: ", error);
-      setRequestStatus("error");
     } finally {
       reset();
-      setRequestStatus("success");
-      setTimeout(() => {setLoading(false);}, 3000)
     }
   }
   console.log(errors);
+  console.log(returnData)
   return (
     <>
       <div className="relative p-8 bg-transparent rounded-md border border-input w-[601px]">
@@ -706,7 +741,7 @@ export function TrackerB() {
                             {i.name}
                           </SelectItem>
                         ))}
-                        <SelectItem value="Nenhum">Nenhum</SelectItem>
+                        <SelectItem value="nenhum">Nenhum</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -770,7 +805,6 @@ export function TrackerB() {
                 type="text"
                 placeholder="/personalização"
                 {...register("tag")}
-                disabled
               />
             </div>
 
@@ -799,7 +833,6 @@ export function TrackerB() {
                   <Select
                     value={selectedTagPosition}
                     onValueChange={handleSelectedTagPosition}
-                    disabled
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Posição da TAG" />
@@ -962,25 +995,46 @@ export function TrackerB() {
             </Button>
           </div>
         </form>
-        {loading && (
-          <div
-            className={`absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-20 w-[460px] h-[300px] p-4 bg-background rounded-md border border-input flex flex-col justify-center `}
-          >
-            <div className={`relative -top-[64px] flex justify-end ${requestStatus === "success" ? '' : 'hidden'}`}>
-            <ArrowUpRight size={38}/>
+
+        {returnData && (
+        <Dialog open={responseModalIsOpen} onOpenChange={handleCloseResponseModal}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader className="mb-4">
+              <DialogTitle className="text-center">Dados da URL</DialogTitle>
+              <DialogDescription className="text-center">
+                Após o fechamento do modal, esses dados serão perdidos.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-col items-center gap-4">
+              <div className="flex">
+                <Button
+                  variant={"outline"}
+                  className="p-2 min-w-[320px]"
+                  onClick={() => handleCopyToClipboard(returnData.link.url)}
+                >
+                  <span>{returnData.link.url}</span>
+                  <Link2 size={18} className="ml-4" />
+                </Button>
+              </div>
+              <div>
+                <img
+                  src={returnData.link.qrCode}
+                  alt="qrCode"
+                  className="max-w-[320px]"
+                />
+                <Button
+                  variant={"outline"}
+                  className="w-full"
+                  onClick={handleDownloadQRCode}
+                >
+                  Baixar QRCode
+                </Button>
+              </div>
             </div>
-            <div className={`flex flex-col gap-2 items-center`}>
-              {requestStatus === "loading" && <Loader size={60} className="animate-spin"/>}
-              {requestStatus === "error" && <CircleX size={60} />}
-              {requestStatus === "success" && <FileDown size={60} />}
-              <p className={`text-xl`}>
-                {requestStatus === "loading" && <span className="animate-pulse">Gerando planilha...</span>}
-                {requestStatus === "error" && <span>Ops, algo deu errado!</span>}
-                {requestStatus === "success" && <span className="animate-pulse">Fazendo o download da planilha...</span>}
-              </p>
-            </div>
-          </div>
+          </DialogContent>
+        </Dialog>
         )}
+
       </div>
     </>
   );

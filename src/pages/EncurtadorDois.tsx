@@ -376,38 +376,38 @@ export function EncurtadorDois() {
     }
   }
 
-  const handleCloseModal = () => {
-    setReturnData(null);
-    setIsModalOpen(false);
-  };
+  // const handleCloseModal = () => {
+  //   setReturnData(null);
+  //   setIsModalOpen(false);
+  // };
 
-  const handleDownloadQRCode = async () => {
-    if (returnData) {
-      const imageUrl = `bigdates/${returnData.qrCode}`;
+  // const handleDownloadQRCode = async () => {
+  //   if (returnData) {
+  //     const imageUrl = `bigdates/${returnData.qrCode}`;
 
-      try {
-        const response = await fetch(imageUrl);
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
+  //     try {
+  //       const response = await fetch(imageUrl);
+  //       const blob = await response.blob();
+  //       const url = window.URL.createObjectURL(blob);
 
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `qrcode-${returnData.shortUrl}.png`; // Nome do arquivo a ser salvo
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url); // Limpa o URL após o download
-      } catch (error) {
-        console.error("Erro ao baixar a imagem:", error);
-      }
-    }
-  };
+  //       const link = document.createElement("a");
+  //       link.href = url;
+  //       link.download = `qrcode-${returnData.shortUrl}.png`; // Nome do arquivo a ser salvo
+  //       document.body.appendChild(link);
+  //       link.click();
+  //       document.body.removeChild(link);
+  //       window.URL.revokeObjectURL(url); // Limpa o URL após o download
+  //     } catch (error) {
+  //       console.error("Erro ao baixar a imagem:", error);
+  //     }
+  //   }
+  // };
 
-  const handleCopyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text).then(() => {
-      alert("Link copiado para a área de transferência!");
-    });
-  };
+  // const handleCopyToClipboard = (text: string) => {
+  //   navigator.clipboard.writeText(text).then(() => {
+  //     alert("Link copiado para a área de transferência!");
+  //   });
+  // };
 
   return (
     <>
@@ -817,7 +817,7 @@ export function EncurtadorDois() {
         </form>
       </div>
 
-      {returnData && (
+      {/* {returnData && (
         <Dialog open={isModalOpen} onOpenChange={handleCloseModal}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader className="mb-4">
@@ -858,7 +858,7 @@ export function EncurtadorDois() {
             </div>
           </DialogContent>
         </Dialog>
-      )}
+      )} */}
     </>
   );
 }

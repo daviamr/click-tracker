@@ -44,6 +44,7 @@ import {
   deleteFinalUrl,
   createTrackerB,
   createTrackerC,
+  ApiResponse,
 } from "@/interface/auth";
 import { AlertMessage } from "@/components/alert_message";
 
@@ -70,7 +71,7 @@ interface AuthContextType {
   handleEditConversor: (data: editConversor) => Promise<void>;
   deleteConversor: (data: deleteConversor) => Promise<void>;
   handleTrackerA: (data: createTrackerA) => Promise<void>;
-  handleTrackerB: (data: createTrackerB) => Promise<void>;
+  handleTrackerB: (data: createTrackerB) => Promise<ApiResponse>;
   handleTrackerC: (data: createTrackerC) => Promise<void>;
   handleCreateLP: (data: createLP) => Promise<void>;
   handleEditLP: (data: editLP) => Promise<void>;
@@ -562,7 +563,7 @@ function AuthProvider({ children }: ChildrenProps) {
           cost,
           landingPageId,
           key,
-          media
+          media,
         },
         {
           headers: {
@@ -595,7 +596,7 @@ function AuthProvider({ children }: ChildrenProps) {
     cost,
     landingPageId,
     key,
-    media
+    media,
   }: editAction) {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
@@ -614,7 +615,7 @@ function AuthProvider({ children }: ChildrenProps) {
         cost: cost,
         landingPageId: landingPageId,
         key: key,
-        media: media
+        media: media,
       });
 
       const response = await api.put(
@@ -628,7 +629,7 @@ function AuthProvider({ children }: ChildrenProps) {
           cost,
           landingPageId,
           key,
-          media
+          media,
         },
         {
           headers: {
@@ -1025,59 +1026,44 @@ function AuthProvider({ children }: ChildrenProps) {
     tag,
     tagPosition,
     lpId,
-  }: createTrackerB) {
+  }: createTrackerB): Promise<ApiResponse> {
     try {
       const dataUser = localStorage.getItem("@shorturl:user");
-
+  
       if (!dataUser) {
         throw new Error("Token não encontrado.");
       }
       const token = JSON.parse(dataUser);
-
-      console.log([
-        {
-          actionId: actionId,
-          baseUrlId: baseUrlId,
-          alphabetId: alphabetId,
-          length: length,
-          qrCode: qrCode,
-          finalUrlId: finalUrlId,
-          lpId: lpId,
-        },
-      ]);
-
+  
       const formData = new FormData();
       formData.append("actionId", String(actionId));
       formData.append("baseUrlId", String(baseUrlId));
-      formData.append("alphabetId", String(alphabetId));
       formData.append("length", String(length));
       formData.append("qrCode", String(qrCode));
       formData.append("finalUrlId", String(finalUrlId));
       formData.append("lpId", String(lpId));
-
+  
+      if (alphabetId !== "") {
+        formData.append("alphabetId", String(alphabetId));
+      }
       if (tag) {
         formData.append("tag", String(tag));
-      } else {
-        console.log("tag Desativada");
       }
       if (tagPosition) {
         formData.append("tagPosition", String(tagPosition));
-      } else {
-        console.log("tagPosition Desativada");
       }
-
-      // Envio da requisição com FormData
-      const response = await api.post("/links/b", formData, {
+  
+      const response = await api.post<ApiResponse>("/links/b", formData, {
         headers: {
           Authorization: `Bearer ${token.jwtToken}`,
           "Content-Type": "multipart/form-data",
         },
-        responseType: "blob",
       });
-
+  
       console.log(response.data);
-
       AlertMessage(response.data.message, "success");
+  
+      return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.response) {
         AlertMessage(error.response.data.message, "error");
@@ -1087,8 +1073,17 @@ function AuthProvider({ children }: ChildrenProps) {
           "error"
         );
       }
+  
+      return {
+        link: {
+          qrCode: "",
+          url: "",
+        },
+        message: "Erro inesperado. Tente novamente mais tarde.",
+      };
     }
   }
+  
 
   async function handleTrackerC({
     actionId,

@@ -28,7 +28,7 @@ import { LogoC } from "./logoC";
 export function Header() {
   const [isOpen, setIsOpen] = useState<Boolean>(true);
   const { isFocus, setIsFocus } = useContextState();
-  const {theme} = useTheme();
+  const { theme } = useTheme();
 
   function logOut() {
     try {
@@ -48,10 +48,20 @@ export function Header() {
       >
         <div className="flex flex-col mb-8 justify-between h-full">
           <div>
-            <div className={`flex justify-center mb-8 ${!isOpen ? 'flex-col items-center gap-2' : ''}`}>
-              {isOpen && theme === "dark" && <LogoA/>}
-              {isOpen && theme === "light" && <LogoB/>}
-              {!isOpen ? <LogoC/> : ''}
+            <div
+              className={`flex justify-center mb-8 ${
+                !isOpen ? "flex-col items-center gap-2" : ""
+              }`}
+            >
+              {isOpen ? (
+                theme === "dark" ? (
+                  <LogoA />
+                ) : theme === "light" ? (
+                  <LogoB />
+                ) : null
+              ) : (
+                <LogoC />
+              )}
               <Button onClick={() => setIsOpen(!isOpen)} variant={"ghost"}>
                 {isOpen ? (
                   <ArrowLeftFromLine size={16} />
@@ -68,7 +78,9 @@ export function Header() {
                 className={`w-12 rounded-sm`}
               /> */}
               <div className={`${isOpen ? "block" : "hidden"}`}>
-                <p className="px-4 border-l-4 border-[#a2d515] leading-4 text-[14px]">Bem vindo (a), Fulano</p>
+                <p className="px-4 border-l-4 border-[#a2d515] leading-4 text-[14px]">
+                  Bem vindo (a), Fulano
+                </p>
               </div>
             </div>
 

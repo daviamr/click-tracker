@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { FileDown, History, UserRoundPen, UserRoundX } from "lucide-react";
+import { FileDown, History } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AlertMessage } from "@/components/alert_message";
 import { AxiosError } from "axios";
@@ -77,16 +77,6 @@ export function HistoricoPage() {
                 <Button variant={"outline"} className="flex gap-2 items-center">
                   <FileDown size={16} />
                   Exportar
-                </Button>
-                <Button className="p-2" variant={"outline"}>
-                  <UserRoundPen size={18} />
-                </Button>
-                <Button
-                  className="p-2 duration-300 hover:text-red-700"
-                  variant={"outline"}
-                  // onClick={() => handleDeleteCustomer(i.id)}
-                >
-                  <UserRoundX size={18} />
                 </Button>
               </TableCell>
             </TableRow>

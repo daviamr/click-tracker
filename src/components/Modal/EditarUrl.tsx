@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hook/Auth";
 import { editURL } from "@/interface/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Pencil } from "lucide-react";
+import { FilePenLine, Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -75,7 +75,7 @@ export function EditarUrl({id, url, onEditUrl}: editUrlProps) {
       <DialogTrigger asChild>
         <Button className="p-2"
         variant={"outline"}>
-        <Pencil size={18}/>
+        <FilePenLine size={18} />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

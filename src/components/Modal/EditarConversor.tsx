@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Pencil } from "lucide-react";
+import { FilePenLine, Pencil } from "lucide-react";
 import TextareaWithCounter from "../ContadorCaracteres";
 import { Input } from "../ui/input";
 import { z } from "zod";
@@ -82,7 +82,7 @@ export function EditarConversor({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="p-2" variant={"outline"}>
-          <Pencil size={18} />
+        <FilePenLine size={18} />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

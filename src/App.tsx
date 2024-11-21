@@ -18,6 +18,15 @@ export function App() {
     <>
       <div className="overflow-y-auto w-full">
         <div className="mx-auto">
+          <div className="flex flex-col items-end border-r-8 border-[#a2d515] px-4 gap-1 py-1">
+            <div className="flex items-center gap-2">
+              <span className="block w-2 h-2 bg-green-600 rounded-full animate-pulse"></span>
+              <p className="text-[14px] opacity-50">Você está logado.</p>
+            </div>
+            <p className="text-[14px]">
+              Bem vindo, <strong>Fulano</strong>.
+            </p>
+          </div>
           {isFocus === "user" && <UsuarioPage />}
           {isFocus === "customers" && <ClientesPage />}
           {isFocus === "campaign" && <CampanhaPage />}

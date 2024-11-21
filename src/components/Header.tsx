@@ -79,7 +79,7 @@ export function Header() {
                 alt="usuário"
                 className={`w-12 rounded-sm`}
               /> */}
-              <div className={`${isOpen ? "block" : "hidden"}`}>
+              <div className={`hidden`}>
                 <p className="px-4 border-l-8 border-[#a2d515] leading-[18px] text-[14px]">
                   Bem vindo (a), <span className="block">Fulano.</span>
                 </p>

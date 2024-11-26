@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { CircleX, Link2, RefreshCw } from "lucide-react";
+import { FileX2, Link2, RefreshCw } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -113,7 +113,7 @@ export function ShortUrlsPage() {
                   variant={"outline"}
                   onClick={() => handleDeleteUrl(i.id)}
                 >
-                  <CircleX size={18} />
+                  <FileX2 size={18} />
                 </Button>
               </TableCell>
             </TableRow>

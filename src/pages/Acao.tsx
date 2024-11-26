@@ -15,7 +15,7 @@ import { useAuth } from "@/hook/Auth";
 import { dataAction, DataProps } from "@/interface/auth";
 import { api } from "@/services/Api";
 import { AxiosError } from "axios";
-import { CircleX, RefreshCw, Waypoints } from "lucide-react";
+import { FileX2, RefreshCw, Waypoints } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type dataActionProps = { data: DataProps };
@@ -221,7 +221,7 @@ export function AcaoPage() {
                     variant={"outline"}
                     onClick={() => handleDeleteCampaign(i.id)}
                   >
-                    <CircleX size={18} />
+                    <FileX2 size={18} />
                   </Button>
                 </TableCell>
               </TableRow>

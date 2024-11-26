@@ -103,7 +103,7 @@ export function TrackerC() {
   const [selectedCampaign, handleSelectedCampaign] = useState<string>("");
   const [selectedAction, handleSelectedAction] = useState<string>("");
   const [lengthValue, setLengthValue] = useState<number>(6);
-  const [selectedTagPosition, setSelectedTagPosition] = useState<string>("");
+  const [selectedTagPosition, setSelectedTagPosition] = useState<string>("before");
   //for the input example url
   // const charactersLength = [
   //   "a",

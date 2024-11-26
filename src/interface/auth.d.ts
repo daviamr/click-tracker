@@ -344,6 +344,10 @@ export type CreateNewUser = {
     subcategories: string;
   }
 
+  export type createUTM = {
+    title: string;
+  }
+
   export interface ApiResponse {
     link: {
       qrCode: string;

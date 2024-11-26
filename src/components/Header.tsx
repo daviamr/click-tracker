@@ -5,6 +5,7 @@ import {
   Braces,
   Building2,
   CaseLower,
+  Code,
   Database,
   History,
   Laptop,
@@ -330,6 +331,32 @@ export function Header() {
                     <Braces size={18} />
                     <p className={`${isOpen ? "block" : "hidden"}`}>
                       URLs de Destino
+                    </p>
+                    <TooltipHeader
+                      align="start"
+                      side="right"
+                      content="URLs de Destino"
+                      className={`hover:bg-transparent absolute w-[60px] h-[42px] top-[0px] right-[0px] ${
+                        isOpen ? "hidden" : "block"
+                      }`}
+                    />
+                  </button>
+                </li>
+
+                <li
+                  className={`border-l-4 text-[16px] cursor-pointer border-col ${
+                    isFocus === "utm"
+                      ? "border-[#a2d515] text-[#a2d515] dark:bg-[#232327] font-semibold"
+                      : ""
+                  }`}
+                >
+                  <button
+                    className="relative flex items-center gap-2 py-3 pl-5 w-full"
+                    onClick={() => setIsFocus("utm")}
+                  >
+                    <Code size={18} />
+                    <p className={`${isOpen ? "block" : "hidden"}`}>
+                      UTM e Chave
                     </p>
                     <TooltipHeader
                       align="start"

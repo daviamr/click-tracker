@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { CaseLower, CircleX, RefreshCw } from "lucide-react";
+import { CaseLower, FileX2, RefreshCw } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -113,7 +113,7 @@ export function ConversorPage() {
                   variant={"outline"}
                   onClick={() => handleDeleteConversor(i.id)}
                 >
-                  <CircleX size={18} />
+                  <FileX2 size={18} />
                 </Button>
               </TableCell>
             </TableRow>

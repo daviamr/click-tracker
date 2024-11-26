@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Database, RefreshCw, UserRoundX } from "lucide-react";
+import { Database, FileX2, RefreshCw } from "lucide-react";
 import { NovaBase } from "@/components/Modal/NovaBase";
 import { api } from "@/services/Api";
 import { baseProps, DataProps } from "@/interface/auth";
@@ -115,7 +115,7 @@ export function BaseOrigemPage() {
                   variant={"outline"}
                   onClick={() => handleDeleteBase(i.id)}
                 >
-                  <UserRoundX size={18} />
+                  <FileX2 size={18} />
                 </Button>
               </TableCell>
             </TableRow>

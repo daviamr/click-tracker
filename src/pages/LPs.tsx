@@ -13,7 +13,7 @@ import { api } from "@/services/Api";
 import { useAuth } from "@/hook/Auth";
 import { DataProps, lpsData } from "@/interface/auth";
 import { Button } from "@/components/ui/button";
-import { Laptop, RefreshCw, UserRoundX } from "lucide-react";
+import { FileX2, Laptop, RefreshCw } from "lucide-react";
 import { NovaLP } from "@/components/Modal/NovaLP";
 import { EditarLP } from "@/components/Modal/EditarLP";
 
@@ -122,7 +122,7 @@ export function LPsPage() {
                   variant={"outline"}
                   onClick={() => handleDeleteLp(i.id)}
                 >
-                  <UserRoundX size={18} />
+                  <FileX2 size={18} />
                 </Button>
               </TableCell>
             </TableRow>

@@ -79,7 +79,8 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
   const [lps, setLPs] = useState<lpsData[]>([]);
   // const [isChecked, setIsChecked] = useState(false);
   const [clientId, setClientId] = useState<string>("");
-  const [utm, setUtm] = useState<string>("utm_source");
+  // const [utm, setUtm] = useState<string>("utm_source");
+  const [utm] = useState<string>("utm_source");
   const [chave, setChave] = useState<string>("");
   const {
     register,
@@ -297,6 +298,19 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
           <div className="grid grid-cols-4 gap-4 gap-y-6 py-4">
 
             <div className="relative col-span-4">
+              <Label htmlFor="nome" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
+                Título da ação
+              </Label>
+              <Input
+                id="nome"
+                type="text"
+                placeholder="Digite a ação..."
+                {...register("name")}
+                className={`${errors.name && "border-rose-400"}`}
+              />
+            </div>
+
+            <div className="relative col-span-4">
               <Label htmlFor="selectCliente" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Cliente</Label>
               {/* SELECT CUSTOMER */}
 
@@ -332,7 +346,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
             </div>
 
             <div className="relative col-span-4">
-              <Label htmlFor="campanha" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Campanha</Label>
+              <Label htmlFor="campanha" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm z-10">Campanha</Label>
               <Select
                 disabled={!selectedClient}
                 onValueChange={handleSelectCampaign}
@@ -411,9 +425,9 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
               />
             </div>
 
-            <div className="relative col-span-2">
+            {/* <div className="relative col-span-2">
               <Label htmlFor="utm" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">UTM</Label>
-              {/* SELECT UTM */}
+
               <Controller
                 name="utm"
                 control={control}
@@ -444,8 +458,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                   </Select>
                 )}
               />
-              {/* FINAL SELECT UTM */}
-            </div>
+            </div> */}
 
             <div className="relative col-span-2">
               <Label htmlFor="key" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">Chave</Label>
@@ -541,19 +554,6 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                 )}
               />
               {/* FINAL SELECT MEDIA */}
-            </div>
-
-            <div className="relative col-span-2">
-              <Label htmlFor="nome" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">
-                Ação
-              </Label>
-              <Input
-                id="nome"
-                type="text"
-                placeholder="Digite a ação..."
-                {...register("name")}
-                className={`${errors.name && "border-rose-400"}`}
-              />
             </div>
 
             <div className="relative col-span-2">

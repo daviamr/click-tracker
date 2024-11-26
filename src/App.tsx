@@ -11,6 +11,7 @@ import { PainelPage } from "./pages/Painel";
 import { ShortUrlsPage } from "./pages/ShortURLS";
 import { UrlDestinoPage } from "./pages/UrlDestino";
 import { UsuarioPage } from "./pages/Usuario";
+import { UtmPage } from "./pages/Utm";
 
 export function App() {
   const { isFocus } = useContextState();
@@ -37,6 +38,7 @@ export function App() {
           {isFocus === "history" && <HistoricoPage />}
           {isFocus === "originbase" && <BaseOrigemPage />}
           {isFocus === "destinationurl" && <UrlDestinoPage />}
+          {isFocus === "utm" && <UtmPage />}
           {isFocus === "shorter" && <EncurtadorPage />}
           {isFocus === "dashboard" && <PainelPage />}
         </div>

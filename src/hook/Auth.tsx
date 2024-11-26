@@ -45,6 +45,7 @@ import {
   createTrackerB,
   createTrackerC,
   ApiResponse,
+  createUTM,
 } from "@/interface/auth";
 import { AlertMessage } from "@/components/alert_message";
 
@@ -82,6 +83,7 @@ interface AuthContextType {
   handleCreateFinalURL: (data: createFinalURL) => Promise<void>;
   handleEditFinalUrl: (data: editFinalURL) => Promise<void>;
   deleteFinalUrl: (data: deleteFinalUrl) => Promise<void>;
+  handleCreateUTM: (data: createUTM) => Promise<void>;
   data: DataProps | null;
 }
 
@@ -1502,6 +1504,44 @@ function AuthProvider({ children }: ChildrenProps) {
     }
   }
 
+  //UTM
+  async function handleCreateUTM({ title }: createUTM) {
+    try {
+      const dataUser = localStorage.getItem("@shorturl:user");
+
+      if (!dataUser) {
+        throw new Error("Token não encontrado.");
+      }
+      const token = JSON.parse(dataUser);
+
+      // console.log(token)
+
+      const response = await api.post(
+        "/utm",
+        {
+          title,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token.jwtToken}`,
+          },
+        }
+      );
+      console.log(response.data);
+
+      AlertMessage("UTM criada com sucesso.", "success");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response) {
+        AlertMessage(error.response.data.message, "error");
+      } else {
+        AlertMessage(
+          "Não foi possível criar uma UTM agora, tente novamente mais tarde.",
+          "error"
+        );
+      }
+    }
+  }
+
   return (
     <>
       <AuthContext.Provider
@@ -1539,6 +1579,7 @@ function AuthProvider({ children }: ChildrenProps) {
           handleCreateFinalURL,
           handleEditFinalUrl,
           deleteFinalUrl,
+          handleCreateUTM,
           data,
         }}
       >

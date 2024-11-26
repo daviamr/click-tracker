@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Braces, RefreshCw, UserRoundX } from "lucide-react";
+import { Braces, FileX2, RefreshCw } from "lucide-react";
 import { NovaUrlDestino } from "@/components/Modal/NovaUrlDestino";
 import { useEffect, useState } from "react";
 import { DataProps, finalURLProps } from "@/interface/auth";
@@ -119,7 +119,7 @@ export function UrlDestinoPage() {
                   variant={"outline"}
                   onClick={() => handleDeleteFinalUrl(i.id)}
                 >
-                  <UserRoundX size={18} />
+                  <FileX2 size={18} />
                 </Button>
               </TableCell>
             </TableRow>

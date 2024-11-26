@@ -111,7 +111,7 @@ export function TrackerB() {
   const [selectedLP, handleSelectedLP] = useState<string>("");
   const [selectedAction, handleSelectedAction] = useState<string>("");
   const [lengthValue, setLengthValue] = useState<number>(6);
-  const [selectedTagPosition, setSelectedTagPosition] = useState<string>("");
+  const [selectedTagPosition, setSelectedTagPosition] = useState<string>("before");
   const [responseModalIsOpen, setResponseModalIsOpen] = useState(false);
   const [returnData, setReturnData] = useState<ApiResponse | null>(null);
   //for the input example url
@@ -444,7 +444,7 @@ export function TrackerB() {
     }
   }
   console.log(errors);
-  console.log(returnData)
+  console.log(tagValue)
   return (
     <>
       <div className="relative p-8 bg-transparent rounded-md border border-input w-[601px]">
@@ -876,21 +876,21 @@ export function TrackerB() {
                       ? `https://exemplo.com/${generateLink()}`
                       : !selectedUrl &&
                         tagValue !== "" &&
-                        selectedTagPosition === "pre"
+                        selectedTagPosition === "before"
                       ? `https://exemplo.com/${tagValue}/${generateLink()}`
                       : !selectedUrl &&
                         tagValue !== "" &&
-                        selectedTagPosition === "pos"
+                        selectedTagPosition === "after"
                       ? `https://exemplo.com/${generateLink()}/${tagValue}`
                       : selectedUrl && tagValue === ""
                       ? `https://${selectedUrl}/${generateLink()}`
                       : selectedUrl &&
                         tagValue !== "" &&
-                        selectedTagPosition === "pre"
+                        selectedTagPosition === "before"
                       ? `https://${selectedUrl}/${tagValue}/${generateLink()}`
                       : selectedUrl &&
                         tagValue !== "" &&
-                        selectedTagPosition === "pos"
+                        selectedTagPosition === "after"
                       ? `https://${selectedUrl}/${generateLink()}/${tagValue}`
                       : ""
                   }

@@ -5,11 +5,11 @@ import {
   Braces,
   Building2,
   CaseLower,
-  Code,
   Database,
   History,
   Laptop,
   LayoutDashboard,
+  Link,
   Link2,
   LogOut,
   Megaphone,
@@ -354,9 +354,9 @@ export function Header() {
                     className="relative flex items-center gap-2 py-3 pl-5 w-full"
                     onClick={() => setIsFocus("utm")}
                   >
-                    <Code size={18} />
+                    <Link size={18} />
                     <p className={`${isOpen ? "block" : "hidden"}`}>
-                      UTM e Chave
+                      Sources
                     </p>
                     <TooltipHeader
                       align="start"

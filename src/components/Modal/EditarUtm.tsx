@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus } from "lucide-react";
+import { FilePenLine, Plus } from "lucide-react";
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -43,7 +43,7 @@ type createUserProps = {
   onCreateUTM: () => void;
 };
 
-export function NovaUTM({ onCreateUTM }: createUserProps) {
+export function EditarUtm({ onCreateUTM }: createUserProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { handleCreateUTM } = useAuth() as HandleCreateUsersProps;
   const {
@@ -87,14 +87,13 @@ export function NovaUTM({ onCreateUTM }: createUserProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="flex items-center gap-2" variant={"secondary"}>
-          <Plus size={18} />
-          Cadastrar UTM
+        <Button className="p-2" variant={"outline"}>
+          <FilePenLine size={18} />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader className="pb-4 border-b-[1px]">
-          <DialogTitle>Nova UTM</DialogTitle>
+          <DialogTitle>Editar UTM</DialogTitle>
           <DialogDescription>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore
             veritatis ipsa nisi hic at!

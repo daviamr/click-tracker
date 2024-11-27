@@ -79,6 +79,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
   const [lps, setLPs] = useState<lpsData[]>([]);
   // const [isChecked, setIsChecked] = useState(false);
   const [clientId, setClientId] = useState<string>("");
+  const [campaignId, setCampaignId] = useState<number>();
   // const [utm, setUtm] = useState<string>("utm_source");
   const [utm] = useState<string>("utm_source");
   const [chave, setChave] = useState<string>("");
@@ -103,7 +104,6 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
       media: "",
     },
   });
-
   const [costValue, setCostValue] = useState<string>("");
 
   const formatToBRLCurrency = (value: string) => {
@@ -150,6 +150,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
     );
     if (selectedCampaign) {
       setValue("campaignId", selectedCampaign.id);
+      setCampaignId(selectedCampaign.id)
     }
   };
 
@@ -180,29 +181,8 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
     }
   };
 
-  const handleGetLP = async () => {
-    try {
-      const response = await api.get("/lps", {
-        headers: {
-          Authorization: `Bearer ${data.jwtToken}`,
-        },
-      });
-      setLPs(response.data);
-    } catch (error: unknown) {
-      if (error instanceof AxiosError && error.response) {
-        AlertMessage(error.message, "error");
-      } else {
-        AlertMessage(
-          "Não foi possível carregar os usuários, tente novamente mais tarde.",
-          "error"
-        );
-      }
-    }
-  };
-
   useEffect(() => {
     handleGetClient();
-    handleGetLP();
   }, [data.jwtToken]);
 
   useEffect(() => {
@@ -229,6 +209,31 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
       handleGetSingleClient();
     }
   }, [clientId]);
+
+  useEffect(() => {
+    const handleGetLP = async () => {
+      try {
+        const response = await api.get(`/lps?campaignId=${campaignId}`, {
+          headers: {
+            Authorization: `Bearer ${data.jwtToken}`,
+          },
+        });
+        setLPs(response.data);
+      } catch (error: unknown) {
+        if (error instanceof AxiosError && error.response) {
+          AlertMessage(error.message, "error");
+        } else {
+          AlertMessage(
+            "Não foi possível carregar os usuários, tente novamente mais tarde.",
+            "error"
+          );
+        }
+      }
+    };
+    if (campaignId) {
+      handleGetLP();
+    }
+  }, [campaignId])
 
   useEffect(() => {
     reset();
@@ -376,7 +381,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
             </div>
 
             <div className="relative col-span-3">
-              <Label htmlFor="lprelacionada" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm">LP Relacionada</Label>
+              <Label htmlFor="lprelacionada" className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold rounded-sm z-10">LP Relacionada</Label>
               <Controller
                 name="landingPage"
                 control={control}
@@ -386,9 +391,10 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                       handleSelectLP(value);
                       field.onChange(value);
                     }}
+                    disabled={!campaignId}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione a LP" />
+                      <SelectValue placeholder={!campaignId ? 'Campanha não selecionada' : 'Selecione'} />
                     </SelectTrigger>
                     <SelectContent
                       className={`${errors.landingPageId && "border-rose-400"}`}
@@ -541,7 +547,7 @@ export function NovaAcao({ onCreateAction }: createActionProps) {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectLabel>Chaves</SelectLabel>
+                        <SelectLabel>Tipo de mídia</SelectLabel>
                         <SelectItem value="Mail mkt">Mail mkt</SelectItem>
                         <SelectItem value="Push">Push</SelectItem>
                         <SelectItem value="Display">Display</SelectItem>

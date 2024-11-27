@@ -7,15 +7,15 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Code, FileX2, RefreshCw } from "lucide-react";
+import { FileX2, Link, RefreshCw } from "lucide-react";
 import { api } from "@/services/Api";
 import { baseProps, DataProps } from "@/interface/auth";
 import { useEffect, useState } from "react";
 import { AlertMessage } from "@/components/alert_message";
 import { AxiosError } from "axios";
 import { useAuth } from "@/hook/Auth";
-import { EditarBase } from "@/components/Modal/EditarBase";
 import { NovaUTM } from "@/components/Modal/NovaUtm";
+import { EditarUtm } from "@/components/Modal/EditarUtm";
 
 type utmPageProps = { data: DataProps };
 
@@ -67,8 +67,8 @@ export function UtmPage() {
         <>
             <div>
                 <h1 className="flex items-center gap-2 text-4xl border-solid border-b-[6px] w-max m-auto rounded-sm pt-8 mb-8">
-                    <Code size={30} className="animate-pulse" />
-                    UTM e Chave
+                    <Link size={30} className="animate-pulse" />
+                    Sources
                 </h1>
             </div>
             <div className="flex gap-2 justify-end border-solid border-y-[1px] py-2 px-4">
@@ -100,12 +100,7 @@ export function UtmPage() {
                             <TableCell>{i.name}</TableCell>
                             <TableCell>{i.url}</TableCell>
                             <TableCell className="flex items-center justify-end gap-2 pr-4">
-                                <EditarBase
-                                    id={i.id}
-                                    name={i.name}
-                                    url={i.url}
-                                    handleGetBase={handleGetBase}
-                                />
+                                <EditarUtm onCreateUTM={handleGetBase}/>
                                 <Button
                                     className="p-2 duration-300 hover:text-red-700"
                                     variant={"outline"}

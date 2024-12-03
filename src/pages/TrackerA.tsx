@@ -33,6 +33,7 @@ import { ArrowUpRight, CircleX, FileDown, Loader, Tag } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import fileDownload from "js-file-download";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const verifyTrackerA = z.object({
   customer: z.string().min(1),
@@ -111,6 +112,7 @@ export function TrackerA() {
   const [selectedAction, handleSelectedAction] = useState<string>("");
   const [lengthValue, setLengthValue] = useState<number>(6);
   const [selectedTagPosition, setSelectedTagPosition] = useState<string>("before");
+  const [selectedSourcesValues, setSelectedSourcesValues] = useState<string[]>([]);
   //for the input example url
   const charactersLength = [
     "a",
@@ -475,10 +477,10 @@ export function TrackerA() {
     } finally {
       reset();
       setRequestStatus("success");
-      setTimeout(() => {setLoading(false);}, 3000)
+      setTimeout(() => { setLoading(false); }, 3000)
     }
   }
-  console.log(errors);
+  console.log(selectedSourcesValues);
   return (
     <>
       <div className="relative p-8 bg-transparent rounded-md border border-input w-[601px]">
@@ -533,9 +535,8 @@ export function TrackerA() {
 
             <div className="relative col-span-2 mt-2">
               <p
-                className={`absolute px-2 bg-background -top-2 left-1 text-xs font-semibold z-10 ${
-                  !selectedCustomer ? "opacity-80" : ""
-                }`}
+                className={`absolute px-2 bg-background -top-2 left-1 text-xs font-semibold z-10 ${!selectedCustomer ? "opacity-80" : ""
+                  }`}
               >
                 Campanha
               </p>
@@ -581,9 +582,8 @@ export function TrackerA() {
 
             <div className="relative col-span-2 mt-2">
               <p
-                className={`absolute px-2 bg-background -top-2 left-1 text-xs font-semibold z-10 ${
-                  !selectedCampaign ? "opacity-80" : ""
-                }`}
+                className={`absolute px-2 bg-background -top-2 left-1 text-xs font-semibold z-10 ${!selectedCampaign ? "opacity-80" : ""
+                  }`}
               >
                 LP
               </p>
@@ -607,8 +607,8 @@ export function TrackerA() {
                             !selectedCampaign
                               ? "Campanha não selecionada"
                               : lpsData.length === 0
-                              ? "Nenhuma LP encontrada"
-                              : "Selecione a LP"
+                                ? "Nenhuma LP encontrada"
+                                : "Selecione a LP"
                           }
                         />
                       </SelectTrigger>
@@ -630,9 +630,8 @@ export function TrackerA() {
 
             <div className="relative col-span-2 mt-2">
               <p
-                className={`absolute px-2 bg-background -top-2 left-1 text-xs font-semibold z-10 ${
-                  !selectedLP ? "opacity-80" : ""
-                }`}
+                className={`absolute px-2 bg-background -top-2 left-1 text-xs font-semibold z-10 ${!selectedLP ? "opacity-80" : ""
+                  }`}
               >
                 Ações
               </p>
@@ -656,8 +655,8 @@ export function TrackerA() {
                             !selectedLP
                               ? "LP não selecionada"
                               : actionsData.length === 0
-                              ? "Nenhuma ação encontrada"
-                              : "Selecione a ação"
+                                ? "Nenhuma ação encontrada"
+                                : "Selecione a ação"
                           }
                         />
                       </SelectTrigger>
@@ -732,7 +731,7 @@ export function TrackerA() {
                   </Select>
                 )}
               />
-            </div>      
+            </div>
 
             <div className="relative col-span-1 mt-2">
               {/* <div className="flex">
@@ -833,7 +832,7 @@ export function TrackerA() {
                   content='Se quiser, você pode inserir uma TAG personalizada nas URLs geradas. Experimente preencher o campo e veja em "URL exemplo" uma simulação de como as URLs ficarão.'
                 />
               </p>
-              
+
               <Input
                 id="tag"
                 type="text"
@@ -883,6 +882,67 @@ export function TrackerA() {
               />
             </div>
 
+            <div className="relative col-span-2 mt-2">
+              <p className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold z-10">
+                Sources
+                <TooltipTracker
+                  className="absolute -right-3 -top-1"
+                  side="right"
+                  align="start"
+                  content='As tags podem ser geradas antes ou depois dos dados convertidos. Veja "URL exemplo" para entender melhor.'
+                />
+              </p>
+              <Controller
+                name={'customer'}
+                control={control}
+                render={({ field }) => (
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue
+                        placeholder={
+                          Array.isArray(field.value) && field.value.length > 0
+                            ? field.value.join(", ")
+                            : "Selecione"
+                        }
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {baseUrlsData.map((item) => (
+                          <div key={item.id} className="flex items-center px-4 py-2">
+                            <Checkbox
+                              checked={Array.isArray(field.value) && field.value.includes(item.url)}
+                              onCheckedChange={() => {
+                                const newValue = Array.isArray(field.value)
+                                  ? field.value.includes(item.url)
+                                    ? field.value.filter((v: string) => v !== item.url)
+                                    : [...field.value, item.url]
+                                  : [item.url];
+                                field.onChange(newValue);
+                                setSelectedSourcesValues(newValue);
+                              }}
+                            />
+                            <span className="ml-2">{item.url}</span>
+                          </div>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
+
+            <div
+              className={`relative col-span-1 mt-2 ${selectedSourcesValues.some((value) => value === "clica.promo") ? "" : "hidden"
+                }`}
+            >
+              <p className="absolute px-2 bg-background -top-2 left-1 text-xs font-semibold z-10">
+                clica.promo
+              </p>
+              <Input type="text" placeholder="Chave" />
+
+            </div>
+
             <div className="relative col-span-4 mt-4">
               {/* <div className="flex">
                 <p className="font-semibold">Conversor</p>
@@ -911,22 +971,22 @@ export function TrackerA() {
                       : !selectedUrl &&
                         tagValue !== "" &&
                         selectedTagPosition === "before"
-                      ? `https://exemplo.com/${tagValue}/${generateLink()}`
-                      : !selectedUrl &&
-                        tagValue !== "" &&
-                        selectedTagPosition === "after"
-                      ? `https://exemplo.com/${generateLink()}/${tagValue}`
-                      : selectedUrl && tagValue === ""
-                      ? `https://${selectedUrl}/${generateLink()}`
-                      : selectedUrl &&
-                        tagValue !== "" &&
-                        selectedTagPosition === "before"
-                      ? `https://${selectedUrl}/${tagValue}/${generateLink()}`
-                      : selectedUrl &&
-                        tagValue !== "" &&
-                        selectedTagPosition === "after"
-                      ? `https://${selectedUrl}/${generateLink()}/${tagValue}`
-                      : ""
+                        ? `https://exemplo.com/${tagValue}/${generateLink()}`
+                        : !selectedUrl &&
+                          tagValue !== "" &&
+                          selectedTagPosition === "after"
+                          ? `https://exemplo.com/${generateLink()}/${tagValue}`
+                          : selectedUrl && tagValue === ""
+                            ? `https://${selectedUrl}/${generateLink()}`
+                            : selectedUrl &&
+                              tagValue !== "" &&
+                              selectedTagPosition === "before"
+                              ? `https://${selectedUrl}/${tagValue}/${generateLink()}`
+                              : selectedUrl &&
+                                tagValue !== "" &&
+                                selectedTagPosition === "after"
+                                ? `https://${selectedUrl}/${generateLink()}/${tagValue}`
+                                : ""
                   }
                 />
               </div>
@@ -961,13 +1021,12 @@ export function TrackerA() {
                   content='Carregue a planilha com os dados que você deseja fazer o tracking. É necessário que a planilha siga o arquivo de exemplo. Clique em "download de planilha exemplo" para visualizar.'
                 />
               </p>
-              
+
               <input
                 id="sheet"
                 type="file"
-                className={`border border-input rounded-md pt-1 max-w-[263.5px] col-span-2 ${
-                  errors.sheet && "border-rose-400"
-                }`}
+                className={`border border-input rounded-md pt-1 max-w-[263.5px] col-span-2 ${errors.sheet && "border-rose-400"
+                  }`}
                 {...register("sheet")}
               />
             </div>
@@ -1130,16 +1189,16 @@ export function TrackerA() {
               Gerar Tags
             </Button>
           </div>
-        </form>
+        </form >
         {loading && (
           <div
             className={`absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-20 w-[460px] h-[300px] p-4 bg-background rounded-md border border-input flex flex-col justify-center `}
           >
             <div className={`relative -top-[64px] flex justify-end ${requestStatus === "success" ? '' : 'hidden'}`}>
-            <ArrowUpRight size={38}/>
+              <ArrowUpRight size={38} />
             </div>
             <div className={`flex flex-col gap-2 items-center`}>
-              {requestStatus === "loading" && <Loader size={60} className="animate-spin"/>}
+              {requestStatus === "loading" && <Loader size={60} className="animate-spin" />}
               {requestStatus === "error" && <CircleX size={60} />}
               {requestStatus === "success" && <FileDown size={60} />}
               <p className={`text-xl`}>
@@ -1149,8 +1208,9 @@ export function TrackerA() {
               </p>
             </div>
           </div>
-        )}
-      </div>
+        )
+        }
+      </div >
     </>
   );
 }
